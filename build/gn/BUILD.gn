@@ -1,0 +1,63 @@
+# Copyright (c) 2023 Huawei Device Co., Ltd.
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+group("commonlibrary") {
+  deps = [ "//commonlibrary/c_utils/base:utils" ]
+}
+
+group("third_party") {
+  deps = [
+    "//third_party/bounds_checking_function:libsec_shared"
+  ]
+}
+
+group("hiviewdfx") {
+  deps = [
+    "//base/hiviewdfx/hilog/services/hilogd:hilogd",
+    "//base/hiviewdfx/hilog/services/hilogtool:hilog",
+
+    # "//base/hiviewdfx/hilog/test/unittest/common:unittest", // TODO
+  ]
+}
+
+group("wm") {
+  deps = [
+    "//foundation/window/window_manager/wmserver:libwms",
+    "//foundation/multimodalinput/input/service:libmmi-server",
+    "//foundation/multimedia/image_framework/plugins/common/libs:multimediaplugin",
+  ]
+}
+
+group("device") {
+  deps = [
+    "//drivers/peripheral/display/hal/openeuler/core/drm_backend:drm-backend"
+  ]
+}
+
+group("graphic_2d") {
+  deps = [
+    "//foundation/graphic/graphic_2d/frameworks/surface:surface",
+    "//foundation/graphic/graphic_2d/rosen/modules/composer:libcomposer",
+    "//foundation/graphic/graphic_2d/rosen/modules/render_service_base:librender_service_base",
+    "//foundation/graphic/graphic_2d/rosen/modules/render_service:librender_service",
+    "//foundation/graphic/graphic_2d/rosen/modules/render_service_client:librender_service_client",
+  ]
+}
+group("arkui") {
+  deps = [
+    "//base/global/resource_management/frameworks/resmgr:linux_resmgr",
+#"//foundation/arkui/ace_engine/adapter/linux/entrance/samples:pc_demo",
+#"//arkcompiler/ets_runtime:libark_jsruntime",
+    "//foundation/arkui/ace_engine/adapter/linux/build:libace_engine_linux"
+  ]
+}
