@@ -1,23 +1,25 @@
 # ft_engine
 
 #### 介绍
-ft_engine is contains modules window display and window management, providing the core capabilities of the Windows engine
+ft_engine是FangTian engine的主仓，中文名称为方天视窗引擎，包含显示服务、窗口管理、图形绘制、合成送显等模块。
+ft engine 主要聚焦于视窗底座，目标在与解决Linux桌面上图形显示的体验问题。为linux用户带来极高性能、流畅交互、极致动效等诸多全新的视效体验。
+
+#### 关键优势
+
+1.  新的显示协议，支持统一渲染、数据驱动等特性
+2.  低内存开销
+3.  极致性能表现
+4.  自然的动效能力
+5.  兼容wayland、X11协议
 
 #### 软件架构
 软件架构说明
 
 
-#### 安装教程
+#### 源码编译
 
-1.  xxxx
-2.  xxxx
-3.  xxxx
-
-#### 使用说明
-
-1.  xxxx
-2.  xxxx
-3.  xxxx
+1.  进入代码根目录，执行进行系统环境检查和依赖检查：./build/prebuild.sh。
+2.  完成依赖包的下载及安装后，直接运行 ./build.sh 即可开始构建。
 
 #### 参与贡献
 
@@ -27,11 +29,3 @@ ft_engine is contains modules window display and window management, providing th
 4.  新建 Pull Request
 
 
-#### 特技
-
-1.  使用 Readme\_XXX.md 来支持不同的语言，例如 Readme\_en.md, Readme\_zh.md
-2.  Gitee 官方博客 [blog.gitee.com](https://blog.gitee.com)
-3.  你可以 [https://gitee.com/explore](https://gitee.com/explore) 这个地址来了解 Gitee 上的优秀开源项目
-4.  [GVP](https://gitee.com/gvp) 全称是 Gitee 最有价值开源项目，是综合评定出的优秀开源项目
-5.  Gitee 官方提供的使用手册 [https://gitee.com/help](https://gitee.com/help)
-6.  Gitee 封面人物是一档用来展示 Gitee 会员风采的栏目 [https://gitee.com/gitee-stars/](https://gitee.com/gitee-stars/)

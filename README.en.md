@@ -1,22 +1,22 @@
 # ft_engine
 
 #### Description
-ft_engine is contains modules window display and window management, providing the core capabilities of the Windows engine
+ft_engine is the main repository of FangTian Windowing engine, It includes modules such as display services, window management, graphic drawing, and composite display.
+FangTian engine mainly focuses on the underlying modules of windowing system, with the goal of solving the experience problem of graphical display on Linux desktops. Provide Linux users with many new visual effects, including high performance, smooth interaction, and extremely dynamic effects.
+
+#### Key Features
+1. New display protocol, supporting features such as unified rendering and data-driven
+2. Low memory overhead
+3. Ultimate performance
+4. Natural animation and effects
+5. Compatible with wayland and X11 application
 
 #### Software Architecture
 Software architecture description
 
-#### Installation
-
-1.  xxxx
-2.  xxxx
-3.  xxxx
-
-#### Instructions
-
-1.  xxxx
-2.  xxxx
-3.  xxxx
+#### Compilation
+1.  Enter the code root directory and perform system environment and dependency checks:/ build/prebuild.sh。
+2.  After downloading and installing the dependency package, run it directly/ Build. sh to start building.
 
 #### Contribution
 
@@ -25,12 +25,3 @@ Software architecture description
 3.  Commit your code
 4.  Create Pull Request
 
-
-#### Gitee Feature
-
-1.  You can use Readme\_XXX.md to support different languages, such as Readme\_en.md, Readme\_zh.md
-2.  Gitee blog [blog.gitee.com](https://blog.gitee.com)
-3.  Explore open source project [https://gitee.com/explore](https://gitee.com/explore)
-4.  The most valuable open source project [GVP](https://gitee.com/gvp)
-5.  The manual of Gitee [https://gitee.com/help](https://gitee.com/help)
-6.  The most popular members  [https://gitee.com/gitee-stars/](https://gitee.com/gitee-stars/)
