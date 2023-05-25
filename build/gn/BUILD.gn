@@ -11,53 +11,5 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-group("commonlibrary") {
-  deps = [ "//commonlibrary/c_utils/base:utils" ]
-}
-
-group("third_party") {
-  deps = [
-    "//third_party/bounds_checking_function:libsec_shared"
-  ]
-}
-
-group("hiviewdfx") {
-  deps = [
-    "//base/hiviewdfx/hilog/services/hilogd:hilogd",
-    "//base/hiviewdfx/hilog/services/hilogtool:hilog",
-
-    # "//base/hiviewdfx/hilog/test/unittest/common:unittest", // TODO
-  ]
-}
-
-group("wm") {
-  deps = [
-    "//foundation/window/window_manager/wmserver:libwms",
-    "//foundation/multimodalinput/input/service:libmmi-server",
-    "//foundation/multimedia/image_framework/plugins/common/libs:multimediaplugin",
-  ]
-}
-
-group("device") {
-  deps = [
-    "//drivers/peripheral/display/hal/openeuler/core/drm_backend:drm-backend"
-  ]
-}
-
-group("graphic_2d") {
-  deps = [
-    "//foundation/graphic/graphic_2d/frameworks/surface:surface",
-    "//foundation/graphic/graphic_2d/rosen/modules/composer:libcomposer",
-    "//foundation/graphic/graphic_2d/rosen/modules/render_service_base:librender_service_base",
-    "//foundation/graphic/graphic_2d/rosen/modules/render_service:librender_service",
-    "//foundation/graphic/graphic_2d/rosen/modules/render_service_client:librender_service_client",
-  ]
-}
-group("arkui") {
-  deps = [
-    "//base/global/resource_management/frameworks/resmgr:linux_resmgr",
-#"//foundation/arkui/ace_engine/adapter/linux/entrance/samples:pc_demo",
-#"//arkcompiler/ets_runtime:libark_jsruntime",
-    "//foundation/arkui/ace_engine/adapter/linux/build:libace_engine_linux"
-  ]
+group("ft_engine") {
 }
