@@ -1,0 +1,131 @@
+# Copyright (c) 2021-2022 Huawei Device Co., Ltd.
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+import("//build/test.gni")
+
+module_out_path = "graphic_standard/render_service_client"
+
+group("unittest") {
+  testonly = true
+
+  deps = [
+    ":RSDirtyManagerTest",
+    ":RSDisplayModeTest",
+    ":RSDropframeTest",
+    ":RSEventTest",
+    ":RSInterfacesTest",
+    ":RSJankDetectorTest",
+    ":RSRegionTest",
+    ":RSTunnelHandleTest",
+    "animation:RSAnimationTest",
+  ]
+}
+
+## Build RSJankDetectorTest
+ohos_unittest("RSJankDetectorTest") {
+  module_out_path = module_out_path
+  sources = [
+    "//foundation/graphic/graphic_2d/rosen/modules/render_service_client/core/jank_detector/rs_jank_detector.cpp",
+    "rs_jank_detector_test.cpp",
+  ]
+  deps = [ ":rs_client_test_common" ]
+  external_deps = [ "hisysevent_native:libhisysevent" ]
+}
+
+## Build RSInterfacesTest
+ohos_unittest("RSInterfacesTest") {
+  module_out_path = module_out_path
+  sources = [ "rs_interfaces_test.cpp" ]
+  deps = [ ":rs_client_test_common" ]
+}
+
+## Build RSDropframeTest
+ohos_unittest("RSDropframeTest") {
+  module_out_path = module_out_path
+  sources = [ "rs_dropframe_test.cpp" ]
+  deps = [ ":rs_client_test_common" ]
+}
+
+## Build RSDirtyManagerTest
+ohos_unittest("RSDirtyManagerTest") {
+  module_out_path = module_out_path
+  sources = [ "rs_dirty_manager_test.cpp" ]
+  deps = [ ":rs_client_test_common" ]
+}
+
+## Build RSDisplayModeTest
+ohos_unittest("RSDisplayModeTest") {
+  module_out_path = module_out_path
+  sources = [ "rs_display_mode_test.cpp" ]
+  deps = [ ":rs_client_test_common" ]
+}
+
+## Build TunnelHandleTest
+ohos_unittest("RSTunnelHandleTest") {
+  module_out_path = module_out_path
+  sources = [ "rs_tunnel_handle_test.cpp" ]
+  deps = [ ":rs_client_test_common" ]
+}
+
+## Build RSEventTest
+ohos_unittest("RSEventTest") {
+  module_out_path = module_out_path
+  sources = [ "rs_event_test.cpp" ]
+  deps = [ ":rs_client_test_common" ]
+}
+
+## Build RSRegionTest
+ohos_unittest("RSRegionTest") {
+  module_out_path = module_out_path
+  sources = [ "rs_region_test.cpp" ]
+  deps = [
+    ":rs_client_test_common",
+    "//foundation/graphic/graphic_2d/rosen/modules/render_service_base:render_service_base_src",
+  ]
+}
+
+## Build rs_client_test_common.a {{{
+config("rs_client_test_common_public_config") {
+  include_dirs = [
+    "//foundation/graphic/graphic_2d/frameworks/surface/include",
+    "//foundation/graphic/graphic_2d/rosen/modules/render_service_client/core",
+  ]
+
+  cflags = [
+    "-Wall",
+    "-Werror",
+    "-g3",
+    "-Dprivate=public",
+    "-Dprotected=public",
+  ]
+}
+
+ohos_static_library("rs_client_test_common") {
+  visibility = [ ":*" ]
+  testonly = true
+
+  public_configs = [ ":rs_client_test_common_public_config" ]
+
+  public_deps = [
+    "//base/hiviewdfx/hilog/interfaces/native/innerkits:libhilog",
+    "//commonlibrary/c_utils/base:utils",
+    "//foundation/graphic/graphic_2d:libsurface",
+    "//foundation/graphic/graphic_2d/rosen/modules/render_service_base:librender_service_base",
+    "//foundation/graphic/graphic_2d/rosen/modules/render_service_client:librender_service_client",
+    "//foundation/systemabilitymgr/samgr/interfaces/innerkits/samgr_proxy:samgr_proxy",
+    "//third_party/googletest:gtest_main",
+  ]
+  subsystem_name = "graphic"
+  part_name = "graphic_standard"
+}
+## Build rs_client_test_common.a }}}
