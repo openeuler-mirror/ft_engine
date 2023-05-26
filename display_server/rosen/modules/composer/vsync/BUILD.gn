@@ -1,0 +1,96 @@
+# Copyright (c) 2021 Huawei Device Co., Ltd.
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+import("//build/ohos.gni")
+import("//foundation/graphic/graphic_2d/graphic_config.gni")
+
+## Build libvsync.so
+
+config("vsync_config") {
+  visibility = [ ":*" ]
+
+  cflags = [
+    "-Wall",
+    "-Werror",
+    "-g3",
+  ]
+}
+
+config("vsync_public_config") {
+  include_dirs = [
+    "//base/notification/eventhandler/interfaces/inner_api",
+    "//foundation/graphic/graphic_2d/interfaces/inner_api/composer",
+    "//foundation/graphic/graphic_2d/rosen/include/common",
+    "//foundation/graphic/graphic_2d/rosen/modules/composer/vsync/include",
+    "//foundation/graphic/graphic_2d/utils/sandbox",
+  ]
+}
+
+ohos_shared_library("libvsync") {
+  sources = [
+    "src/vsync_connection_proxy.cpp",
+    "src/vsync_connection_stub.cpp",
+    "src/vsync_controller.cpp",
+    "src/vsync_distributor.cpp",
+    "src/vsync_generator.cpp",
+    "src/vsync_receiver.cpp",
+    "src/vsync_sampler.cpp",
+  ]
+
+  include_dirs = [
+    "//foundation/graphic/graphic_2d/utils/log",
+    "//foundation/graphic/graphic_2d/interfaces/inner_api/common",
+    "//foundation/graphic/graphic_2d/rosen/modules/composer/vsync/include",
+  ]
+
+  configs = [ ":vsync_config" ]
+
+  public_configs = [
+    ":vsync_public_config",
+    "//commonlibrary/c_utils/base:utils_config",
+  ]
+
+  deps = [
+    "//foundation/communication/ipc/interfaces/innerkits/ipc_core:ipc_core",
+    "//foundation/graphic/graphic_2d/utils:sandbox_utils",
+    "//foundation/graphic/graphic_2d/utils:socketpair",
+  ]
+
+  public_deps = [
+    "//commonlibrary/c_utils/base:utils",
+    "//foundation/graphic/graphic_2d/utils:scoped_bytrace",
+  ]
+  external_deps = [
+    "eventhandler:libeventhandler",
+    "hilog_native:libhilog",
+  ]
+
+  if (defined(graphic_2d_ext_configs.vendor_root)) {
+    include_dirs += graphic_2d_ext_configs.libvsync_ext_include_dirs
+
+    sources += graphic_2d_ext_configs.libvsync_ext_sources
+
+    public_deps += [ "//foundation/graphic/graphic_2d_ext/ohcore/graphic_compat_layer:libgraphic_compat_layer" ]
+  }
+
+  part_name = "graphic_standard"
+  subsystem_name = "graphic"
+}
+
+## Build libvsync.so
+
+group("test") {
+  testonly = true
+
+  deps = [ "test:test" ]
+}
