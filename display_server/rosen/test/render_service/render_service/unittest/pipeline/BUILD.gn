@@ -1,0 +1,248 @@
+# Copyright (c) 2021 Huawei Device Co., Ltd.
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+import("//build/test.gni")
+import("//foundation/arkui/ace_engine/ace_config.gni")
+import("//foundation/graphic/graphic_2d/graphic_config.gni")
+
+module_output_path = "graphic/rosen_engine/render_service/pipeline"
+
+group("unittest") {
+  testonly = true
+
+  deps = [
+    ":RSBaseRenderUtilTest",
+    ":RSColdStartThreadTest",
+    ":RSComposerAdapterTest",
+    ":RSDividedRenderUtilTest",
+    ":RSDropFrameProcessorTest",
+    ":RSMainThreadTest",
+    ":RSPhysicalScreenProcessorTest",
+    ":RSProcessorFactoryTest",
+    ":RSQosThreadTest",
+    ":RSRenderServiceListenerTest",
+    ":RSRenderServiceVisitorTest",
+    ":RSSurfaceCaptureTaskTest",
+    ":RSUniRenderJudgementTest",
+    ":RSUniRenderUtilTest",
+    ":RSUniRenderVisitorTest",
+    ":RSVirtualScreenProcessorTest",
+  ]
+}
+
+###############################################################################
+config("pipeline_test") {
+  include_dirs =
+      [ "//foundation/graphic/graphic_2d/rosen/modules/render_service/core" ]
+}
+
+## Build RSVirtualScreenProcessorTest
+ohos_unittest("RSVirtualScreenProcessorTest") {
+  module_out_path = module_output_path
+  sources = [ "rs_virtual_screen_processor_test.cpp" ]
+  deps = [ ":rs_test_common" ]
+  defines = []
+  defines += gpu_defines
+}
+
+## Build RSUniRenderJudgementTest
+ohos_unittest("RSUniRenderJudgementTest") {
+  module_out_path = module_output_path
+  sources = [ "rs_uni_render_judgement_test.cpp" ]
+  deps = [ ":rs_test_common" ]
+  defines = []
+  defines += gpu_defines
+}
+
+## Build RSRenderServiceVisitorTest
+ohos_unittest("RSRenderServiceVisitorTest") {
+  module_out_path = module_output_path
+  sources = [ "rs_render_service_visitor_test.cpp" ]
+  deps = [
+    ":rs_test_common",
+    "//foundation/graphic/graphic_2d/rosen/modules/render_service_base:render_service_base_src",
+  ]
+  defines = []
+  defines += gpu_defines
+}
+
+## Build RSComposerAdapterTest
+ohos_unittest("RSComposerAdapterTest") {
+  module_out_path = module_output_path
+  sources = [ "rs_composer_adapter_test.cpp" ]
+  deps = [ ":rs_test_common" ]
+  defines = []
+  defines += gpu_defines
+}
+
+## Build RSRenderServiceListenerTest
+ohos_unittest("RSRenderServiceListenerTest") {
+  module_out_path = module_output_path
+  sources = [ "rs_render_service_listener_test.cpp" ]
+  deps = [ ":rs_test_common" ]
+  defines = []
+  defines += gpu_defines
+}
+
+## Build RSProcessorFactoryTest
+ohos_unittest("RSProcessorFactoryTest") {
+  module_out_path = module_output_path
+  sources = [ "rs_processor_factory_test.cpp" ]
+  deps = [ ":rs_test_common" ]
+  defines = []
+  defines += gpu_defines
+}
+
+## Build RSPhysicalScreenProcessorTest
+ohos_unittest("RSPhysicalScreenProcessorTest") {
+  module_out_path = module_output_path
+  sources = [ "rs_physical_screen_processor_test.cpp" ]
+  deps = [ ":rs_test_common" ]
+  defines = []
+  defines += gpu_defines
+}
+
+## Build RSDropFrameProcessorTest
+ohos_unittest("RSDropFrameProcessorTest") {
+  module_out_path = module_output_path
+  sources = [ "rs_drop_frame_processor_test.cpp" ]
+  deps = [ ":rs_test_common" ]
+  defines = []
+  defines += gpu_defines
+}
+
+## Build RSBaseRenderUtilTest
+ohos_unittest("RSBaseRenderUtilTest") {
+  module_out_path = module_output_path
+  sources = [ "rs_base_render_util_test.cpp" ]
+  deps = [ ":rs_test_common" ]
+  defines = []
+  defines += gpu_defines
+}
+
+## Build RSSurfaceCaptureTaskTest
+ohos_unittest("RSSurfaceCaptureTaskTest") {
+  module_out_path = module_output_path
+  sources = [ "rs_surface_capture_task_test.cpp" ]
+  deps = [
+    ":rs_test_common",
+    "//foundation/graphic/graphic_2d/rosen/modules/render_service_base:render_service_base_src",
+  ]
+  defines = []
+  defines += gpu_defines
+}
+
+## Build RSDividedRenderUtilTest
+ohos_unittest("RSDividedRenderUtilTest") {
+  module_out_path = module_output_path
+  sources = [ "rs_divided_render_util_test.cpp" ]
+  deps = [ ":rs_test_common" ]
+  defines = []
+  defines += gpu_defines
+}
+
+## Build RSUniRenderUtilTest
+ohos_unittest("RSUniRenderUtilTest") {
+  module_out_path = module_output_path
+  sources = [ "rs_uni_render_util_test.cpp" ]
+  deps = [ ":rs_test_common" ]
+  defines = []
+  defines += gpu_defines
+}
+
+## Build RSUniRenderVisitorTest
+ohos_unittest("RSUniRenderVisitorTest") {
+  module_out_path = module_output_path
+  sources = [ "rs_uni_render_visitor_test.cpp" ]
+  deps = [
+    ":rs_test_common",
+    "//foundation/graphic/graphic_2d/rosen/modules/render_service_base:render_service_base_src",
+  ]
+  external_deps = [ "init:libbegetutil" ]
+  defines = []
+  defines += gpu_defines
+}
+
+## Build RSQosThreadTest
+ohos_unittest("RSQosThreadTest") {
+  module_out_path = module_output_path
+  sources = [ "rs_qos_thread_test.cpp" ]
+  deps = [ ":rs_test_common" ]
+  external_deps = [ "init:libbegetutil" ]
+  defines = []
+  defines += gpu_defines
+}
+
+## Build RSMainThreadTest
+ohos_unittest("RSMainThreadTest") {
+  module_out_path = module_output_path
+  sources = [ "rs_main_thread_test.cpp" ]
+  deps = [ ":rs_test_common" ]
+  defines = []
+  defines += gpu_defines
+}
+
+## Build RSColdStartThreadTest
+ohos_unittest("RSColdStartThreadTest") {
+  module_out_path = module_output_path
+  sources = [ "rs_cold_start_thread_test.cpp" ]
+  deps = [ ":rs_test_common" ]
+  defines = []
+  defines += gpu_defines
+}
+
+## Build rs_test_common.a {{{
+config("rs_test_common_public_config") {
+  include_dirs = [
+    "//foundation/graphic/graphic_2d/rosen/include",
+    "//foundation/graphic/graphic_2d/rosen/modules/render_service/core",
+    "//foundation/graphic/graphic_2d/rosen/modules/render_service_client/core",
+    "//foundation/graphic/graphic_2d/rosen/modules/render_service_base/src",
+    "//foundation/graphic/graphic_2d/rosen/test/include",
+    "//foundation/barrierfree/accessibility/interfaces/innerkits/acfwk/include",
+  ]
+
+  cflags = [
+    "-Wall",
+    "-Werror",
+    "-g3",
+    "-Dprivate=public",
+    "-Dprotected=public",
+  ]
+}
+
+ohos_static_library("rs_test_common") {
+  visibility = [ ":*" ]
+  testonly = true
+  defines = []
+  defines += gpu_defines
+  sources = [ "rs_test_util.cpp" ]
+  public_configs = [ ":rs_test_common_public_config" ]
+
+  public_deps = [
+    "//base/hiviewdfx/hilog/interfaces/native/innerkits:libhilog",
+    "//foundation/graphic/graphic_2d/rosen/modules/composer:libcomposer",
+    "//foundation/graphic/graphic_2d/rosen/modules/render_service:librender_service",
+    "//foundation/graphic/graphic_2d/rosen/modules/render_service_base:librender_service_base",
+    "//foundation/graphic/graphic_2d/rosen/modules/render_service_client:librender_service_client",
+    "//third_party/googletest:gtest_main",
+  ]
+
+  external_deps = [
+    "c_utils:utils",
+    "init:libbegetutil",
+  ]
+
+  subsystem_name = "graphic"
+  part_name = "graphic_standard"
+}
