@@ -1,0 +1,77 @@
+# Copyright (c) 2021 Huawei Device Co., Ltd.
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+import("//build/ohos.gni")
+import("//foundation/graphic/graphic_2d/graphic_config.gni")
+
+group("color_manager") {
+  public_deps = [
+    "color_manager:color_manager",
+    "//foundation/graphic/graphic_2d/interfaces/kits/napi/graphic/color_manager:color_space_object_convertor",
+  ]
+}
+
+group("buffer_handle") {
+  public_deps = [ "buffer_handle:buffer_handle" ]
+}
+
+group("scoped_bytrace") {
+  public_deps = [ "scoped_bytrace:scoped_bytrace" ]
+}
+
+group("promise") {
+  public_deps = [ "promise:promise" ]
+}
+
+group("socketpair") {
+  public_deps = [ "socketpair:socketpair" ]
+}
+
+group("test_header") {
+  public_deps = [ "test_header:test_header" ]
+}
+
+group("matrix") {
+  public_deps = [ "matrix:matrix" ]
+}
+
+group("sync_fence") {
+  public_deps = [ "sync_fence:sync_fence" ]
+}
+
+group("sandbox_utils") {
+  public_deps = [ "sandbox:sandbox_utils" ]
+}
+
+## Build libgraphic_utils.so {{{
+config("libgraphic_utils_public_config") {
+  include_dirs =
+      [ "//foundation/graphic/graphic_2d/interfaces/inner_api/common" ]
+}
+
+ohos_shared_library("libgraphic_utils") {
+  public_configs = [ ":libgraphic_utils_public_config" ]
+
+  public_deps = [
+    "buffer_handle:buffer_handle",
+    "color_manager:color_manager",
+    "matrix:matrix",
+    "promise:promise",
+    "sandbox:sandbox_utils",
+    "test_header:test_header",
+  ]
+
+  part_name = "graphic_standard"
+  subsystem_name = "graphic"
+}
+## Build libgraphic_utils.so }}}

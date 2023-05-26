@@ -1,0 +1,158 @@
+# Copyright (c) 2021 Huawei Device Co., Ltd.
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+import("//build/ohos.gni")
+import("//foundation/graphic/graphic_2d/graphic_config.gni")
+
+ohos_executable("drawing_engine_sample") {
+  install_enable = true
+  cflags = [
+    "-Wall",
+    "-Werror",
+    "-Wno-unused-parameter",
+    "-Wno-missing-field-initializers",
+    "-Wno-unused-variable",
+    "-Werror,-Wreturn-type",
+  ]
+
+  sources = [
+    "drawing_engine_sample.cpp",
+    "main.cpp",
+  ]
+
+  sources += [
+    "drawing_engine/canvas_context.cpp",
+    "drawing_engine/drawing_proxy.cpp",
+    "drawing_engine/drawing_surface/surface_frame_ohos_raster.cpp",
+    "drawing_engine/drawing_surface/surface_ohos.cpp",
+    "drawing_engine/drawing_surface/surface_ohos_raster.cpp",
+    "drawing_engine/software_render_backend.cpp",
+  ]
+
+  if (ace_enable_gpu) {
+    sources += [
+      "drawing_engine/drawing_surface/surface_frame_ohos_gl.cpp",
+      "drawing_engine/drawing_surface/surface_ohos_gl.cpp",
+      "drawing_engine/egl_manager.cpp",
+      "drawing_engine/gles_render_backend.cpp",
+    ]
+  }
+
+  configs = []
+
+  include_dirs = [
+    "include",
+    "drawing_engine",
+    "drawing_engine/drawing_surface",
+    "//foundation/graphic/graphic_2d/rosen/modules/composer/hdi_backend/include",
+    "//foundation/graphic/graphic_2d/utils/sync_fence/export",
+    "//foundation/graphic/graphic_2d/rosen/include/common",
+    "//foundation/communication/ipc/interfaces/innerkits/ipc_core/include",
+  ]
+
+  sources += [
+    "benchmarks/benchmark_config.cpp",
+    "benchmarks/benchmark_multithread/drawing_mutilthread.cpp",
+    "benchmarks/benchmark_singlethread/drawing_singlethread.cpp",
+  ]
+
+  include_dirs += [
+    "benchmarks",
+    "benchmarks/benchmark_singlethread",
+    "benchmarks/benchmark_multithread",
+    "benchmarks/benchmark_api",
+  ]
+
+  deps = [
+    "//foundation/graphic/graphic_2d:libsurface",
+    "//foundation/graphic/graphic_2d/rosen/modules/composer:libcomposer",
+    "//foundation/graphic/graphic_2d/utils:sync_fence",
+    "//third_party/flutter/build/skia:ace_skia_ohos",
+  ]
+  public_deps = libgl
+  defines = gpu_defines
+
+  #defines = [ "USE_CANVASKIT0310_SKIA" ]
+  #defines += gpu_defines
+  deps += [
+    #"//third_party/skia:skia",
+  ]
+
+  external_deps = [
+    "c_utils:utils",
+    "eventhandler:libeventhandler",
+    "hilog_native:libhilog",
+  ]
+
+  subsystem_name = "graphic"
+  part_name = "graphic_standard"
+}
+
+ohos_executable("drawing_sample_rs") {
+  install_enable = true
+
+  sources = [ "drawing_c_sample.cpp" ]
+
+  include_dirs = [
+    "//foundation/graphic/graphic_2d/rosen/modules/2d_graphics/include",
+    "//foundation/graphic/graphic_2d/rosen/modules/2d_graphics/src",
+    "//foundation/graphic/graphic_2d/rosen/modules/render_service_base/src",
+    "//foundation/graphic/graphic_2d/rosen/modules/render_service_base/include",
+    "//foundation/graphic/graphic_2d/rosen/modules/render_service_client",
+    "//foundation/graphic/graphic_2d/rosen/include/common",
+    "//foundation/window/window_manager/interfaces/innerkits/wm",
+  ]
+
+  deps = [
+    "//foundation/graphic/graphic_2d/rosen/modules/2d_graphics:2d_graphics",
+    "//foundation/graphic/graphic_2d/rosen/modules/render_service_base:librender_service_base",
+    "//foundation/graphic/graphic_2d/rosen/modules/render_service_client:librender_service_client",
+    "//third_party/zlib:libz",
+  ]
+
+  external_deps = [ "hilog_native:libhilog" ]
+
+  part_name = "graphic_standard"
+  subsystem_name = "graphic"
+}
+
+ohos_executable("drawing_sample_canvaskit0310") {
+  install_enable = true
+
+  sources = [ "drawing_sample_canvaskit0310.cpp" ]
+
+  include_dirs = [
+    "//foundation/graphic/graphic_2d/rosen/modules/composer/hdi_backend/include",
+    "//foundation/graphic/graphic_2d/rosen/include/common",
+    "//foundation/graphic/graphic_2d/interfaces/inner_api/common",
+    "//foundation/graphic/graphic_2d/rosen/modules/composer/vsync/include",
+    "//foundation/graphic/graphic_2d/rosen/modules/2d_graphics/include",
+    "//foundation/graphic/graphic_2d/rosen/modules/2d_graphics/src",
+  ]
+
+  deps = [
+    "//foundation/graphic/graphic_2d:libsurface",
+    "//foundation/graphic/graphic_2d/rosen/modules/2d_graphics:2d_graphics_canvaskit0310",
+    "//foundation/graphic/graphic_2d/rosen/modules/composer:libcomposer",
+    "//foundation/graphic/graphic_2d/utils:libgraphic_utils",
+    "//foundation/graphic/graphic_2d/utils:sync_fence",
+  ]
+
+  external_deps = [
+    "hilog_native:libhilog",
+    "ipc:ipc_core",
+  ]
+
+  part_name = "graphic_standard"
+  subsystem_name = "graphic"
+}

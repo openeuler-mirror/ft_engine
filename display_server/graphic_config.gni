@@ -1,0 +1,82 @@
+# Copyright (c) 2021 Huawei Device Co., Ltd.
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+declare_args() {
+  graphic_standard_feature_bootanimation_enable = true
+  graphic_standard_feature_ace_enable_gpu = true
+  graphic_standard_feature_color_gamut_enable = false
+  graphic_standard_feature_rs_enable_eglimage = false
+  graphic_standard_feature_rs_enable_uni_render = false
+  graphic_standard_feature_wuji_enable = false
+  graphic_standard_feature_freemem_enable = false
+  graphic_standard_feature_enable_afbc = false
+}
+
+if (graphic_standard_feature_ace_enable_gpu) {
+  gpu_defines = [
+    "ACE_ENABLE_GL",
+    "RS_ENABLE_GL",
+  ]
+  ace_enable_gpu = true
+  rs_enable_gpu = true
+  surface_enable_gpu = true
+
+  # libgl is a native stub for decoupling system.img and vendor.img
+  # real libgl installed in /vendor/lib/chipsetsdk
+  libgl = [
+    "//foundation/graphic/graphic_2d/frameworks/opengl_wrapper:EGL",
+    "//foundation/graphic/graphic_2d/frameworks/opengl_wrapper:GLESv3",
+  ]
+} else {
+  gpu_defines = [ "ACE_DISABLE_GL" ]
+  ace_enable_gpu = false
+  rs_enable_gpu = false
+  surface_enable_gpu = false
+  libgl = []
+}
+
+if (graphic_standard_feature_rs_enable_eglimage) {
+  gpu_defines += [
+    "RS_ENABLE_EGLIMAGE",
+    "RS_ENABLE_EGLQUERYSURFACE",
+  ]
+  rs_enable_eglimage = true
+} else {
+  gpu_defines += [ "RS_DISABLE_EGLIMAGE" ]
+  rs_enable_eglimage = false
+}
+
+if (graphic_standard_feature_rs_enable_uni_render) {
+  gpu_defines += [ "RS_ENABLE_UNI_RENDER" ]
+}
+
+if (graphic_standard_feature_enable_afbc) {
+  gpu_defines += [ "RS_ENABLE_AFBC" ]
+}
+
+graphic_2d_ext_configs = {
+}
+check_graphic_ext_file_script = "//build/ohos/file_exists.py"
+check_graphic_ext_file_args = [
+  "--filename",
+  rebase_path("//foundation/graphic/graphic_2d_ext/ohcore/build/config.gni"),
+]
+if (exec_script(check_graphic_ext_file_script,
+                check_graphic_ext_file_args,
+                "string") == "True" && "${product_name}" == "ohcore") {
+  graphic_2d_ext_configs = {
+    import("//foundation/graphic/graphic_2d_ext/ohcore/build/config.gni")
+  }
+}
+
+graphic_2d_root = "//foundation/graphic/graphic_2d"
