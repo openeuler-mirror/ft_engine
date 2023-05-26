@@ -14,14 +14,14 @@
 print("[GN INFO] host_os :", host_os)
 print("[GN INFO] host_cpu :", host_cpu)
 
-if (host_os != "linux") {
-  assert(false, "[GN ERROR] Unsupported os: ", host_os)
-}
-
 if (target_os == "") {
   target_os = host_os
 } else {
   print("[GN INFO] target_os :", target_os)
+}
+
+if (host_os != "linux" || target_os != "linux") {
+  assert(false, "[GN ERROR] current only supported linux os")
 }
 
 if (target_cpu == "") {
@@ -73,50 +73,24 @@ if (use_musl_oh == true) {
   assert(use_musl, "[GN ERROR] use_musl_oh = true, but use_musl = false")
 }
 
-# ==============================================================================
 # TOOLCHAIN SETUP
-# ==============================================================================
-#
-# Here we set the default toolchain, as well as the variable host_toolchain
-# which will identify the toolchain corresponding to the local system when
-# doing cross-compiles. When not cross-compiling, this will be the same as the
-# default toolchain.
-#
-# We do this before anything else to make sure we complain about any
-# unsupported os/cpu combinations as early as possible.
-
 if (host_toolchain == "") {
-  # This should only happen in the top-level context.
-  # In a specific toolchain context, the toolchain_args()
-  # block should have propagated a value down.
-  if (host_os == "linux") {
-    if (is_clang) {
-      host_toolchain = "//build/gn/toolchain/linux:clang_$host_cpu"
-    } else {
-      host_toolchain = "//build/gn/toolchain/linux:$host_cpu"
-    }
-  } else {
-    assert(false, "[GN ERROR] Unsupported host_os: $host_os")
-  }
-}
-
-if (target_os == "linux") {
   if (is_clang) {
-    _default_toolchain = "//build/gn/toolchain/linux:clang_$target_cpu"
+    host_toolchain = "//build/gn/toolchain/linux:clang_$host_cpu"
   } else {
-    assert(false,
-           "[GN ERROR] Unsupported all compilers except clang currently.")
-    # _default_toolchain = "//build/gn/toolchain/linux:gcc_$target_cpu"
+    host_toolchain = "//build/gn/toolchain/linux:$host_cpu"
   }
-} else {
-  assert(false, "[GN ERROR] Unsupported target_os: $target_os")
 }
 
-# If a custom toolchain has been set in the args, set it as default. Otherwise,
-# set the default toolchain for the platform (if any).
-if (custom_toolchain != "") {
-  set_default_toolchain(custom_toolchain)
-} else if (_default_toolchain != "") {
+if (is_clang) {
+  _default_toolchain = "//build/gn/toolchain/linux:clang_$target_cpu"
+} else {
+  assert(false,
+       "[GN ERROR] Unsupported all compilers except clang currently.")
+  # _default_toolchain = "//build/gn/toolchain/linux:gcc_$target_cpu"
+}
+
+if (_default_toolchain != "") {
   set_default_toolchain(_default_toolchain)
 }
 
@@ -130,8 +104,6 @@ default_compiler_configs = [
   # Default Symbol level
   "//build/gn/configs/compiler:default_symbols",
   "//build/gn/configs/compiler:no_common",
-  # Default Warnings
-  "//build/gn/configs/compiler:chromium_code_warnings",
   # Other
   "//build/gn/configs/compiler:export_dynamic",
   "//build/gn/configs/compiler:no_exceptions",
