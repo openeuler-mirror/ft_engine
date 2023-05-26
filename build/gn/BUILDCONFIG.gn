@@ -14,38 +14,6 @@
 # every other file in the build. So variables declared here (that don't start
 # with an underscore) will be implicitly global.
 
-# =============================================================================
-# PLATFORM SELECTION
-# =============================================================================
-#
-# There are two main things to set: "os" and "cpu". The "toolchain" is the name
-# of the GN thing that encodes combinations of these things.
-#
-# Users typically only set the variables "target_os" and "target_cpu" in "gn
-# args", the rest are set up by our build and internal to GN.
-#
-# There are three different types of each of these things: The "host"
-# represents the computer doing the compile and never changes. The "target"
-# represents the main thing we're trying to build. The "current" represents
-# which configuration is currently being defined, which can be either the
-# host, the target, or something completely different (like nacl). GN will
-# run the same build file multiple times for the different required
-# configuration in the same build.
-#
-# This gives the following variables:
-#  - host_os, host_cpu, host_toolchain
-#  - target_os, target_cpu, default_toolchain
-#  - current_os, current_cpu, current_toolchain.
-#
-# Note the default_toolchain isn't symmetrical (you would expect
-# target_toolchain). This is because the "default" toolchain is a GN built-in
-# concept, and "target" is something our build sets up that's symmetrical with
-# its GYP counterpart. Potentially the built-in default_toolchain variable
-# could be renamed in the future.
-#
-# When writing build files, to do something only for the host:
-#   if (current_toolchain == host_toolchain) { ...
-
 print("[GN INFO] host_os :", host_os)
 print("[GN INFO] host_cpu :", host_cpu)
 
@@ -80,68 +48,6 @@ if (current_cpu == "") {
 declare_args() {
   # We add this parameter to speed up link process, enable_lto_O0 default is false.
   enable_lto_O0 = false
-}
-
-# =============================================================================
-# BUILD FLAGS
-# =============================================================================
-#
-# This block lists input arguments to the build, along with their default
-# values.
-#
-# If a value is specified on the command line, it will overwrite the defaults
-# given in a declare_args block, otherwise the default will be used.
-#
-# YOU SHOULD ALMOST NEVER NEED TO ADD FLAGS TO THIS FILE. GN allows any file in
-# the build to declare build flags. If you need a flag for a single component,
-# you can just declare it in the corresponding BUILD.gn file.
-#
-# - If your feature is a single target, say //components/foo, you can put
-#   a declare_args() block in //components/foo/BUILD.gn and use it there.
-#   Nobody else in the build needs to see the flag.
-#
-# - Defines based on build variables should be implemented via the generated
-#   build flag header system. See //build/buildflag_header.gni. You can put
-#   the buildflag_header target in the same file as the build flag itself. You
-#   should almost never set "defines" directly.
-#
-# - If your flag toggles a target on and off or toggles between different
-#   versions of similar things, write a "group" target that forwards to the
-#   right target (or no target) depending on the value of the build flag. This
-#   group can be in the same BUILD.gn file as the build flag, and targets can
-#   depend unconditionally on the group rather than duplicating flag checks
-#   across many targets.
-#
-# - If a semi-random set of build files REALLY needs to know about a define and
-#   the above pattern for isolating the build logic in a forwarding group
-#   doesn't work, you can put the argument in a .gni file. This should be put
-#   in the lowest level of the build that knows about this feature (which should
-#   almost always be outside of the //build directory!).
-#
-# Other flag advice:
-#
-# - Use boolean values when possible. If you need a default value that expands
-#   to some complex thing in the default case (like the location of the
-#   compiler which would be computed by a script), use a default value of -1 or
-#   the empty string. Outside of the declare_args block, conditionally expand
-#   the default value as necessary.
-#
-# - Use a name like "use_foo" or "is_foo" (whatever is more appropriate for
-#   your feature) rather than just "foo".
-#
-# - Write good comments directly above the declaration with no blank line.
-#   These comments will appear as documentation in "gn args --list".
-#
-# - Don't call exec_script inside declare_args. This will execute the script
-#   even if the value is overridden, which is wasteful. See first bullet.
-
-declare_args() {
-  # Set to enable the official build level of optimization. This has nothing
-  # to do with branding, but enables an additional level of optimization above
-  # release (!is_debug). This might be better expressed as a tri-state
-  # (debug, release, official) but for historical reasons there are two
-  # separate flags.
-  is_official_build = false
 
   # Whether we're a traditional desktop unix.
   is_desktop_linux = current_os == "linux"
@@ -159,9 +65,7 @@ declare_args() {
   # This should not normally be set as a build argument.  It's here so that
   # every toolchain can pass through the "global" value via toolchain_args().
   host_toolchain = ""
-}
 
-declare_args() {
   use_musl = false
   use_musl_oh = false
 }
@@ -201,9 +105,7 @@ if (host_toolchain == "") {
   # In a specific toolchain context, the toolchain_args()
   # block should have propagated a value down.
   if (host_os == "linux") {
-    if (target_os != "linux") {
-      host_toolchain = "//build/gn/toolchain/linux:clang_$host_cpu"
-    } else if (is_clang) {
+    if (is_clang) {
       host_toolchain = "//build/gn/toolchain/linux:clang_$host_cpu"
     } else {
       host_toolchain = "//build/gn/toolchain/linux:$host_cpu"
@@ -233,16 +135,6 @@ if (custom_toolchain != "") {
   set_default_toolchain(_default_toolchain)
 }
 
-declare_args() {
-  # Component build. Setting to true compiles targets declared as "components"
-  # as shared libraries loaded dynamically. This speeds up development time.
-  # When false, components will be linked statically.
-  #
-  # For more information see
-  # https://chromium.googlesource.com/chromium/src/+/master/docs/component_build.md
-  is_component_build = true
-}
-
 # =============================================================================
 # OS DEFINITIONS
 # =============================================================================
@@ -264,15 +156,11 @@ declare_args() {
 is_linux = current_os == "linux"
 is_ft = current_os == "linux"
 is_android = current_os == "android"
-is_chromeos = current_os == "chromeos"
-is_fuchsia = current_os == "fuchsia"
 is_ios = current_os == "ios"
 is_mac = current_os == "mac"
-is_nacl = current_os == "nacl"
 is_win = current_os == "win" || current_os == "winuwp"
 
 is_apple = is_ios || is_mac
-is_posix = !is_win && !is_fuchsia
 
 # =============================================================================
 # SOURCES FILTERS
