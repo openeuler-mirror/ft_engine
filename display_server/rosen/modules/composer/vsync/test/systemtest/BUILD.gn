@@ -1,0 +1,57 @@
+# Copyright (c) 2021 Huawei Device Co., Ltd.
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+import("//build/test.gni")
+
+module_out_path = "graphic_standard/composer"
+
+group("systemtest") {
+  testonly = true
+
+  deps = [ ":vsync_test" ]
+}
+
+## SystemTest vsync_test {{{
+ohos_systemtest("vsync_test") {
+  module_out_path = module_out_path
+
+  sources = [ "vsync_test.cpp" ]
+
+  include_dirs = [
+    "//foundation/graphic/graphic_2d/interfaces/inner_api/common",
+    "//foundation/graphic/graphic_2d/rosen/modules/composer/vsync/include",
+    "//foundation/graphic/graphic_2d/rosen/modules/composer/vsync/test",
+    "//utils/system/safwk/native/include",
+    "//base/security/access_token/interfaces/innerkits/nativetoken/include",
+    "//base/security/access_token/interfaces/innerkits/accesstoken/include",
+    "//base/security/access_token/interfaces/innerkits/token_setproc/include",
+  ]
+
+  cflags = [
+    "-Wall",
+    "-Werror",
+    "-g3",
+  ]
+
+  deps = [
+    "//base/security/access_token/interfaces/innerkits/accesstoken:libaccesstoken_sdk",
+    "//base/security/access_token/interfaces/innerkits/nativetoken:libnativetoken",
+    "//base/security/access_token/interfaces/innerkits/token_setproc:libtoken_setproc",
+    "//foundation/communication/ipc/interfaces/innerkits/ipc_core:ipc_core",
+    "//foundation/graphic/graphic_2d/rosen/modules/composer/vsync:libvsync",
+    "//foundation/graphic/graphic_2d/utils:socketpair",
+    "//foundation/systemabilitymgr/samgr/interfaces/innerkits/samgr_proxy:samgr_proxy",
+    "//third_party/googletest:gtest_main",
+  ]
+}
+## SystemTest vsync_test }}}
