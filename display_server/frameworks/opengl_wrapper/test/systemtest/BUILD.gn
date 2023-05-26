@@ -1,0 +1,51 @@
+# Copyright (c) 2021 Huawei Device Co., Ltd.
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+import("//build/test.gni")
+
+module_out_path = "graphic_standard/opengl_wrapper"
+
+group("systemtest") {
+  testonly = true
+
+  deps = [ ":opengl_wrapper_api_test" ]
+}
+
+## SystemTest opengl_wrapper_api_test {{{
+ohos_systemtest("opengl_wrapper_api_test") {
+  module_out_path = module_out_path
+
+  sources = [ "opengl_wrapper_api_test.cpp" ]
+
+  include_dirs =
+      [ "//foundation/graphic/graphic_2d/frameworks/surface/include" ]
+
+  cflags = [
+    "-Wall",
+    "-Werror",
+    "-g3",
+    "-Dprivate=public",
+    "-Dprotected=public",
+    "-Wsign-compare",
+  ]
+
+  deps = [
+    "//base/hiviewdfx/hilog/interfaces/native/innerkits:libhilog",
+    "//foundation/graphic/graphic_2d:libsurface",
+    "//foundation/graphic/graphic_2d/frameworks/opengl_wrapper:EGL",
+    "//foundation/graphic/graphic_2d/frameworks/opengl_wrapper:GLESv3",
+    "//foundation/graphic/graphic_2d/utils:libgraphic_utils",
+    "//third_party/googletest:gtest_main",
+  ]
+}
+## SystemTest opengl_wrapper_api_test }}}
