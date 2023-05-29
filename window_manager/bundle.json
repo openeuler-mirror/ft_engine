@@ -1,0 +1,138 @@
+{
+    "name": "@ohos/window_manager",
+    "description": "library for window",
+    "version": "3.1",
+    "license": "Apache License 2.0",
+    "publishAs": "code-segment",
+    "segment": {
+      "destPath": "foundation/window/window_manager"
+    },
+    "dirs": {},
+    "scripts": {},
+    "component": {
+      "name": "window_manager",
+      "subsystem": "window",
+      "syscap": ["SystemCapability.WindowManager.WindowManager.Core"],
+      "features": [
+        "window_manager_feature_coverage = false",
+        "window_manager_feature_subscribe_motion"
+      ],
+      "adapted_system_type": [ "standard" ],
+      "rom": "8000KB",
+      "ram": "8000KB",
+      "hisysevent_config": [
+        "//foundation/window/window_manager/hisysevent.yaml"
+      ],
+      "deps": {
+        "components": [
+          "imf",
+          "sensor",
+          "ability_base",
+          "graphic_standard",
+          "hisysevent_native",
+          "ability_runtime",
+          "napi",
+          "common_event_service",
+          "hilog_native",
+          "access_token",
+          "init",
+          "bundle_framework",
+          "hiviewdfx_hilog_native",
+          "ipc",
+          "power_manager",
+          "utils_base",
+          "hitrace_native",
+          "resource_management",
+          "samgr",
+          "input",
+          "safwk",
+          "display_manager",
+          "config_policy",
+          "ace_engine",
+          "multimedia_image_framework"
+        ],
+        "third_party": [
+          "flutter",
+          "libxml2",
+          "libjpeg-turbo"
+        ]
+      },
+      "build": {
+        "group_type": {
+          "base_group": [
+            "//foundation/window/window_manager/snapshot:snapshot_display",
+            "//foundation/window/window_manager/interfaces/kits/napi/window_runtime/window_stage_napi:windowstage",
+            "//foundation/window/window_manager/interfaces/kits/napi:napi_packages",
+            "//foundation/window/window_manager/resources:window_resources"
+          ],
+          "fwk_group": [
+            "//foundation/window/window_manager/interfaces/kits/js/declaration:window",
+            "//foundation/window/window_manager/dm:libdm",
+            "//foundation/window/window_manager/extension/extension_connection:libwindow_extension_client",
+            "//foundation/window/window_manager/extension/window_extension:libwindow_extension",
+            "//foundation/window/window_manager/extension/window_extension:window_extension_module",
+            "//foundation/window/window_manager/wm:libwm",
+            "//foundation/window/window_manager/utils:libwmutil"
+          ],
+          "service_group": [
+            "//foundation/window/window_manager/sa_profile:wms_sa_profile",
+            "//foundation/window/window_manager/dmserver:libdms",
+            "//foundation/window/window_manager/wmserver:libwms"
+          ]
+        },
+        "inner_kits": [
+          {
+            "type": "so",
+            "name": "//foundation/window/window_manager/wm:libwm",
+            "header": {
+              "header_files": [
+                "window.h",
+                "window_accessibility_controller.h",
+                "window_manager.h",
+                "window_option.h",
+                "window_scene.h",
+                "wm_common.h"
+              ],
+              "header_base": "//foundation/window/window_manager/interfaces/innerkits/wm"
+            }
+          },
+          {
+            "type": "so",
+            "name": "//foundation/window/window_manager/dm:libdm",
+            "header": {
+              "header_files": [
+                "display.h",
+                "display_manager.h",
+                "display_property.h",
+                "dm_common.h",
+                "screen.h",
+                "screen_group.h",
+                "screen_manager.h"
+              ],
+              "header_base": "//foundation/window/window_manager/interfaces/innerkits/dm"
+            }
+          },
+          {
+            "type": "so",
+            "name": "//foundation/window/window_manager/extension/extension_connection:libwindow_extension_client",
+            "header": {
+              "header_files": [
+                "window_extension_connection.h"
+              ],
+              "header_base": "//foundation/window/window_manager/interfaces/innerkits/extension"
+            }
+          }
+        ],
+        "test": [
+          "//foundation/window/window_manager/dm:test",
+          "//foundation/window/window_manager/dmserver:test",
+          "//foundation/window/window_manager/snapshot:test",
+          "//foundation/window/window_manager/utils:test",
+          "//foundation/window/window_manager/wm:test",
+          "//foundation/window/window_manager/wmserver:test",
+          "//foundation/window/window_manager/test:test",
+          "//foundation/window/window_manager/extension/window_extension:test"
+        ]
+      }
+    }
+  }

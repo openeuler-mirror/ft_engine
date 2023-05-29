@@ -1,0 +1,79 @@
+# Copyright (c) 2021-2022 Huawei Device Co., Ltd.
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+import("//build/test.gni")
+import("//foundation/window/window_manager/windowmanager_aafwk.gni")
+module_out_path = "window_manager/extension/window_extension"
+
+group("unittest") {
+  testonly = true
+
+  deps = [ ":extension_window_extension_proxy_test" ]
+}
+
+ohos_unittest("extension_window_extension_proxy_test") {
+  module_out_path = module_out_path
+
+  sources = [ "window_extension_proxy_test.cpp" ]
+
+  deps = [ ":window_extension_unittest_common" ]
+}
+
+## Build window_extension_unittest_common.a {{{
+config("window_extension_unittest_common_public_config") {
+  include_dirs = [
+    "//foundation/window/window_manager/interfaces/innerkits/wm",
+    "//foundation/window/window_manager/wm/include",
+    "//foundation/window/window_manager/extension/window_extension/include",
+    "//foundation/window/window_manager/extension/window_extension/include/zidl",
+    "//foundation/window/window_manager/extension/extension_connection/include",
+    "//foundation/window/window_manager/extension/extension_connection/include/zidl",
+    "//foundation/window/window_manager/interfaces/innerkits/extension",
+    "//third_party/googletest/googlemock/include",
+  ]
+}
+
+ohos_static_library("window_extension_unittest_common") {
+  visibility = [ ":*" ]
+  testonly = true
+
+  public_configs = [
+    ":window_extension_unittest_common_public_config",
+    "//foundation/window/window_manager/resources/config/build:coverage_flags",
+    "//foundation/window/window_manager/resources/config/build:testcase_flags",
+  ]
+
+  public_deps = [
+    "//commonlibrary/c_utils/base:utils",
+    "//foundation/graphic/graphic_2d/rosen/modules/render_service_client:librender_service_client",
+    "//foundation/multimedia/image_framework/interfaces/innerkits:image_native",
+    "//foundation/multimodalinput/input/frameworks/proxy:libmmi-client",
+    "//third_party/googletest:gmock",
+    "//third_party/googletest:gtest_main",
+  ]
+
+  deps = [
+    "//foundation/window/window_manager/extension/extension_connection:libwindow_extension_client",
+    "//foundation/window/window_manager/extension/window_extension:libwindow_extension",
+    "//foundation/window/window_manager/interfaces/kits/napi/window_runtime:window_native_kit",
+    "//foundation/window/window_manager/wm:libwm",
+  ]
+
+  external_deps = [
+    "hilog_native:libhilog",
+    "input:libmmi-client",
+    "ipc:ipc_core",
+  ]
+  subsystem_name = "window"
+  part_name = "window_manager"
+}

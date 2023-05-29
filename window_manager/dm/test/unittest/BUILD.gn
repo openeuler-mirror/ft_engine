@@ -1,0 +1,171 @@
+# Copyright (c) 2021-2022 Huawei Device Co., Ltd.
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+import("//build/test.gni")
+
+module_out_path = "window_manager/dm"
+
+group("unittest") {
+  testonly = true
+
+  deps = [
+    ":dm_display_change_unit_test",
+    ":dm_display_manager_adapter_test",
+    ":dm_display_manager_agent_stub_test",
+    ":dm_display_manager_test",
+    ":dm_display_power_unit_test",
+    ":dm_display_test",
+    ":dm_screen_group_test",
+    ":dm_screen_manager_test",
+    ":dm_screen_test",
+    ":dm_screenshot_test",
+  ]
+}
+
+ohos_unittest("dm_display_test") {
+  module_out_path = module_out_path
+
+  sources = [ "display_test.cpp" ]
+
+  deps = [ ":dm_unittest_common" ]
+}
+
+ohos_unittest("dm_display_change_unit_test") {
+  module_out_path = module_out_path
+
+  sources = [ "display_change_unit_test.cpp" ]
+
+  deps = [ ":dm_unittest_common" ]
+}
+
+ohos_unittest("dm_display_power_unit_test") {
+  module_out_path = module_out_path
+
+  sources = [ "display_power_unit_test.cpp" ]
+
+  deps = [ ":dm_unittest_common" ]
+}
+
+ohos_unittest("dm_screenshot_test") {
+  module_out_path = module_out_path
+
+  sources = [ "screenshot_test.cpp" ]
+
+  deps = [ ":dm_unittest_common" ]
+}
+
+ohos_unittest("dm_screen_manager_test") {
+  module_out_path = module_out_path
+
+  include_dirs = [ "//foundation/window/window_manager/dm/src" ]
+
+  sources = [ "screen_manager_test.cpp" ]
+
+  deps = [ ":dm_unittest_common" ]
+}
+
+ohos_unittest("dm_screen_test") {
+  module_out_path = module_out_path
+
+  sources = [ "screen_test.cpp" ]
+
+  deps = [ ":dm_unittest_common" ]
+}
+
+ohos_unittest("dm_screen_group_test") {
+  module_out_path = module_out_path
+
+  sources = [ "screen_group_test.cpp" ]
+
+  deps = [ ":dm_unittest_common" ]
+}
+
+ohos_unittest("dm_display_manager_adapter_test") {
+  module_out_path = module_out_path
+
+  sources = [ "display_manager_adapter_test.cpp" ]
+
+  deps = [ ":dm_unittest_common" ]
+}
+
+ohos_unittest("dm_display_manager_test") {
+  module_out_path = module_out_path
+
+  include_dirs = [ "//foundation/window/window_manager/dm/src" ]
+
+  sources = [ "display_manager_test.cpp" ]
+
+  deps = [ ":dm_unittest_common" ]
+}
+
+ohos_unittest("dm_display_manager_agent_stub_test") {
+  module_out_path = module_out_path
+
+  sources = [ "display_manager_agent_stub_test.cpp" ]
+
+  deps = [ ":dm_unittest_common" ]
+}
+
+## Build dm_unittest_common.a {{{
+config("dm_unittest_common_public_config") {
+  include_dirs = [
+    "//foundation/window/window_manager/dm/include",
+    "//foundation/window/window_manager/dm/include/zidl",
+    "//foundation/window/window_manager/dmserver/include",
+    "//foundation/window/window_manager/snapshot",
+    "//foundation/window/window_manager/test/common/mock",
+    "//foundation/window/window_manager/test/common/utils/include",
+    "//foundation/window/window_manager/interfaces/innerkits/dm",
+    "//foundation/window/window_manager/test/common/utils/include",
+    "//foundation/window/window_manager/utils/include",
+    "//foundation/graphic/graphic_2d/rosen/modules/render_service_client",  # RSSurface
+  ]
+}
+
+ohos_static_library("dm_unittest_common") {
+  visibility = [ ":*" ]
+  testonly = true
+
+  public_configs = [
+    ":dm_unittest_common_public_config",
+    "//foundation/window/window_manager/resources/config/build:coverage_flags",
+    "//foundation/window/window_manager/resources/config/build:testcase_flags",
+  ]
+
+  public_deps = [
+    "//commonlibrary/c_utils/base:utils",
+    "//foundation/graphic/graphic_2d/rosen/modules/render_service_client:librender_service_client",
+    "//foundation/multimedia/image_framework/interfaces/innerkits:image_native",  # PixelMap
+    "//foundation/multimodalinput/input/frameworks/proxy:libmmi-client",
+    "//foundation/window/window_manager/dm:libdm",
+    "//foundation/window/window_manager/dmserver:libdms",
+    "//foundation/window/window_manager/snapshot:snapshot_display",
+    "//foundation/window/window_manager/test/common/utils:libtestutil",
+    "//foundation/window/window_manager/utils:libwmutil",
+    "//foundation/window/window_manager/wm:libwm",
+    "//third_party/googletest:gmock",
+    "//third_party/googletest:gtest_main",
+    "//third_party/libjpeg-turbo:turbojpeg_static",
+  ]
+
+  external_deps = [
+    "access_token:libaccesstoken_sdk",
+    "access_token:libnativetoken",
+    "access_token:libtoken_setproc",
+    "hilog_native:libhilog",
+    "ipc:ipc_core",
+  ]
+  subsystem_name = "window"
+  part_name = "window_manager"
+}
+## Build wm_unittest_common.a }}}
