@@ -1,0 +1,89 @@
+# Copyright (c) 2022 Huawei Device Co., Ltd.
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+import("//build/config/features.gni")
+import("//build/test.gni")
+
+module_output_path = "window_manager/wms"
+
+##############################fuzztest##########################################
+ohos_fuzztest("WindowRootFuzzTest") {
+  fuzz_config_file =
+      "//foundation/window/window_manager/test/fuzztest/wms/windowroot_fuzzer"
+  module_out_path = module_output_path
+  include_dirs = [
+    "//foundation/window/window_manager/wm/include",
+    "//foundation/window/window_manager/dm/include",
+    "//foundation/window/window_manager/dm/include/zidl",
+    "//foundation/window/window_manager/wmserver/include",
+    "//foundation/window/window_manager/wmserver/include/zidl",
+    "//foundation/window/window_manager/wmserver/include/window_snapshot",
+    "//foundation/window/window_manager/dmserver/include",
+    "//foundation/window/window_manager/snapshot/include",
+    "//foundation/window/window_manager/utils/include",
+    "//foundation/window/window_manager/interfaces/innerkits/dm",
+    "//foundation/window/window_manager/interfaces/innerkits/wm",
+    "//foundation/graphic/graphic_2d/interfaces/innerkits/surface",
+    "//commonlibrary/c_utils/base/include",
+  ]
+
+  configs = [
+    "//foundation/window/window_manager/test/fuzztest:configs_cc_ld",
+    "//foundation/window/window_manager/resources/config/build:coverage_flags",
+    "//foundation/window/window_manager/resources/config/build:testcase_flags",
+  ]
+
+  sources = [ "windowroot_fuzzer.cpp" ]
+
+  deps = [
+    "//foundation/graphic/graphic_2d/rosen/modules/render_service_client:librender_service_client",
+    "//foundation/window/window_manager/dm:libdm",
+    "//foundation/window/window_manager/dmserver:libdms",
+    "//foundation/window/window_manager/utils:libwmutil",
+    "//foundation/window/window_manager/wm:libwm",
+    "//foundation/window/window_manager/wmserver:libwms",
+  ]
+
+  public_deps = [ "//foundation/arkui/napi:ace_napi" ]
+
+  external_deps = [
+    "ability_base:want",
+    "ability_runtime:ability_manager",
+    "c_utils:utils",
+    "common_event_service:cesfwk_innerkits",
+    "config_policy:configpolicy_util",
+    "display_manager:displaymgr",
+    "eventhandler:libeventhandler",
+    "graphic_standard:window_animation",
+    "hicollie_native:libhicollie",
+    "hilog_native:libhilog",
+    "hisysevent_native:libhisysevent",
+    "hitrace_native:hitrace_meter",
+    "input:libmmi-client",
+    "ipc:ipc_core",
+    "power_manager:powermgr_client",
+    "safwk:system_ability_fwk",
+  ]
+}
+
+###############################################################################
+group("fuzztest") {
+  testonly = true
+  deps = []
+
+  deps += [
+    # deps file
+    ":WindowRootFuzzTest",
+  ]
+}
+###############################################################################

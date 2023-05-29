@@ -1,0 +1,82 @@
+# Copyright (c) 2022 Huawei Device Co., Ltd.
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+import("//build/config/features.gni")
+import("//build/test.gni")
+import("//foundation/window/window_manager/windowmanager_aafwk.gni")
+
+module_output_path = "window_manager/wms"
+
+##############################fuzztest##########################################
+ohos_fuzztest("WindowFuzzTest") {
+  fuzz_config_file =
+      "//foundation/window/window_manager/test/fuzztest/wms/window_fuzzer"
+  module_out_path = module_output_path
+  include_dirs = [
+    "//foundation/window/window_manager/wm/include",
+    "//foundation/window/window_manager/dm/include",
+    "//foundation/window/window_manager/wmserver/include",
+    "//foundation/window/window_manager/interfaces/innerkits/wm",
+    "//foundation/window/window_manager/interfaces/innerkits/dm",
+    "//commonlibrary/c_utils/base/include",
+
+    # for abilityContext
+    "${ability_runtime_path}/interfaces/kits/native/ability/ability_runtime",
+    "${ability_runtime_path}/interfaces/kits/native/appkit/ability_runtime/context",
+    "//base/global/resource_management/interfaces/inner_api/include",
+    "//third_party/node/deps/icu-small/source/common",
+    "${ability_runtime_inner_api_path}/ability_manager/include",
+
+    # abilityContext end
+  ]
+
+  configs = [
+    "//foundation/window/window_manager/test/fuzztest:configs_cc_ld",
+    "//foundation/window/window_manager/resources/config/build:coverage_flags",
+    "//foundation/window/window_manager/resources/config/build:testcase_flags",
+  ]
+
+  sources = [ "window_fuzzer.cpp" ]
+  deps = [
+    "//foundation/window/window_manager/dm:libdm",
+    "//foundation/window/window_manager/wm:libwm",
+  ]
+
+  public_deps = [ "//foundation/arkui/napi:ace_napi" ]
+  external_deps = [
+    "ability_base:base",
+    "ability_base:want",
+    "ability_runtime:ability_context_native",
+    "ability_runtime:ability_manager",
+    "ace_engine:ace_uicontent",
+    "c_utils:utils",
+    "eventhandler:libeventhandler",
+    "graphic_standard:window_animation",
+    "hilog_native:libhilog",
+    "input:libmmi-client",
+    "ipc:ipc_core",
+    "multimedia_image_framework:image_native",
+  ]
+}
+
+###############################################################################
+group("fuzztest") {
+  testonly = true
+  deps = []
+
+  deps += [
+    # deps file
+    ":WindowFuzzTest",
+  ]
+}
+###############################################################################

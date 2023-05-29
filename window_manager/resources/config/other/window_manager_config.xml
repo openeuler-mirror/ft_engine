@@ -1,0 +1,38 @@
+<?xml version='1.0' encoding="utf-8"?>
+<!--
+ * Copyright (c) 2022 Huawei Device Co., Ltd.
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ -->
+ <Configs>
+   <!--decor enable is true means app main window show decoration-->
+    <decor enable="true"></decor>
+    <!--maximum number of windows supported by unified rendering -->
+    <maxUniRenderAppWindowNumber>1</maxUniRenderAppWindowNumber>
+    <!--minimizeByOther enable is true means fullscreen window will be minmized by other fullscreen window-->
+    <minimizeByOther enable="true"></minimizeByOther>
+    <!--exit split screen mode ratio config-->
+    <exitSplitRatios>0.1 0.9</exitSplitRatios>
+    <!--split screen ratios config-->
+    <splitRatios>0.5 0.33 0.67</splitRatios>
+    <!--window animation config-->
+    <windowAnimation>
+        <scale>0.7 0.7</scale>
+    </windowAnimation>
+    <keyboardAnimation>
+        <timing>
+            <durationIn>500</durationIn>
+            <durationOut>300</durationOut>
+            <curve name="cubic">0.2 0.0 0.2 1.0</curve>
+        </timing>
+    </keyboardAnimation>
+ </Configs>

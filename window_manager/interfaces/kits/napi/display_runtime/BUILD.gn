@@ -1,0 +1,60 @@
+# Copyright (c) 2021-2022 Huawei Device Co., Ltd.
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+import("//build/ohos.gni")
+import("//foundation/window/window_manager/windowmanager_aafwk.gni")
+
+config("display_config") {
+  visibility = [ ":*" ]
+
+  include_dirs = [
+    "//foundation/window/window_manager/interfaces/kits/napi/display_runtime",
+    "//foundation/window/window_manager/utils/include",
+
+    # because of pixle_map.h
+    "//foundation/multimedia/image_framework/interfaces/innerkits/include",
+  ]
+}
+
+## Build display_napi.so {{{
+ohos_shared_library("display_napi") {
+  sources = [
+    "js_display.cpp",
+    "js_display_listener.cpp",
+    "js_display_manager.cpp",
+    "js_display_module.cpp",
+  ]
+
+  configs = [
+    ":display_config",
+    "//foundation/window/window_manager/resources/config/build:coverage_flags",
+  ]
+
+  deps = [
+    "../common:dm_napi_common",
+    "//foundation/window/window_manager/dm:libdm",
+    "//foundation/window/window_manager/utils:libwmutil",
+  ]
+
+  external_deps = [
+    "ability_runtime:runtime",
+    "c_utils:utils",
+    "hiviewdfx_hilog_native:libhilog",
+    "napi:ace_napi",
+  ]
+
+  relative_install_dir = "module"
+  part_name = "window_manager"
+  subsystem_name = "window"
+}
+## Build display_napi.so }}}

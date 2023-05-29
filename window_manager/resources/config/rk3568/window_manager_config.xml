@@ -1,0 +1,95 @@
+<?xml version='1.0' encoding="utf-8"?>
+<!--
+ * Copyright (c) 2022 Huawei Device Co., Ltd.
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ -->
+<Configs>
+    <!--decor enable is true means app main window show decoration-->
+    <decor enable="false"></decor>
+    <!--max number of main window that could be shown on display-->
+    <maxAppWindowNumber>100</maxAppWindowNumber>
+    <!--maximum number of windows supported by unified rendering -->
+    <maxUniRenderAppWindowNumber>100</maxUniRenderAppWindowNumber>
+    <!--minimizeByOther enable is true means fullscreen window will be minmized by other fullscreen window-->
+    <minimizeByOther enable="true"></minimizeByOther>
+    <!--window mdoe change hot zones config, fullscreen primary secondary-->
+    <modeChangeHotZones>50 50 50</modeChangeHotZones>
+    <!--stretchable enable is true means all window be stretchable-->
+    <stretchable enable="false"></stretchable>
+    <!--exit split screen mode ratio config-->
+    <exitSplitRatios>0.1 0.9</exitSplitRatios>
+    <!--split screen ratios config-->
+    <splitRatios>0.5 0.33 0.67</splitRatios>
+    <!--default window mode config-->
+    <defaultWindowMode>1</defaultWindowMode>
+    <!--window animation config-->
+    <windowAnimation>
+        <timing>
+            <!--duration of animation when add/remove window, unit is ms-->
+            <duration>350</duration>
+            <!--timing curve of animation, config it as below:
+            name=ease, easeIn, easeOut, easeInOut, default, linear,
+            spring, interactiveSpring, cubic(float float float float)-->
+            <curve name="easeOut"></curve>
+        </timing>
+        <!--scaleX and scaleY of animation start state-->
+        <scale>0.7 0.7</scale>
+        <!--rotation of animation start state, 4 numbers is axis and angle-->
+        <rotation>0 0 1 0</rotation>
+        <!--translateX and translateY of animation start state-->
+        <translate>0 0</translate>
+        <!--opacity of animation start state-->
+        <opacity>0</opacity>
+    </windowAnimation>
+    <!--keyboard animation config-->
+    <keyboardAnimation>
+        <timing>
+            <!--duration of animation when add keyboard, unit is ms-->
+            <durationIn>150</durationIn>
+            <!--duration of animation when remove keyboard, unit is ms-->
+            <durationOut>150</durationOut>
+            <!--friction curve-->
+            <curve name="cubic">0.2 0.0 0.2 1.0</curve>
+        </timing>
+    </keyboardAnimation>
+    <!--enable/disable remote animation-->
+    <remoteAnimation enable="true"></remoteAnimation>
+    <!--window effect config-->
+    <windowEffect>
+        <appWindows>
+            <cornerRadius>
+                <!--off: no corner, defaultCornerRadiusXS: 4vp, defaultCornerRadiusS: 8vp-->
+                <!--defaultCornerRadiusM: 12vp, defaultCornerRadiusL: 16vp, defaultCornerRadiusXL: 24vp-->
+                <fullScreen>off</fullScreen>
+                <split>off</split>
+                <float>off</float>
+            </cornerRadius>
+            <shadow>
+                <focused>
+                    <elevation>0</elevation>
+                    <color>#000000</color>
+                    <offsetX>0</offsetX>
+                    <offsetY>0</offsetY>
+                    <alpha>0</alpha>
+                </focused>
+                <unfocused>
+                    <elevation>0</elevation>
+                    <color>#000000</color>
+                    <offsetX>0</offsetX>
+                    <offsetY>0</offsetY>
+                    <alpha>0</alpha>
+                </unfocused>
+            </shadow>
+        </appWindows>
+    </windowEffect>
+</Configs>

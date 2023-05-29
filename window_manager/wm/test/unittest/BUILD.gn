@@ -1,0 +1,214 @@
+# Copyright (c) 2021-2022 Huawei Device Co., Ltd.
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+import("//build/test.gni")
+import("//foundation/window/window_manager/windowmanager_aafwk.gni")
+module_out_path = "window_manager/wm"
+
+group("unittest") {
+  testonly = true
+
+  deps = [
+    ":wm_input_transfer_station_test",
+    ":wm_window_effect_test",
+    ":wm_window_impl_listener_test",
+    ":wm_window_impl_test",
+    ":wm_window_input_channel_test",
+    ":wm_window_manager_agent_proxy_test",
+    ":wm_window_manager_stub_proxy_test",
+    ":wm_window_manager_test",
+    ":wm_window_option_test",
+    ":wm_window_proxy_test",
+    ":wm_window_scene_test",
+    ":wm_window_stub_test",
+    ":wm_window_test",
+  ]
+}
+
+ohos_unittest("wm_window_manager_test") {
+  module_out_path = module_out_path
+
+  include_dirs = [ "//foundation/window/window_manager/wm/src" ]
+  sources = [ "window_manager_test.cpp" ]
+
+  deps = [ ":wm_unittest_common" ]
+
+  if (efficiency_manager_enable) {
+    external_deps = [ "efficiency_manager:suspend_manager_client" ]
+    defines = [ "EFFICIENCY_MANAGER_ENABLE" ]
+  }
+}
+
+ohos_unittest("wm_window_impl_test") {
+  module_out_path = module_out_path
+
+  sources = [ "window_impl_test.cpp" ]
+
+  deps = [ ":wm_unittest_common" ]
+}
+
+ohos_unittest("wm_window_effect_test") {
+  module_out_path = module_out_path
+
+  sources = [ "window_effect_test.cpp" ]
+
+  deps = [ ":wm_unittest_common" ]
+}
+
+ohos_unittest("wm_input_transfer_station_test") {
+  module_out_path = module_out_path
+
+  sources = [ "input_transfer_station_test.cpp" ]
+
+  deps = [ ":wm_unittest_common" ]
+}
+
+ohos_unittest("wm_window_input_channel_test") {
+  module_out_path = module_out_path
+
+  sources = [ "window_input_channel_test.cpp" ]
+
+  deps = [ ":wm_unittest_common" ]
+}
+
+ohos_unittest("wm_window_option_test") {
+  module_out_path = module_out_path
+
+  sources = [ "window_option_test.cpp" ]
+
+  deps = [ ":wm_unittest_common" ]
+}
+
+ohos_unittest("wm_window_scene_test") {
+  module_out_path = module_out_path
+
+  sources = [ "window_scene_test.cpp" ]
+
+  deps = [ ":wm_unittest_common" ]
+}
+
+ohos_unittest("wm_window_test") {
+  module_out_path = module_out_path
+
+  sources = [ "window_test.cpp" ]
+
+  deps = [ ":wm_unittest_common" ]
+}
+
+ohos_unittest("wm_window_impl_listener_test") {
+  module_out_path = module_out_path
+
+  sources = [ "window_impl_listener_test.cpp" ]
+
+  deps = [ ":wm_unittest_common" ]
+}
+
+ohos_unittest("wm_window_proxy_test") {
+  module_out_path = module_out_path
+
+  sources = [ "window_proxy_test.cpp" ]
+
+  deps = [ ":wm_unittest_common" ]
+}
+
+ohos_unittest("wm_window_stub_test") {
+  module_out_path = module_out_path
+
+  sources = [ "window_stub_test.cpp" ]
+
+  deps = [ ":wm_unittest_common" ]
+}
+
+ohos_unittest("wm_window_manager_stub_proxy_test") {
+  module_out_path = module_out_path
+
+  sources = [ "window_manager_agent_stub_test.cpp" ]
+
+  deps = [ ":wm_unittest_common" ]
+}
+
+ohos_unittest("wm_window_manager_agent_proxy_test") {
+  module_out_path = module_out_path
+
+  sources = [ "window_manager_agent_proxy_test.cpp" ]
+
+  deps = [ ":wm_unittest_common" ]
+}
+
+## Build wm_unittest_common.a {{{
+config("wm_unittest_common_public_config") {
+  include_dirs = [
+    "//foundation/window/window_manager/test/common/mock",
+    "//foundation/window/window_manager/wm/include",
+    "//foundation/window/window_manager/wm/include/zidl",
+    "//foundation/window/window_manager/wmserver/include",
+    "//foundation/window/window_manager/wmserver/include/window_snapshot",
+    "//foundation/window/window_manager/interfaces/innerkits/wm",
+    "//foundation/window/window_manager/utils/include",
+    "//commonlibrary/c_utils/base/include",
+    "//foundation/communication/ipc/interfaces/innerkits/ipc_core/include",
+    "//base/hiviewdfx/hilog/interfaces/native/innerkits/include",
+    "//third_party/googletest/googlemock/include",
+
+    # for abilityContext
+    "${ability_runtime_path}/interfaces/kits/native/ability/ability_runtime",
+    "${ability_runtime_path}/interfaces/kits/native/appkit/ability_runtime/context",
+    "//base/global/resource_management/interfaces/inner_api/include",
+    "//third_party/node/deps/icu-small/source/common",
+    "${ability_runtime_inner_api_path}/ability_manager/include",
+    "//foundation/ability/ability_base/interfaces/kits/native/configuration/include/",
+
+    # abilityContext end
+  ]
+}
+
+ohos_static_library("wm_unittest_common") {
+  visibility = [ ":*" ]
+  testonly = true
+
+  public_configs = [
+    ":wm_unittest_common_public_config",
+    "//foundation/window/window_manager/resources/config/build:coverage_flags",
+    "//foundation/window/window_manager/resources/config/build:testcase_flags",
+  ]
+
+  public_deps = [
+    "//base/powermgr/power_manager/interfaces/innerkits:powermgr_client",
+
+    # need delete it for abilitycontext
+    "${ability_runtime_inner_api_path}/ability_manager:ability_manager",
+    "//commonlibrary/c_utils/base:utils",
+    "//foundation/arkui/ace_engine/interfaces/inner_api/ace:ace_uicontent",
+    "//foundation/arkui/napi:ace_napi",
+    "//foundation/graphic/graphic_2d/rosen/modules/animation/window_animation:window_animation",
+    "//foundation/graphic/graphic_2d/rosen/modules/render_service_client:librender_service_client",
+    "//foundation/multimodalinput/input/frameworks/proxy:libmmi-client",
+    "//foundation/systemabilitymgr/safwk/interfaces/innerkits/safwk:system_ability_fwk",
+    "//foundation/window/window_manager/dm:libdm",
+    "//foundation/window/window_manager/dmserver:libdms",
+    "//foundation/window/window_manager/utils:libwmutil",
+    "//foundation/window/window_manager/wm:libwm",
+    "//foundation/window/window_manager/wmserver:libwms",
+    "//third_party/googletest:gmock",
+    "//third_party/googletest:gtest_main",
+  ]
+
+  external_deps = [
+    "ability_base:configuration",
+    "ability_base:want",
+    "ability_runtime:ability_context_native",
+    "bundle_framework:appexecfwk_base",
+    "ipc:ipc_core",
+  ]
+}
+## Build wm_unittest_common.a }}}
