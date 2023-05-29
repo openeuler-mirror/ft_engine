@@ -1,0 +1,133 @@
+# Copyright (c) 2022 Huawei Device Co., Ltd.
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+import("//build/ohos.gni")
+
+config("previewer_window_config") {
+  visibility = [ ":*" ]
+
+  include_dirs = [
+    "//foundation/window/window_manager/interfaces/innerkits/wm",
+    "//foundation/window/window_manager/previewer/include",
+  ]
+}
+
+ohos_shared_library("previewer_window") {
+  configs = [ ":previewer_window_config" ]
+
+  libs = []
+
+  sources = [
+    "../../../../commonlibrary/c_utils/base/src/refbase.cpp",
+    "../utils/src/window_property.cpp",
+    "../utils/src/window_transition_info.cpp",
+    "../utils/src/wm_math.cpp",
+    "../wm/src/input_transfer_station.cpp",
+    "../wm/src/vsync_station.cpp",
+    "../wm/src/window.cpp",
+    "../wm/src/window_frame_trace_impl.cpp",
+    "../wm/src/window_input_channel.cpp",
+    "../wm/src/window_option.cpp",
+    "mock/parcel.cpp",
+    "src/window_impl.cpp",
+    "src/window_scene.cpp",
+  ]
+
+  include_dirs = [
+    "include",
+    "mock",
+    "../interfaces/innerkits/wm",
+    "../interfaces/innerkits/dm",
+    "../wm/include",
+    "../utils/include",
+    "../../../../commonlibrary/c_utils/base/include",
+  ]
+
+  deps = [
+    "//foundation/arkui/napi:ace_napi",
+    "//foundation/arkui/napi:ace_napi_ark",
+  ]
+
+  cflags = [ "-std=c++11" ]
+  part_name = "window_manager"
+  subsystem_name = "window"
+}
+
+config("previewer_window_napi_config") {
+  visibility = [ ":*" ]
+
+  include_dirs = [ "//foundation/window/window_manager/interfaces/kits/napi/window_runtime/window_napi" ]
+}
+
+ohos_shared_library("previewer_window_napi") {
+  public_configs = [ ":previewer_window_napi_config" ]
+
+  libs = []
+
+  sources = [
+    "../../../ability/ability_runtime/frameworks/native/runtime/js_runtime_utils.cpp",
+    "../interfaces/kits/napi/window_runtime/window_napi/js_window.cpp",
+    "../interfaces/kits/napi/window_runtime/window_napi/js_window_utils.cpp",
+    "../interfaces/kits/napi/window_runtime/window_stage_napi/js_window_stage.cpp",
+
+    # mock
+    "mock/js_transition_controller.cpp",
+    "mock/js_window_register_manager.cpp",
+    "mock/permission.cpp",
+    "mock/pixel_map_napi.cpp",
+    "mock/ui/rs_node.cpp",
+  ]
+
+  include_dirs = [
+    ".",  # 避免冲突的mock目录
+    "include",
+    "mock",
+    "mock/ui",
+    "mock/transaction",
+    "../wm/include",
+    "../utils/include",
+    "../interfaces/innerkits/wm",
+    "../interfaces/innerkits/dm",
+    "../interfaces/kits/napi/window_runtime/window_stage_napi",
+    "../../../ability/ability_runtime/interfaces/inner_api/runtime/include",
+    "../../../../commonlibrary/c_utils/base/include",
+  ]
+
+  deps = [
+    ":previewer_window",
+    "//foundation/arkui/napi:ace_napi",
+    "//foundation/arkui/napi:ace_napi_ark",
+  ]
+
+  cflags_cc = [ "-DWINDOW_PREVIEW" ]
+  cflags = [ "-std=c++11" ]
+  part_name = "window_manager"
+  subsystem_name = "window"
+}
+
+ohos_copy("copy_previewer_library") {
+  if (host_os == "mac") {
+    suffix = ".dylib"
+  } else {
+    suffix = ".dll"
+  }
+  shared_library_path =
+      get_label_info(":previewer_window_napi", "root_out_dir") +
+      "/window/window_manager/libpreviewer_window_napi" + suffix
+  deps = [ ":previewer_window_napi" ]
+  sources = [ shared_library_path ]
+  outputs =
+      [ target_out_dir + "/previewer/common/bin/libpreviewer_window" + suffix ]
+  module_source_dir = target_out_dir + "/previewer/common/bin/"
+  module_install_name = ""
+}

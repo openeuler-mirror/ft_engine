@@ -1,0 +1,134 @@
+# Copyright (c) 2021-2022 Huawei Device Co., Ltd.
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+import("//build/ohos.gni")
+import("//foundation/window/window_manager/windowmanager_aafwk.gni")
+
+config("libwm_private_config") {
+  visibility = [ ":*" ]
+
+  include_dirs = [
+    "include",
+    "../wmserver/include",
+    "//foundation/arkui/napi",  # because of ability_context.h
+  ]
+}
+
+config("libwm_public_config") {
+  include_dirs = [
+    "../interfaces/innerkits/wm",
+    "../utils/include",
+  ]
+}
+
+## Build libwm.so
+ohos_shared_library("libwm") {
+
+  sources = [
+    "../wmserver/src/zidl/window_manager_proxy.cpp",
+    "src/color_parser.cpp",
+    "src/input_transfer_station.cpp",
+    "src/static_call.cpp",
+    "src/vsync_station.cpp",
+    "src/window.cpp",
+    "src/window_accessibility_controller.cpp",
+    "src/window_adapter.cpp",
+    "src/window_agent.cpp",
+    "src/window_frame_trace_impl.cpp",
+    "src/window_impl.cpp",
+    "src/window_input_channel.cpp",
+    "src/window_manager.cpp",
+    "src/window_manager_agent.cpp",
+    "src/window_option.cpp",
+    "src/window_scene.cpp",
+    "src/zidl/window_manager_agent_stub.cpp",
+    "src/zidl/window_stub.cpp",
+  ]
+
+  configs = [
+    ":libwm_private_config",
+    "//foundation/window/window_manager/resources/config/build:coverage_flags",
+  ]
+
+  public_configs = [ ":libwm_public_config" ]
+
+  deps = [
+    "//foundation/graphic/graphic_2d/rosen/modules/render_service_client:librender_service_client",
+    "//foundation/window/window_manager/dm:libdm",
+    "//foundation/window/window_manager/utils:libwmutil",
+  ]
+
+  external_deps = [
+    "ability_runtime:ability_context_native",
+    "ability_runtime:ability_manager",
+    "ace_engine:ace_uicontent",
+    "c_utils:utils",
+    "eventhandler:libeventhandler",
+    "graphic_standard:window_animation",
+    "hilog_native:libhilog",
+    "hisysevent_native:libhisysevent",
+    "input:libmmi-client",
+    "ipc:ipc_core",
+    "multimedia_image_framework:image_native",
+    "samgr:samgr_proxy",
+  ]
+
+  defines = []
+  if (efficiency_manager_enable) {
+    external_deps += [ "efficiency_manager:suspend_manager_client" ]
+    defines += [ "EFFICIENCY_MANAGER_ENABLE" ]
+  }
+
+  if (defined(global_parts_info)) {
+    if (defined(global_parts_info.resourceschedule_frame_aware_sched) ||
+        defined(global_parts_info.hmosresourceschedule_resourceschedule_frame_aware_sched_override)) {
+      defines += [ "FRAME_TRACE_ENABLE" ]
+      deps += [ "//foundation/resourceschedule/frame_aware_sched/interfaces/innerkits/frameintf:frame_trace_intf" ]
+      include_dirs = [ "//foundation/resourceschedule/frame_aware_sched/interfaces/innerkits/frameintf" ]
+    }
+  }
+
+  if (!defined(global_parts_info) ||
+      defined(global_parts_info.resourceschedule_resource_schedule_service)) {
+    soc_perf_enable = true
+  } else {
+    soc_perf_enable = false
+  }
+  print("soc_perf_enable: ", soc_perf_enable)
+
+  if (soc_perf_enable == true) {
+    external_deps += [ "resource_schedule_service:ressched_client" ]
+    defines += [ "SOC_PERF_ENABLE" ]
+  }
+
+  if (!defined(global_parts_info) ||
+      defined(global_parts_info.inputmethod_imf)) {
+    imf_enable = true
+  } else {
+    imf_enable = false
+  }
+  print("imf_enable: ", imf_enable)
+
+  if (imf_enable == true) {
+    external_deps += [ "imf:inputmethod_client" ]
+    defines += [ "IMF_ENABLE" ]
+  }
+
+  part_name = "window_manager"
+  subsystem_name = "window"
+}
+
+group("test") {
+  testonly = true
+  deps = [ "test:test" ]
+}
