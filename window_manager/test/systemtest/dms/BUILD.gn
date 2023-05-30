@@ -1,0 +1,140 @@
+# Copyright (c) 2021-2022 Huawei Device Co., Ltd.
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+import("//build/test.gni")
+
+module_out_path = "window_manager/dms"
+
+group("systemtest") {
+  testonly = true
+
+  deps = [
+    ":dms_display_change_test",
+    ":dms_display_manager_test",
+    ":dms_display_minimal_test",
+    ":dms_display_power_test",
+    ":dms_screenshot_test",
+    ":dms_screen_manager_test",
+  ]
+}
+
+ohos_systemtest("dms_display_minimal_test") {
+  module_out_path = module_out_path
+
+  sources = [ "display_minimal_test.cpp" ]
+
+  deps = [ ":dms_systemtest_common" ]
+}
+
+ohos_systemtest("dms_display_manager_test") {
+  module_out_path = module_out_path
+
+  sources = [ "display_manager_test.cpp" ]
+
+  deps = [ ":dms_systemtest_common" ]
+}
+
+ohos_systemtest("dms_display_power_test") {
+  module_out_path = module_out_path
+
+  sources = [ "display_power_test.cpp" ]
+
+  deps = [ ":dms_systemtest_common" ]
+}
+
+ohos_systemtest("dms_display_change_test") {
+  module_out_path = module_out_path
+
+  sources = [ "display_change_test.cpp" ]
+
+  deps = [ ":dms_systemtest_common" ]
+}
+
+ohos_systemtest("dms_screenshot_test") {
+  module_out_path = module_out_path
+
+  sources = [ "screenshot_test.cpp" ]
+
+  deps = [ ":dms_systemtest_common" ]
+}
+
+ohos_systemtest("dms_screen_manager_test") {
+  module_out_path = module_out_path
+
+  sources = [ "screen_manager_test.cpp" ]
+
+  deps = [ ":dms_systemtest_common" ]
+
+  external_deps = [ "init:libbegetutil" ]
+}
+
+ohos_systemtest("dms_screen_gamut_test") {
+  module_out_path = module_out_path
+
+  sources = [ "screen_gamut_test.cpp" ]
+
+  deps = [ ":dms_systemtest_common" ]
+}
+
+## Build dms_systemtest_common.a {{{
+config("dms_systemtest_common_public_config") {
+  include_dirs = [
+    "//foundation/window/window_manager/dm/include",
+    "//foundation/window/window_manager/dmserver/include",
+    "//foundation/window/window_manager/interfaces/innerkits/dm",
+    "//foundation/window/window_manager/interfaces/innerkits/wm",
+    "//foundation/window/window_manager/test/common/utils/include",
+    "//foundation/window/window_manager/utils/include",
+
+    # RSSurface
+    "//foundation/graphic/graphic_2d/interfaces/inner_api/surface",
+    "//foundation/graphic/graphic_2d/rosen/modules/render_service_client",
+  ]
+}
+
+ohos_static_library("dms_systemtest_common") {
+  visibility = [ ":*" ]
+  testonly = true
+
+  sources = [ "display_test_utils.cpp" ]
+
+  public_configs = [
+    ":dms_systemtest_common_public_config",
+    "//foundation/window/window_manager/resources/config/build:coverage_flags",
+    "//foundation/window/window_manager/resources/config/build:testcase_flags",
+  ]
+
+  public_deps = [
+    "//commonlibrary/c_utils/base:utils",
+    "//foundation/graphic/graphic_2d/rosen/modules/render_service_client:librender_service_client",
+    "//foundation/multimodalinput/input/frameworks/proxy:libmmi-client",
+    "//foundation/window/window_manager/dm:libdm",
+    "//foundation/window/window_manager/dmserver:libdms",
+    "//foundation/window/window_manager/test/common/utils:libtestutil",
+    "//foundation/window/window_manager/utils:libwmutil",
+    "//foundation/window/window_manager/wm:libwm",
+    "//third_party/googletest:gmock",
+    "//third_party/googletest:gtest_main",
+  ]
+
+  external_deps = [
+    "access_token:libaccesstoken_sdk",
+    "access_token:libnativetoken",
+    "access_token:libtoken_setproc",
+    "hilog_native:libhilog",
+    "ipc:ipc_core",
+  ]
+  subsystem_name = "window"
+  part_name = "window_manager"
+}
+## Build dms_systemtest_common.a }}}

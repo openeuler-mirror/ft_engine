@@ -1,0 +1,97 @@
+# Copyright (c) 2022 Huawei Device Co., Ltd.
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+import("//build/ohos.gni")
+import("//foundation/window/window_manager/windowmanager_aafwk.gni")
+
+## Build libdms.so
+config("libdms_private_config") {
+  include_dirs = [
+    "//foundation/window/window_manager/dm/include",
+    "//foundation/window/window_manager/interfaces/innerkits/dm",
+  ]
+}
+
+config("libdms_public_config") {
+  include_dirs = [ "include" ]
+}
+
+ohos_shared_library("libdms") {
+  sources = [
+    "../dm/src/zidl/display_manager_agent_proxy.cpp",
+    "src/abstract_display.cpp",
+    "src/abstract_display_controller.cpp",
+    "src/abstract_screen.cpp",
+    "src/abstract_screen_controller.cpp",
+    "src/display_cutout_controller.cpp",
+    "src/display_dumper.cpp",
+    "src/display_manager_agent_controller.cpp",
+    "src/display_manager_config.cpp",
+    "src/display_manager_service.cpp",
+    "src/display_manager_service_inner.cpp",
+    "src/display_manager_stub.cpp",
+    "src/display_power_controller.cpp",
+    "src/screen_rotation_controller.cpp",
+    "src/sensor_connector.cpp",
+  ]
+
+  configs = [
+    ":libdms_private_config",
+    "//foundation/window/window_manager/resources/config/build:coverage_flags",
+  ]
+
+  public_configs = [ ":libdms_public_config" ]
+
+  deps = [
+    "//foundation/graphic/graphic_2d/rosen/modules/render_service_client:librender_service_client",
+    "//foundation/resourceschedule/resource_schedule_service/soc_perf:socperf_client",
+    "//foundation/window/window_manager/utils:libwmutil",
+    "//third_party/libxml2:libxml2",
+  ]
+
+  external_deps = [
+    "c_utils:utils",
+    "config_policy:configpolicy_util",
+    "eventhandler:libeventhandler",
+    "graphic_standard:surface",
+    "hilog_native:libhilog",
+    "hitrace_native:hitrace_meter",
+    "ipc:ipc_core",
+    "safwk:system_ability_fwk",
+    "sensor:sensor_interface_native",
+  ]
+
+  include_dirs = [ "//third_party/flutter/skia/src" ]
+
+  defines = []
+  if (window_manager_feature_subscribe_motion) {
+    if (defined(global_parts_info) && defined(global_parts_info.msdp_motion)) {
+      external_deps += [ "motion:motion_interface_native" ]
+      defines += [ "WM_SUBSCRIBE_MOTION_ENABLE" ]
+    }
+  }
+
+  if (is_standard_system) {
+    external_deps += [ "init:libbegetutil" ]
+  } else {
+    external_deps += [ "init_lite:libbegetutil" ]
+  }
+
+  part_name = "window_manager"
+  subsystem_name = "window"
+}
+
+group("test") {
+  testonly = true
+  deps = [ "test:test" ]
+}

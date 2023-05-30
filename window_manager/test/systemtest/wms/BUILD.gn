@@ -1,0 +1,304 @@
+# Copyright (c) 2021-2022 Huawei Device Co., Ltd.
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+import("//build/test.gni")
+import("//foundation/window/window_manager/windowmanager_aafwk.gni")
+
+module_out_path = "window_manager/wms"
+
+group("systemtest") {
+  testonly = true
+
+  deps = [
+    ":wms_window_animation_transition_test",
+    ":wms_window_app_floating_window_test",
+    ":wms_window_dialogwindow_test",
+    ":wms_window_display_zoom_test",
+    ":wms_window_drag_test",
+    ":wms_window_effect_test",
+    ":wms_window_focus_test",
+    ":wms_window_gamut_test",
+    ":wms_window_immersive_test",
+    ":wms_window_input_method_test",
+    ":wms_window_input_test",
+    ":wms_window_layout_test",
+    ":wms_window_mode_support_info_test",
+    ":wms_window_move_drag_test",
+    ":wms_window_multi_ability_test",
+    ":wms_window_occupied_area_change_test",
+    ":wms_window_rotation_test",
+    ":wms_window_split_immersive_test",
+    ":wms_window_split_test",
+    ":wms_window_subwindow_test",
+    ":wms_window_systemsubwindow_test",
+    ":wms_window_touch_outside_test",
+    ":wms_window_visibility_info_test",
+  ]
+}
+
+ohos_systemtest("wms_window_layout_test") {
+  module_out_path = module_out_path
+
+  sources = [ "window_layout_test.cpp" ]
+
+  deps = [ ":wms_systemtest_common" ]
+}
+
+ohos_systemtest("wms_window_effect_test") {
+  module_out_path = module_out_path
+
+  sources = [ "window_effect_test.cpp" ]
+
+  deps = [ ":wms_systemtest_common" ]
+}
+
+ohos_systemtest("wms_window_multi_ability_test") {
+  module_out_path = module_out_path
+
+  sources = [ "window_multi_ability_test.cpp" ]
+
+  deps = [ ":wms_systemtest_common" ]
+}
+
+ohos_systemtest("wms_window_subwindow_test") {
+  module_out_path = module_out_path
+
+  sources = [ "window_subwindow_test.cpp" ]
+
+  deps = [ ":wms_systemtest_common" ]
+
+  external_deps = [ "bundle_framework:appexecfwk_base" ]
+}
+
+ohos_systemtest("wms_window_systemsubwindow_test") {
+  module_out_path = module_out_path
+
+  sources = [ "window_systemsubwindow_test.cpp" ]
+
+  deps = [ ":wms_systemtest_common" ]
+
+  external_deps = [ "bundle_framework:appexecfwk_base" ]
+}
+
+ohos_systemtest("wms_window_dialogwindow_test") {
+  module_out_path = module_out_path
+
+  sources = [ "window_dialogwindow_test.cpp" ]
+
+  deps = [ ":wms_systemtest_common" ]
+
+  external_deps = [ "bundle_framework:appexecfwk_base" ]
+}
+
+ohos_systemtest("wms_window_immersive_test") {
+  module_out_path = module_out_path
+
+  sources = [ "window_immersive_test.cpp" ]
+
+  deps = [ ":wms_systemtest_common" ]
+}
+
+ohos_systemtest("wms_window_focus_test") {
+  module_out_path = module_out_path
+
+  sources = [ "window_focus_test.cpp" ]
+
+  deps = [ ":wms_systemtest_common" ]
+}
+
+ohos_systemtest("wms_window_split_immersive_test") {
+  module_out_path = module_out_path
+
+  sources = [ "window_split_immersive_test.cpp" ]
+
+  deps = [ ":wms_systemtest_common" ]
+}
+
+ohos_systemtest("wms_window_split_test") {
+  module_out_path = module_out_path
+
+  sources = [ "window_split_test.cpp" ]
+
+  deps = [ ":wms_systemtest_common" ]
+}
+
+ohos_systemtest("wms_window_move_drag_test") {
+  module_out_path = module_out_path
+
+  sources = [ "window_move_drag_test.cpp" ]
+
+  deps = [ ":wms_systemtest_common" ]
+
+  external_deps = [ "bundle_framework:appexecfwk_base" ]
+}
+
+ohos_systemtest("wms_window_input_method_test") {
+  module_out_path = module_out_path
+
+  sources = [ "window_input_method_test.cpp" ]
+
+  deps = [ ":wms_systemtest_common" ]
+}
+
+ohos_systemtest("wms_window_gamut_test") {
+  module_out_path = module_out_path
+
+  sources = [ "window_gamut_test.cpp" ]
+
+  deps = [ ":wms_systemtest_common" ]
+}
+
+ohos_systemtest("wms_window_input_test") {
+  module_out_path = module_out_path
+
+  sources = [ "window_input_test.cpp" ]
+
+  deps = [ ":wms_systemtest_common" ]
+}
+
+ohos_systemtest("wms_window_visibility_info_test") {
+  module_out_path = module_out_path
+
+  sources = [ "window_visibility_info_test.cpp" ]
+
+  deps = [ ":wms_systemtest_common" ]
+}
+
+ohos_systemtest("wms_window_display_zoom_test") {
+  module_out_path = module_out_path
+
+  sources = [ "window_display_zoom_test.cpp" ]
+
+  deps = [ ":wms_systemtest_common" ]
+}
+
+ohos_systemtest("wms_window_drag_test") {
+  module_out_path = module_out_path
+
+  sources = [ "window_drag_test.cpp" ]
+
+  deps = [ ":wms_systemtest_common" ]
+}
+
+ohos_systemtest("wms_window_rotation_test") {
+  module_out_path = module_out_path
+
+  sources = [ "window_rotation_test.cpp" ]
+
+  deps = [ ":wms_systemtest_common" ]
+}
+
+ohos_systemtest("wms_window_occupied_area_change_test") {
+  module_out_path = module_out_path
+
+  sources = [ "window_occupied_area_change_test.cpp" ]
+
+  deps = [ ":wms_systemtest_common" ]
+}
+
+ohos_systemtest("wms_window_touch_outside_test") {
+  module_out_path = module_out_path
+
+  sources = [ "window_touch_outside_test.cpp" ]
+
+  deps = [ ":wms_systemtest_common" ]
+}
+
+ohos_systemtest("wms_window_mode_support_info_test") {
+  module_out_path = module_out_path
+
+  sources = [ "window_mode_support_info_test.cpp" ]
+
+  deps = [ ":wms_systemtest_common" ]
+}
+
+ohos_systemtest("wms_window_app_floating_window_test") {
+  module_out_path = module_out_path
+
+  sources = [ "window_app_floating_window_test.cpp" ]
+
+  deps = [ ":wms_systemtest_common" ]
+}
+
+ohos_systemtest("wms_window_animation_transition_test") {
+  module_out_path = module_out_path
+
+  sources = [ "window_animation_transition_test.cpp" ]
+
+  deps = [ ":wms_systemtest_common" ]
+}
+
+## Build wms_systemtest_common.a {{{
+config("wms_systemtest_common_public_config") {
+  include_dirs = [
+    "//foundation/window/window_manager/wm/include",
+    "//foundation/window/window_manager/wmserver/include",
+    "//foundation/window/window_manager/interfaces/innerkits/wm",
+    "//foundation/window/window_manager/utils/include",
+    "//commonlibrary/c_utils/base/include",
+    "//foundation/communication/ipc/interfaces/innerkits/ipc_core/include",
+    "//base/hiviewdfx/hilog/interfaces/native/innerkits/include",
+    "//third_party/googletest/googlemock/include",
+    "//foundation/graphic/graphic_2d/rosen/modules/2d_graphics/include",
+
+    # for abilityContext
+    "${ability_runtime_path}/interfaces/kits/native/ability/ability_runtime",
+    "${ability_runtime_path}/interfaces/kits/native/appkit/ability_runtime/context",
+    "//base/global/resource_management/interfaces/inner_api/include",
+    "//third_party/node/deps/icu-small/source/common",
+    "${ability_runtime_inner_api_path}/ability_manager/include",
+
+    # abilityContext end
+  ]
+}
+
+ohos_static_library("wms_systemtest_common") {
+  visibility = [ ":*" ]
+  testonly = true
+
+  sources = [ "window_test_utils.cpp" ]
+
+  public_configs = [
+    ":wms_systemtest_common_public_config",
+    "//foundation/window/window_manager/resources/config/build:coverage_flags",
+    "//foundation/window/window_manager/resources/config/build:testcase_flags",
+  ]
+
+  public_deps = [
+    "//base/powermgr/power_manager/interfaces/innerkits:powermgr_client",
+    "//foundation/arkui/ace_engine/interfaces/inner_api/ace:ace_uicontent",
+
+    # need delete it for abilitycontext
+    "${ability_runtime_inner_api_path}/ability_manager:ability_manager",
+    "//commonlibrary/c_utils/base:utils",
+    "//foundation/arkui/napi:ace_napi",
+    "//foundation/graphic/graphic_2d/rosen/modules/animation/window_animation:window_animation",
+    "//foundation/graphic/graphic_2d/rosen/modules/render_service_client:librender_service_client",
+    "//foundation/multimodalinput/input/frameworks/proxy:libmmi-client",
+    "//foundation/window/window_manager/dm:libdm",
+    "//foundation/window/window_manager/dmserver:libdms",
+    "//foundation/window/window_manager/utils:libwmutil",
+    "//foundation/window/window_manager/wm:libwm",
+    "//third_party/googletest:gmock",
+    "//third_party/googletest:gtest_main",
+  ]
+  external_deps = [
+    "ability_base:base",
+    "ability_base:want",
+    "ability_base:zuri",
+    "ability_runtime:ability_context_native",
+    "bundle_framework:appexecfwk_base",
+    "ipc:ipc_core",
+  ]
+}
+## Build wms_systemtest_common.a }}}

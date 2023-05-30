@@ -1,0 +1,122 @@
+# Copyright (c) 2021-2022 Huawei Device Co., Ltd.
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+import("//build/ohos.gni")
+config("libwms_config") {
+  visibility = [ ":*" ]
+
+  include_dirs = [
+    "include",
+    "include/window_snapshot",
+    "//utils/system/safwk/native/include",
+    "//foundation/window/window_manager/interfaces/innerkits/wm",
+    "//foundation/window/window_manager/interfaces/innerkits/dm",
+    "//foundation/window/window_manager/wm/include",
+    "//foundation/window/window_manager/utils/include",
+    "//foundation/window/window_manager/dm/include",
+    "//foundation/window/window_manager/dmserver/include",
+  ]
+}
+
+ohos_shared_library("libwms") {
+  if (use_musl) {
+    if (use_jemalloc && use_jemalloc_dfx_intf) {
+      defines = [ "CONFIG_USE_JEMALLOC_DFX_INTF" ]
+    }
+  }
+  sources = [
+    "../wm/src/zidl/window_manager_agent_proxy.cpp",
+    "../wm/src/zidl/window_proxy.cpp",
+    "src/accessibility_connection.cpp",
+    "src/avoid_area_controller.cpp",
+    "src/display_group_controller.cpp",
+    "src/display_group_info.cpp",
+    "src/display_zoom_controller.cpp",
+    "src/drag_controller.cpp",
+    "src/freeze_controller.cpp",
+    "src/inner_window.cpp",
+    "src/input_window_monitor.cpp",
+    "src/memory_guard.cpp",
+    "src/minimize_app.cpp",
+    "src/remote_animation.cpp",
+    "src/starting_window.cpp",
+    "src/window_common_event.cpp",
+    "src/window_controller.cpp",
+    "src/window_dumper.cpp",
+    "src/window_inner_manager.cpp",
+    "src/window_layout_policy.cpp",
+    "src/window_layout_policy_cascade.cpp",
+    "src/window_layout_policy_tile.cpp",
+    "src/window_manager_agent_controller.cpp",
+    "src/window_manager_config.cpp",
+    "src/window_manager_service.cpp",
+    "src/window_node.cpp",
+    "src/window_node_container.cpp",
+    "src/window_node_state_machine.cpp",
+    "src/window_pair.cpp",
+    "src/window_root.cpp",
+    "src/window_snapshot/snapshot_controller.cpp",
+    "src/window_snapshot/snapshot_proxy.cpp",
+    "src/window_snapshot/snapshot_stub.cpp",
+    "src/window_zorder_policy.cpp",
+    "src/zidl/ressched_report.cpp",
+    "src/zidl/window_manager_stub.cpp",
+  ]
+
+  configs = [
+    ":libwms_config",
+    "//foundation/window/window_manager/resources/config/build:coverage_flags",
+  ]
+
+  deps = [
+    "//foundation/graphic/graphic_2d/rosen/modules/render_service_client:librender_service_client",
+    "//foundation/window/window_manager/dmserver:libdms",
+    "//foundation/window/window_manager/etc:wms_etc",
+    "//foundation/window/window_manager/utils:libwmutil",
+    "//foundation/window/window_manager/wm:libwm",
+    "//third_party/libxml2:libxml2",
+  ]
+
+  external_deps = [
+    "ability_base:want",
+    "ability_runtime:ability_manager",
+    "c_utils:utils",
+    "common_event_service:cesfwk_innerkits",
+    "config_policy:configpolicy_util",
+    "display_manager:displaymgr",
+    "eventhandler:libeventhandler",
+    "graphic_standard:window_animation",
+    "hicollie_native:libhicollie",
+    "hilog_native:libhilog",
+    "hisysevent_native:libhisysevent",
+    "hitrace_native:hitrace_meter",
+    "input:libmmi-client",
+    "ipc:ipc_core",
+    "power_manager:powermgr_client",
+    "safwk:system_ability_fwk",
+  ]
+
+  if (is_standard_system) {
+    external_deps += [ "init:libbegetutil" ]
+  } else {
+    external_deps += [ "init_lite:libbegetutil" ]
+  }
+
+  part_name = "window_manager"
+  subsystem_name = "window"
+}
+
+group("test") {
+  testonly = true
+  deps = [ "test:test" ]
+}
