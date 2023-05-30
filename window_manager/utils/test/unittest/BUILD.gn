@@ -1,0 +1,210 @@
+# Copyright (c) 2022 Huawei Device Co., Ltd.
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+import("//build/test.gni")
+import("//foundation/window/window_manager/windowmanager_aafwk.gni")
+module_out_path = "window_manager/utils"
+
+group("unittest") {
+  testonly = true
+
+  deps = [
+    ":utils_all_test",
+    ":utils_cutout_info_test",
+    ":utils_display_info_test",
+    ":utils_perform_reporter_test",
+    ":utils_screen_group_info_test",
+    ":utils_screen_info_test",
+    ":utils_string_test",
+    ":utils_window_helper_test",
+    ":utils_window_property_test",
+    ":utils_window_transition_info_test",
+    ":utils_wm_math_test",
+    ":utils_wm_occlusion_region_test",
+  ]
+}
+
+ohos_unittest("utils_display_info_test") {
+  module_out_path = module_out_path
+
+  sources = [ "display_info_test.cpp" ]
+
+  deps = [ ":utils_unittest_common" ]
+}
+
+ohos_unittest("utils_screen_info_test") {
+  module_out_path = module_out_path
+
+  sources = [ "screen_info_test.cpp" ]
+
+  deps = [ ":utils_unittest_common" ]
+
+  external_deps = [ "graphic_standard:surface" ]
+}
+
+ohos_unittest("utils_screen_group_info_test") {
+  module_out_path = module_out_path
+
+  sources = [ "screen_group_info_test.cpp" ]
+
+  deps = [ ":utils_unittest_common" ]
+
+  external_deps = [ "graphic_standard:surface" ]
+}
+
+ohos_unittest("utils_string_test") {
+  module_out_path = module_out_path
+
+  sources = [ "string_util_test.cpp" ]
+
+  deps = [ ":utils_unittest_common" ]
+}
+
+ohos_unittest("utils_window_property_test") {
+  module_out_path = module_out_path
+
+  sources = [ "window_property_test.cpp" ]
+
+  deps = [ ":utils_unittest_common" ]
+}
+
+ohos_unittest("utils_wm_math_test") {
+  module_out_path = module_out_path
+
+  sources = [ "wm_math_test.cpp" ]
+
+  deps = [ ":utils_unittest_common" ]
+}
+
+ohos_unittest("utils_surface_draw_test") {
+  module_out_path = module_out_path
+
+  sources = [ "surface_draw_test.cpp" ]
+
+  deps = [ ":utils_unittest_common" ]
+
+  external_deps = [
+    "ability_base:base",
+    "ability_base:want",
+    "ability_runtime:ability_context_native",
+    "ability_runtime:ability_manager",
+    "ability_runtime:abilitykit_native",
+    "ace_engine:ace_uicontent",
+    "input:libmmi-client",
+    "ipc:ipc_core",
+  ]
+}
+
+ohos_unittest("utils_window_helper_test") {
+  module_out_path = module_out_path
+
+  sources = [ "window_helper_test.cpp" ]
+
+  deps = [ ":utils_unittest_common" ]
+
+  external_deps = [
+    "ability_runtime:ability_manager",
+    "bundle_framework:appexecfwk_base",
+  ]
+}
+
+ohos_unittest("utils_perform_reporter_test") {
+  module_out_path = module_out_path
+
+  sources = [ "perform_reporter_test.cpp" ]
+
+  deps = [ ":utils_unittest_common" ]
+}
+
+ohos_unittest("utils_cutout_info_test") {
+  module_out_path = module_out_path
+
+  sources = [ "cutout_info_test.cpp" ]
+
+  deps = [ ":utils_unittest_common" ]
+}
+
+ohos_unittest("utils_all_test") {
+  module_out_path = module_out_path
+
+  sources = [ "utils_all_test.cpp" ]
+
+  deps = [ ":utils_unittest_common" ]
+
+  external_deps = [
+    "ability_runtime:ability_manager",
+    "ipc:ipc_core",
+  ]
+}
+
+ohos_unittest("utils_wm_occlusion_region_test") {
+  module_out_path = module_out_path
+
+  sources = [ "wm_occlusion_region_test.cpp" ]
+
+  deps = [ ":utils_unittest_common" ]
+}
+
+ohos_unittest("utils_window_transition_info_test") {
+  module_out_path = module_out_path
+
+  sources = [ "window_transition_info_test.cpp" ]
+
+  deps = [ ":utils_unittest_common" ]
+
+  external_deps = [
+    "ability_runtime:ability_manager",
+    "ipc:ipc_core",
+  ]
+}
+
+## Build dm_unittest_common.a {{{
+config("utils_unittest_common_public_config") {
+  include_dirs = [
+    "//foundation/window/window_manager/dmserver/include",
+    "//foundation/window/window_manager/test/common/mock",
+    "//foundation/window/window_manager/interfaces/innerkits/dm",
+    "//foundation/window/window_manager/interfaces/innerkits/wm",
+    "//foundation/window/window_manager/utils/include",
+    "//foundation/window/window_manager/wm/include",
+    "//foundation/window/window_manager/dm/include",
+    "//foundation/graphic/graphic_2d/rosen/modules/render_service_base/include",
+  ]
+}
+
+ohos_static_library("utils_unittest_common") {
+  visibility = [ ":*" ]
+  testonly = true
+
+  public_configs = [
+    ":utils_unittest_common_public_config",
+    "//foundation/window/window_manager/resources/config/build:coverage_flags",
+    "//foundation/window/window_manager/resources/config/build:testcase_flags",
+  ]
+
+  public_deps = [
+    "//commonlibrary/c_utils/base:utils",
+    "//foundation/graphic/graphic_2d/rosen/modules/2d_graphics:2d_graphics",
+    "//foundation/graphic/graphic_2d/rosen/modules/render_service_base:librender_service_base",
+    "//foundation/graphic/graphic_2d/rosen/modules/render_service_client:librender_service_client",
+    "//foundation/window/window_manager/dm:libdm",
+    "//foundation/window/window_manager/utils:libwmutil",
+    "//foundation/window/window_manager/wm:libwm",
+    "//third_party/googletest:gmock",
+    "//third_party/googletest:gtest_main",
+  ]
+
+  subsystem_name = "window"
+  part_name = "window_manager"
+}
+## Build wm_unittest_common.a }}}

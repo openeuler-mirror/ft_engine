@@ -1,0 +1,57 @@
+<?xml version='1.0' encoding="utf-8"?>
+<!--
+ * Copyright (c) 2022 Huawei Device Co., Ltd.
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ -->
+ <Configs>
+    <!--Window display dpi, valid range is 80~640, use 0 if no configuration is requeired-->
+    <dpi>240</dpi>
+    <!-- Indicate the deviation between the default device display direction and the direction -->
+    <!-- of the sensor. Use 0 in default, available values are {0, 90, 180, 270} -->
+    <defaultDeviceRotationOffset>0</defaultDeviceRotationOffset>
+    <!-- Svg path for cutout, use empty string if there is not cutout on the screen -->
+    <!-- format: string -->
+    <!-- default value: empty string -->
+    <!-- sample: M 100,100 m -75,0 a 75,75 0 1,0 150,0 a 75,75 0 1,0 -150,0 z -->
+    <defaultDisplayCutoutPath></defaultDisplayCutoutPath>
+    <!-- Indicates the boundary of the curved screen, each value corresponds to the px from each edge -->
+    <!-- format: number(left) number(top) number(right) number(bottom) -->
+    <!-- default value: 0 0 0 0 -->
+    <!-- sample: 150 150 0 0 -->
+    <curvedScreenBoundary>0 0 0 0</curvedScreenBoundary>
+    <!-- Indicates whether the built-in display is a waterfall display -->
+    <!-- format: boolean -->
+    <!-- default value: false -->
+    <!-- sample: false -->
+    <isWaterfallDisplay enable="false"></isWaterfallDisplay>
+
+    <!-- Indicate whether to enable display area compression for waterfall display when displayed in landscape -->
+    <!-- or landscape_inverted mode. -->
+    <!-- This configuration item takes effect only when isWaterfallDisplay above is true -->
+    <!-- format: boolean -->
+    <!-- default value: false -->
+    <isWaterfallAreaCompressionEnableWhenHorizontal enable="false"></isWaterfallAreaCompressionEnableWhenHorizontal>
+
+    <!-- Indicate the size of both sides of the waterfall display which to be compressed when displayed in landscape -->
+    <!-- or landscape_inverted mode. -->
+    <!-- This configuration item takes effect only when isWaterfallDisplay above is true -->
+    <!-- format: uint32_t, the unit is vp. -->
+    <!-- default value: 0 -->
+    <waterfallAreaCompressionSizeWhenHorzontal>0</waterfallAreaCompressionSizeWhenHorzontal>
+    
+    <!-- Indicates orientation of the built-in screen -->
+    <!-- 0: Orientation::UNSPECIFIED -->
+    <!-- 1: Orientation::VERTICAL         2: Orientation::HORIZONTAL-->
+    <!-- 3: Orientation::REVERSE_VERTICAL 4: Orientation::REVERSE_HORIZONTAL -->
+    <buildInDefaultOrientation>0</buildInDefaultOrientation>
+ </Configs>
