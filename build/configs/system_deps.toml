@@ -11,8 +11,19 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-group("ft_engine") {
-  deps = [
-    "//third_party/bounds_checking_function/ft_build:libsec_static",
-  ]
-}
+title = "Fangtian System Dependencies"
+
+[dependencies]
+supported_os = ["openeuler"]
+
+[dependencies.openeuler]
+supported_version = ["22.03"]
+
+[openeuler."22.03"]
+package_deps = [
+    "clang",
+    "compiler-rt",
+    "llvm-devel",
+    "python3",
+
+]
