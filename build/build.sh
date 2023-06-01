@@ -37,6 +37,7 @@ if [[ "${PROJECT_DIR}x" == "x" ]]; then
 fi
 
 # Exec builder
+python3 ${PROJECT_DIR}/build/builder.py --project-dir ${PROJECT_DIR} build $*
 
 # Check builder result
 if [[ "$?" -ne 0 ]]; then
