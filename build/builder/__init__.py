@@ -1,3 +1,4 @@
+#!/usr/bin/env python3
 # Copyright (c) 2023 Huawei Device Co., Ltd.
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -10,9 +11,3 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-
-group("ft_engine") {
-  deps = [
-    "//third_party/bounds_checking_function/ft_build:libsec_static",
-  ]
-}

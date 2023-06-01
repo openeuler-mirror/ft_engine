@@ -11,8 +11,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-group("ft_engine") {
-  deps = [
-    "//third_party/bounds_checking_function/ft_build:libsec_static",
-  ]
-}
+import("//build/gn/templates/ft_executable.gni")
+import("//build/gn/templates/ft_shared_library.gni")
+import("//build/gn/templates/ft_source_set.gni")
+import("//build/gn/templates/ft_static_library.gni")
