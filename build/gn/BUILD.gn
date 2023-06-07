@@ -13,5 +13,6 @@
 
 group("ft_engine") {
   deps = [
+    "//display_server/utils/socketpair/ft_build:socketpair",
   ]
 }

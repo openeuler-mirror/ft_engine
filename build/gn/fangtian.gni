@@ -18,3 +18,4 @@ declare_args() {
 
 }
 
+sys_inc = "/usr/include"
