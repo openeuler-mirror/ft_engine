@@ -13,6 +13,5 @@
 
 group("ft_engine") {
   deps = [
-    "//third_party/bounds_checking_function/ft_build:libsec_static",
   ]
 }
