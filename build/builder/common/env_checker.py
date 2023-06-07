@@ -46,7 +46,7 @@ class Checker:
 
     def _install_packages(self, pkgs: list) -> bool:
         logger.info('Try install system packages: {} ...'.format(', '.join(pkgs)))
-        is_success, _output = exec_sys_command(['sudo', 'yum', 'install', '-y', ' '.join(pkgs)])
+        is_success, _output = exec_sys_command(['sudo', 'yum', 'install', '-y'] + pkgs)
         return is_success
 
     def check_system_env(self, project_dir: str, install_missing_pkg: bool = False) -> bool:
