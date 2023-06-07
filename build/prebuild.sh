@@ -36,7 +36,7 @@ fi
 PYTHON_VERSION=$(python3 --version 2>&1 | awk '{print $2}')
 
 # Compare the versions
-if [ "$(printf '%s\n' "$PYTHON_REQUIRED_VERSION" "$PYTHON_VERSION" | sort -V | head -n1)" = "$PYTHON_REQUIRED_VERSION" ]; then 
+if [ "$(printf '%s\n' "$PYTHON_REQUIRED_VERSION" "$PYTHON_VERSION" | sort -V | head -n1)" = "$PYTHON_REQUIRED_VERSION" ]; then
     echo "The python3 version is $PYTHON_VERSION"
 else
     echo "The python3 version is less than $PYTHON_REQUIRED_VERSION"
@@ -59,4 +59,27 @@ echo -e "\e[36m[-] Prepare system packages...\e[0m"
 # Check & Install required system packages
 python3 ${PROJECT_DIR}/build/builder.py check --install-packages $*
 
-echo -e "\033[32m[*] Pre-build Done. You can exec 'build.sh' now.\033[0m"
+# install prebuild library
+if [ ! -d ${PROJECT_DIR}/prebuilts/libs ]; then
+git clone https://gitee.com/yanansong/ft_engine_prebuild.git ${PROJECT_DIR}/prebuilts/libs
+fi
+
+# copy prebuild library to /usr/lib64
+ARCHNAME=`uname -m`
+cd ${PROJECT_DIR}/prebuilts/libs/library/${ARCHNAME}
+sudo cp -fr *.so /usr/lib64
+cd ${PROJECT_DIR}
+rm -fr ${PROJECT_DIR}/prebuilts/libs
+
+# install prebuild include. delete download files
+if [ ! -d ${PROJECT_DIR}/prebuilts/inc ]; then
+git clone https://gitee.com/yanansong/devel_inc.git ${PROJECT_DIR}/prebuilts/inc
+fi
+
+# copy include files to /usr/include. delete download files
+cd ${PROJECT_DIR}/prebuilts/inc
+sudo cp -fr * /usr/include
+cd ${PROJECT_DIR}
+rm -fr ${PROJECT_DIR}/prebuilts/inc
+
+echo -e "\033[32m[*] Pre-build Done. You need exec 'build.sh'.\033[0m"
