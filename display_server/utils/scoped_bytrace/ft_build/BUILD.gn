@@ -15,30 +15,26 @@ import("//build/gn/fangtian.gni")
 
 config("scoped_bytrace_config") {
   visibility = [ ":*" ]
-
   cflags = [
     "-Wall",
     "-Werror",
     "-g3",
   ]
-}
-
-config("scoped_bytrace_public_config") {
-  include_dirs = [ "../export" ]
-  include_dirs += [
+  include_dirs = [
     "${sys_inc}/hitrace_meter",
     "${sys_inc}/hilog",
   ]
   libs = ["hilog", "hitrace_meter"]
 }
 
+config("scoped_bytrace_public_config") {
+  include_dirs = [ "../export" ]
+}
+
 ft_static_library("scoped_bytrace") {
   sources = [ "../src/scoped_bytrace.cpp" ]
-
   configs = [ ":scoped_bytrace_config" ]
-
   public_configs = [ ":scoped_bytrace_public_config" ]
-
   subsystem_name = "graphic"
   part_name = "graphic_standard"
 }
