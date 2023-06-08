@@ -70,13 +70,13 @@ python3 ${PROJECT_DIR}/build/builder.py check --install-packages $*
 
 # install prebuild library
 if [ ! -d ${PROJECT_DIR}/prebuilts/libs ]; then
-git clone https://gitee.com/yanansong/ft_engine_prebuild.git ${PROJECT_DIR}/prebuilts/libs
+git clone https://gitee.com/yanansong/ft_engine_prebuild.git -b rpms ${PROJECT_DIR}/prebuilts/libs
 fi
 
 # copy prebuild library to /usr/lib64
 ARCHNAME=`uname -m`
-cd ${PROJECT_DIR}/prebuilts/libs/library/${ARCHNAME}
-sudo cp -fr *.so /usr/local/lib64
+cd ${PROJECT_DIR}/prebuilts/libs/rpms/${ARCHNAME}
+sudo installRPM
 cd ${PROJECT_DIR}
 rm -fr ${PROJECT_DIR}/prebuilts/libs
 
@@ -99,6 +99,7 @@ cd ${PROJECT_DIR}/prebuilts/rpm/ft_surface_wrapper/
 if [ ! -d ${PROJECT_DIR}/prebuilts/rpm/ft_surface_wrapper/build ]; then
     mkdir build
 fi
+
 cd build
 cmake ..
 make -j6
@@ -113,5 +114,8 @@ fi
 cd ${PROJECT_DIR}/prebuilts/rpm/binary
 ./install.sh
 cd ${PROJECT_DIR}
+
+sudo mkdir -p /usr/local/share/ft
+sudo cp -fr ${PROJECT_DIR}/etc/ft.xml /usr/local/share/ft/
 
 echo -e "\033[32m[*] Pre-build Done. You need exec 'build.sh'.\033[0m"
