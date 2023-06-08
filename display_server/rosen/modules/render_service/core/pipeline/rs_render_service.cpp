@@ -74,13 +74,6 @@ bool RSRenderService::Init()
 
     RSQosThread::GetInstance()->appVSyncDistributor_ = appVSyncDistributor_;
     RSQosThread::ThreadStart();
-
-    // Wait samgr ready for up to 5 second to ensure adding service to samgr.
-    int status = WaitParameter("bootevent.samgr.ready", "true", 5);
-    if (status != 0) {
-        RS_LOGE("RSRenderService wait SAMGR error, return value [%d].", status);
-    }
-
     return true;
 }
 
