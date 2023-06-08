@@ -15,16 +15,13 @@ import("//build/gn/fangtian.gni")
 
 config("socketpair_config") {
   visibility = [ ":socketpair" ]
-
   cflags = [
     "-Wall",
     "-Werror",
     "-g3",
   ]
-}
-
-config("socketpair_public_config") {
   include_dirs = [
+    "../export",
     "${sys_inc}/c_utils",
     "${sys_inc}/ipc_core",
     "${sys_inc}/hilog",
@@ -32,20 +29,10 @@ config("socketpair_public_config") {
   libs = ["hilog", "ipc_core", "utils"]
 }
 
-config("socketpair_all_dependent_config") {
-  include_dirs = [ "../export" ]
-}
-
 ft_shared_library("socketpair") {
   sources = [ "../src/local_socketpair.cpp" ]
-
   configs = [ ":socketpair_config" ]
-
-  public_configs = [ ":socketpair_public_config" ]
-  all_dependent_configs = [ ":socketpair_all_dependent_config" ]
-
   deps = [ "//display_server/utils/scoped_bytrace/ft_build:scoped_bytrace" ]
-
   part_name = "graphic_standard"
   subsystem_name = "graphic"
 }
