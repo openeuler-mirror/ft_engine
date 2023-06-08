@@ -76,7 +76,7 @@ fi
 # copy prebuild library to /usr/lib64
 ARCHNAME=`uname -m`
 cd ${PROJECT_DIR}/prebuilts/libs/rpms/${ARCHNAME}
-sudo installRPM
+sudo ./installRPM
 cd ${PROJECT_DIR}
 rm -fr ${PROJECT_DIR}/prebuilts/libs
 
