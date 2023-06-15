@@ -67,7 +67,7 @@ fi
 # copy prebuild library to /usr/lib64
 ARCHNAME=`uname -m`
 cd ${PROJECT_DIR}/prebuilts/libs/library/${ARCHNAME}
-sudo cp -fr *.so /usr/lib64
+sudo cp -fr *.so /usr/local/lib64
 cd ${PROJECT_DIR}
 rm -fr ${PROJECT_DIR}/prebuilts/libs
 
@@ -78,7 +78,7 @@ fi
 
 # copy include files to /usr/include. delete download files
 cd ${PROJECT_DIR}/prebuilts/inc
-sudo cp -fr * /usr/include
+sudo cp -fr * /usr/local/include
 cd ${PROJECT_DIR}
 rm -fr ${PROJECT_DIR}/prebuilts/inc
 
