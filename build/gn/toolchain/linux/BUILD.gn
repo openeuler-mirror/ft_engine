@@ -16,10 +16,17 @@
 
 import("//build/gn/toolchain/toolchain.gni")
 
+clang_toolchain("clang_arm64") {
+  toolchain_args = {
+    current_cpu = ""
+    current_os = ""
+  }
+}
+
 clang_toolchain("clang_x64") {
   toolchain_args = {
-    current_cpu = "x64"
-    current_os = "linux"
+    current_cpu = ""
+    current_os = ""
   }
 
   if (use_musl) {
