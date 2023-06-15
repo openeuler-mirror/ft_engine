@@ -57,7 +57,7 @@ private:
     std::mutex mtx_;
 };
 
-#if !defined(_WIN32) && !defined(__APPLE__) && !defined(__gnu_linux__)
+#ifndef ROSEN_CROSS_PLATFORM
 class VSyncReceiver : public RefBase {
 public:
     // check
