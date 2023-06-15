@@ -16,6 +16,7 @@ import toml
 
 from builder.common.logger import logger
 from builder.common.utils import exec_sys_command
+from builder.common.prebuild import build_deps
 
 class Checker:
     """
@@ -78,9 +79,13 @@ class Checker:
                 missing_packages.append(pkg)
 
         if missing_packages == []:
+            build_deps(os.path.join(project_dir, "out", "prebuild"))
             return True
         elif install_missing_pkg:
-            return self._install_packages(missing_packages)
+            ret = self._install_packages(missing_packages)
+            if ret:
+                build_deps(os.path.join(project_dir, "out", "prebuild"))
+            return ret
         else:
             logger.error('System package "{}" is not installed. Please install them by using `yum install` or `dnf install`'.format(', '.join(missing_packages)))
             return False

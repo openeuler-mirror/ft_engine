@@ -59,8 +59,8 @@ class FtBuilder:
         build_parser = subparsers.add_parser('build', help='Build the project')
         build_parser.add_argument('-t', '--target-cpu',
                                 type=str,
-                                choices=['x64', 'x86'],
-                                default='x64',
+                                choices=['auto', 'x64', 'x86', 'aarch64'],
+                                default='auto',
                                 help='Specify the target CPU type.')
         build_parser.add_argument('-b', '--build-type',
                                 choices=['debug', 'release'],

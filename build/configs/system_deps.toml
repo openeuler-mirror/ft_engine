@@ -25,5 +25,5 @@ package_deps = [
     "compiler-rt",
     "llvm-devel",
     "python3",
-
+    "tar",
 ]

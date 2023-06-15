@@ -17,14 +17,19 @@ import os
 from builder.common.logger import logger
 from builder.common.utils import exec_sys_command
 from builder.common.env_checker import checker
+from builder.common.prebuild import get_machine_info
 
 class Builder:
     def __init__(self, args):
         self.args = args
 
         self.project_dir = args.project_dir
-        self.build_output_dir = os.path.join(args.project_dir, "out", args.build_type.title(), args.target_cpu)
-        self._build_tools_dir = os.path.join(args.project_dir, "prebuilts", "build-tools", f"linux-{args.target_cpu}", "bin")
+        os_name = "linux"
+        arch = "x64"
+        if args.target_cpu == "auto":
+            arch, os_name = get_machine_info()
+        self.build_output_dir = os.path.join(args.project_dir, "out", args.build_type.title(), arch)
+        self._build_tools_dir = os.path.join(args.project_dir, "prebuilts", "build-tools", os_name+"-"+arch, "bin")
         self.gn_path = os.path.join(self._build_tools_dir, "gn")
         self.ninja_path = os.path.join(self._build_tools_dir, "ninja")
 
