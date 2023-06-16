@@ -20,4 +20,7 @@ config("sandbox_utils_config") {
 ohos_static_library("sandbox_utils") {
   sources = [ "sandbox_utils.cpp" ]
   public_configs = [ ":sandbox_utils_config" ]
+
+  subsystem_name = "graphic"
+  part_name = "graphic_standard"
 }
