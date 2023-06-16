@@ -34,9 +34,13 @@ namespace Rosen {
 namespace {
     constexpr uint32_t UNI_RENDER_VSYNC_OFFSET = 10000000;
 }
-RSRenderService::RSRenderService() {}
 
-RSRenderService::~RSRenderService() noexcept {}
+const bool REGISTER_RESULT =
+    SystemAbility::MakeAndRegisterAbility(DelayedSingleton<RSRenderService>::GetInstance().get());
+
+RSRenderService::RSRenderService() : SystemAbility(RENDER_SERVICE, true) {}
+
+RSRenderService::~RSRenderService() {}
 
 bool RSRenderService::Init()
 {
@@ -67,7 +71,7 @@ bool RSRenderService::Init()
     }
     mainThread_->rsVSyncDistributor_ = rsVSyncDistributor_;
     mainThread_->Init();
- 
+
     RSQosThread::GetInstance()->appVSyncDistributor_ = appVSyncDistributor_;
     RSQosThread::ThreadStart();
 
@@ -77,20 +81,38 @@ bool RSRenderService::Init()
         RS_LOGE("RSRenderService wait SAMGR error, return value [%d].", status);
     }
 
-    auto samgr = SystemAbilityManagerClient::GetInstance().GetSystemAbilityManager();
-    if (samgr == nullptr) {
-        RS_LOGE("RSRenderService GetSystemAbilityManager fail.");
-        return false;
-    }
-    samgr->AddSystemAbility(RENDER_SERVICE, this);
-
     return true;
 }
 
 void RSRenderService::Run()
 {
-    RS_LOGE("RSRenderService::Run");
+    RS_LOGI("RSRenderService::Run");
     mainThread_->Start();
+}
+
+void RSRenderService::OnStart()
+{
+    RS_LOGI("RSRenderService::OnStart");
+    Init();
+
+    std::thread rsThread([this]() {
+        Run();
+    });
+    rsThread.detach();
+
+    if (!Publish(this)) {
+        RS_LOGE("Publish failed");
+    }
+}
+
+void RSRenderService::OnStop()
+{
+    RS_LOGI("RSRenderService::OnStop");
+}
+
+void RSRenderService::OnAddSystemAbility(int32_t systemAbilityId, const std::string &deviceId)
+{
+    RS_LOGI("systemAbilityId: %{public}d, start", systemAbilityId);
 }
 
 sptr<RSIRenderServiceConnection> RSRenderService::CreateConnection(const sptr<RSIConnectionToken>& token)
