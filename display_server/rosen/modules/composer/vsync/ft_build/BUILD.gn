@@ -68,7 +68,4 @@ ft_shared_library("libvsync") {
   public_deps = [
     "//display_server/utils/scoped_bytrace/ft_build:scoped_bytrace",
   ]
-
-  part_name = "graphic_standard"
-  subsystem_name = "graphic"
 }
