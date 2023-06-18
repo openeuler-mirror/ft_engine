@@ -1,0 +1,87 @@
+# Copyright (c) 2021-2022 Huawei Technologies Co., Ltd.
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+import("//build/gn/fangtian.gni")
+import("//display_server/ft_configs/ds_config.gni")
+
+ft_shared_library("librender_service") {
+  defines = []
+
+  sources = [
+    "core/pipeline/rs_base_render_engine.cpp",
+    "core/pipeline/rs_base_render_util.cpp",
+    "core/pipeline/rs_cold_start_thread.cpp",
+    "core/pipeline/rs_composer_adapter.cpp",
+    "core/pipeline/rs_divided_render_util.cpp",
+    "core/pipeline/rs_main_thread.cpp",
+    "core/pipeline/rs_physical_screen_processor.cpp",
+    "core/pipeline/rs_processor.cpp",
+    "core/pipeline/rs_processor_factory.cpp",
+    "core/pipeline/rs_qos_thread.cpp",
+    "core/pipeline/rs_render_engine.cpp",
+    "core/pipeline/rs_render_service.cpp",
+    "core/pipeline/rs_render_service_connection.cpp",
+    "core/pipeline/rs_render_service_listener.cpp",
+    "core/pipeline/rs_render_service_visitor.cpp",
+    "core/pipeline/rs_surface_capture_task.cpp",
+    "core/pipeline/rs_uni_render_engine.cpp",
+    "core/pipeline/rs_uni_render_judgement.cpp",
+    "core/pipeline/rs_uni_render_listener.cpp",
+    "core/pipeline/rs_uni_render_mirror_processor.cpp",
+    "core/pipeline/rs_uni_render_processor.cpp",
+    "core/pipeline/rs_uni_render_util.cpp",
+    "core/pipeline/rs_uni_render_visitor.cpp",
+    "core/pipeline/rs_unmarshal_thread.cpp",
+    "core/pipeline/rs_virtual_screen_processor.cpp",
+    "core/screen_manager/rs_screen.cpp",
+    "core/screen_manager/rs_screen_manager.cpp",
+    "core/transaction/rs_render_service_connection_stub.cpp",
+    "core/transaction/rs_render_service_stub.cpp",
+  ]
+
+  include_dirs = [
+    "core",
+    "$display_server_root/frameworks/surface/include",
+    "$display_server_root/rosen/include",
+    "$display_server_root/rosen/modules/composer/vsync/include",
+    "$display_server_root/rosen/modules/render_frame_trace/include",
+    "$display_server_root/rosen/modules/render_service_base/src",
+    "$display_server_root/rosen/modules/utils",
+    "$display_server_root/utils/log",
+  ]
+
+  deps = [
+    "$display_server_root/frameworks/surface/ft_build:surface",
+    "$display_server_root/rosen/modules/composer/ft_build:libcomposer",
+    "$display_server_root/rosen/modules/render_frame_trace:render_frame_trace",
+    "$display_server_root/rosen/modules/render_service_base/ft_build:librender_service_base",
+  ]
+
+  libs = ["png"]
+}
+
+## Build render_service.bin
+ft_executable("render_service") {
+  sources = [ "core/main.cpp" ]
+
+  include_dirs = [
+    "core",
+    "//commonlibrary/c_utils/base/include",
+  ]
+
+  deps = [
+    ":librender_service",
+    "$display_server_root/rosen/modules/composer/ft_build:libcomposer",
+    "$display_server_root/rosen/modules/render_service_base/ft_build:librender_service_base",
+  ]
+}

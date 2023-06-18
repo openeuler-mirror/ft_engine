@@ -41,7 +41,7 @@ void DestroyNativeWindowBuffer(OHNativeWindowBuffer* buffer);
 int32_t NativeWindowRequestBuffer(OHNativeWindow *window, /* [out] */ OHNativeWindowBuffer **buffer,
     /* [out] get release fence */ int *fenceFd);
 int32_t NativeWindowFlushBuffer(OHNativeWindow *window, OHNativeWindowBuffer *buffer,
-    int fenceFd, Region region);
+    int fenceFd, DirtyRegion region);
 int32_t NativeWindowCancelBuffer(OHNativeWindow *window, OHNativeWindowBuffer *buffer);
 
 // The meaning and quantity of parameters vary according to the code type.

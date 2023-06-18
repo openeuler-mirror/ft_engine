@@ -18,9 +18,9 @@
 #include <memory>
 
 #include "experimental/svg/model/SkSVGDOM.h"
-#include "third_party/skia/include/core/SkPaint.h"
-#include "third_party/skia/include/core/SkPath.h"
-#include "third_party/skia/include/core/SkPicture.h"
+#include "include/core/SkPaint.h"
+#include "include/core/SkPath.h"
+#include "include/core/SkPicture.h"
 
 #include "common/rs_macros.h"
 #include "transaction/rs_marshalling_helper.h"
