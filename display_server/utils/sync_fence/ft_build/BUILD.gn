@@ -1,0 +1,55 @@
+# Copyright (c) 2022 Huawei Technologies Co., Ltd.
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+import("//build/gn/fangtian.gni")
+import("//display_server/ft_configs/ds_config.gni")
+
+config("sync_fence_config") {
+  visibility = [ ":sync_fence" ]
+
+  cflags = [
+    "-Wall",
+    "-Werror",
+    "-g3",
+    "-Wno-missing-braces",
+    "-Wno-error=#warnings",
+  ]
+
+  include_dirs = [
+    "${sys_inc}/c_utils",
+    "${sys_inc}/eventhandler",
+    "${sys_inc}/ipc_core",
+    "${sys_inc}/hilog",
+    "${sys_inc}/hitrace_meter",
+    "$display_server_root/utils/log",
+  ]
+}
+
+config("sync_fence_config_public") {
+  include_dirs = [
+    "../export",
+  ]
+}
+
+ft_shared_library("sync_fence") {
+  sources = [
+    "../src/sync_fence.cpp",
+    "../src/sync_fence_timeline.cpp",
+    "../src/sync_fence_tracker.cpp",
+  ]
+  libs = ["ipc_core", "eventhandler", "hilog", "utils", "hitrace_meter", "sec_shared"]
+
+  configs = [ ":sync_fence_config" ]
+
+  public_configs = [":sync_fence_config_public"]
+}

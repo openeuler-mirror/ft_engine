@@ -66,7 +66,7 @@ typedef struct NativeWindowBuffer OHNativeWindowBuffer;
 /**
  * @brief indicates a dirty region where content is updated.
  */
-typedef struct Region {
+typedef struct DirtyRegion {
     /** if rects is nullptr, fill the Buffer dirty size by default */
     struct Rect {
         int32_t x;
@@ -76,7 +76,7 @@ typedef struct Region {
     } *rects;
     /** if rectNumber is 0, fill the Buffer dirty size by default */
     int32_t rectNumber;
-}Region;
+}DirtyRegion;
 
 
 /**
@@ -321,7 +321,7 @@ int32_t OH_NativeWindow_NativeWindowRequestBuffer(OHNativeWindow *window,
  * @version 1.0
  */
 int32_t OH_NativeWindow_NativeWindowFlushBuffer(OHNativeWindow *window, OHNativeWindowBuffer *buffer,
-    int fenceFd, Region region);
+    int fenceFd, DirtyRegion region);
 
  /**
  * @brief Returns the <b>NativeWindowBuffer</b> to the buffer queue through a <b>NativeWindow</b> instance, without filling in any content. The <b>NativeWindowBuffer</b> can be used for another request.
