@@ -1,0 +1,205 @@
+# Copyright (c) 2021-2023 Huawei Technologies Co., Ltd.
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+import("//build/gn/fangtian.gni")
+import("//display_server/ft_configs/ds_config.gni")
+
+rs_common_define = [ "ROSEN_OHOS" ]
+enable_export_macro = true
+
+config("export_config") {
+  cflags_cc = [ "-std=c++17" ]
+  include_dirs = [ "include" ]
+
+  defines = rs_common_define
+}
+
+ft_source_set("render_service_base_src") {
+  defines = ["__FANGTIAN__"]
+  defines += [ "MODULE_RSB" ]
+
+  sources = [
+    #animation
+    "../src/animation/rs_animation_fraction.cpp",
+    "../src/animation/rs_animation_manager.cpp",
+    "../src/animation/rs_interpolator.cpp",
+    "../src/animation/rs_render_animation.cpp",
+    "../src/animation/rs_render_curve_animation.cpp",
+    "../src/animation/rs_render_keyframe_animation.cpp",
+    "../src/animation/rs_render_path_animation.cpp",
+    "../src/animation/rs_render_property_animation.cpp",
+    "../src/animation/rs_render_spring_animation.cpp",
+    "../src/animation/rs_render_transition.cpp",
+    "../src/animation/rs_render_transition_effect.cpp",
+    "../src/animation/rs_spring_interpolator.cpp",
+    "../src/animation/rs_spring_model.cpp",
+    "../src/animation/rs_steps_interpolator.cpp",
+    "../src/animation/rs_transition_effect.cpp",
+    "../src/animation/rs_value_estimator.cpp",
+
+    # message(depracated)
+    "../src/command/rs_message_processor.cpp",
+
+    # modifier
+    "../src/modifier/rs_render_modifier.cpp",
+    "../src/modifier/rs_render_property.cpp",
+
+    #command
+    "../src/command/rs_animation_command.cpp",
+    "../src/command/rs_base_node_command.cpp",
+    "../src/command/rs_canvas_node_command.cpp",
+    "../src/command/rs_command_factory.cpp",
+    "../src/command/rs_display_node_command.cpp",
+    "../src/command/rs_node_command.cpp",
+    "../src/command/rs_proxy_node_command.cpp",
+    "../src/command/rs_root_node_command.cpp",
+    "../src/command/rs_surface_node_command.cpp",
+
+    #common
+    "../src/common/rs_color.cpp",
+    "../src/common/rs_common_def.cpp",
+    "../src/common/rs_obj_abs_geometry.cpp",
+    "../src/common/rs_occlusion_region.cpp",
+    "../src/common/rs_thread_handler_generic.cpp",
+    "../src/common/rs_thread_looper_generic.cpp",
+    "../src/common/rs_thread_looper_impl.cpp",
+
+    #delegate
+    "../src/delegate/rs_functional_delegate.cpp",
+
+    #ipc_callbacks
+    "../src/ipc_callbacks/buffer_available_callback_proxy.cpp",
+    "../src/ipc_callbacks/buffer_available_callback_stub.cpp",
+    "../src/ipc_callbacks/rs_application_agent_proxy.cpp",
+    "../src/ipc_callbacks/rs_application_agent_stub.cpp",
+    "../src/ipc_callbacks/rs_occlusion_change_callback_proxy.cpp",
+    "../src/ipc_callbacks/rs_occlusion_change_callback_stub.cpp",
+    "../src/ipc_callbacks/rs_render_mode_change_callback_proxy.cpp",
+    "../src/ipc_callbacks/rs_render_mode_change_callback_stub.cpp",
+    "../src/ipc_callbacks/screen_change_callback_proxy.cpp",
+    "../src/ipc_callbacks/screen_change_callback_stub.cpp",
+    "../src/ipc_callbacks/surface_capture_callback_proxy.cpp",
+    "../src/ipc_callbacks/surface_capture_callback_stub.cpp",
+
+    #pipeline
+    "../src/pipeline/rs_base_render_node.cpp",
+    "../src/pipeline/rs_canvas_render_node.cpp",
+    "../src/pipeline/rs_context.cpp",
+    "../src/pipeline/rs_dirty_region_manager.cpp",
+    "../src/pipeline/rs_display_render_node.cpp",
+    "../src/pipeline/rs_draw_cmd.cpp",
+    "../src/pipeline/rs_draw_cmd_list.cpp",
+    "../src/pipeline/rs_occlusion_config.cpp",
+    "../src/pipeline/rs_paint_filter_canvas.cpp",
+    "../src/pipeline/rs_proxy_render_node.cpp",
+    "../src/pipeline/rs_recording_canvas.cpp",
+    "../src/pipeline/rs_render_node.cpp",
+    "../src/pipeline/rs_render_node_map.cpp",
+    "../src/pipeline/rs_root_render_node.cpp",
+    "../src/pipeline/rs_surface_handler.cpp",
+    "../src/pipeline/rs_surface_render_node.cpp",
+
+    #property
+    "../src/property/rs_properties.cpp",
+    "../src/property/rs_properties_painter.cpp",
+    "../src/property/rs_property_trace.cpp",
+
+    #render
+    "../src/render/rs_blur_filter.cpp",
+    "../src/render/rs_border.cpp",
+    "../src/render/rs_filter.cpp",
+    "../src/render/rs_image.cpp",
+    "../src/render/rs_image_cache.cpp",
+    "../src/render/rs_mask.cpp",
+    "../src/render/rs_material_filter.cpp",
+    "../src/render/rs_path.cpp",
+    "../src/render/rs_shader.cpp",
+    "../src/render/rs_shadow.cpp",
+    "../src/render/rs_skia_filter.cpp",
+
+    #transaction
+    "../src/transaction/rs_occlusion_data.cpp",
+    "../src/transaction/rs_transaction_data.cpp",
+    "../src/transaction/rs_transaction_proxy.cpp",
+
+    #screen_manager
+    "../src/screen_manager/rs_screen_capability.cpp",
+    "../src/screen_manager/rs_screen_data.cpp",
+    "../src/screen_manager/rs_screen_hdr_capability.cpp",
+    "../src/screen_manager/rs_screen_mode_info.cpp",
+    "../src/screen_manager/rs_screen_props.cpp",
+    "../src/screen_manager/rs_virtual_screen_resolution.cpp",
+  ]
+
+  cflags = [
+    "-Wall",
+    "-Wno-pointer-arith",
+    "-Wno-non-virtual-dtor",
+    "-Wno-missing-field-initializers",
+    "-Wno-c++11-narrowing",
+    "-fvisibility=hidden",
+  ]
+
+  cflags_cc = [
+    "-std=c++17",
+    "-fvisibility-inlines-hidden",
+  ]
+
+  public_configs = [
+    ":export_config",
+  ]
+  deps = [
+    "../src/platform/fangtian:rosen_fangtian_sources",
+    "mock:mock_image_native",
+  ]
+
+  if (enable_export_macro) {
+    defines += [ "ENABLE_EXPORT_MACRO" ]
+  }
+
+  if (rs_enable_gpu) {
+    sources += [ "src/common/rs_shared_context.cpp" ]
+    defines += [
+      "GR_TEST_UTILS=1",
+    ]
+  }
+
+  include_dirs = [
+    "${sys_inc}/c_utils",
+    "${sys_inc}/skia",
+    "${sys_inc}/ipc_core",
+    "${sys_inc}/hitrace_meter",
+    "${sys_inc}/eventhandler",
+    "$rosen_root/modules/render_service_base/src",
+    "$rosen_root/modules/platform/image_native",
+    "$rosen_root/modules/composer/vsync/include",
+    "$display_server_root/utils/log",
+    "$display_server_root/interfaces/inner_api/surface",
+    "$display_server_root/interfaces/inner_api/composer",
+    "../include",
+  ]
+
+  deps += [
+    "$display_server_root/utils/buffer_handle/ft_build:buffer_handle",
+    "$display_server_root/utils/sandbox/ft_build:sandbox_utils",
+    "$display_server_root/utils/sync_fence/ft_build:sync_fence",
+  ]
+
+}
+
+ft_shared_library("librender_service_base") {
+  deps = [
+    ":render_service_base_src",
+    "../src/platform/fangtian:rosen_fangtian_sources",
+  ]
+}

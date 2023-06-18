@@ -1,4 +1,4 @@
-# Copyright (c) 2023 Huawei Device Co., Ltd.
+# Copyright (c) 2021-2023 Huawei Technologies Co., Ltd.
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
 # You may obtain a copy of the License at
@@ -11,12 +11,18 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-group("ft_engine") {
-  deps = [
-    "//display_server/utils/socketpair/ft_build:socketpair",
-    "//display_server/rosen/modules/composer/vsync/ft_build:libvsync",
-    "//display_server/utils/sync_fence/ft_build:sync_fence",
-    "//display_server/frameworks/surface/ft_build:surface",
-    "//display_server/rosen/modules/render_service_base/ft_build:librender_service_base",
+import("//build/gn/fangtian.gni")
+import("//display_server/ft_configs/ds_config.gni")
+
+ft_source_set("mock_image_native") {
+
+  include_dirs = [
+    "${sys_inc}/c_utils",
+    "${sys_inc}/skia",
+  ]
+
+  sources = [
+    "../../../platform/image_native/pixel_map.cpp",
+    "../../../platform/image_native/pixel_map_rosen_utils.cpp",
   ]
 }

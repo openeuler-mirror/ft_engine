@@ -23,6 +23,7 @@
 #include <idisplay_gralloc.h>
 #include "egl_data.h"
 #include "stdint.h"
+#include <mutex>
 
 struct BufferWrapper {};
 

@@ -299,7 +299,7 @@ bool RSSurfaceRenderNode::GetSecurityLayer() const
     return isSecurityLayer_;
 }
 
-#if !defined(_WIN32) && !defined(__APPLE__) && !defined(__gnu_linux__)
+#if (!defined(_WIN32) && !defined(__APPLE__) && !defined(__gnu_linux__)) || defined(__FANGTIAN__)
 void RSSurfaceRenderNode::SetColorSpace(ColorGamut colorSpace)
 {
     colorSpace_ = colorSpace;

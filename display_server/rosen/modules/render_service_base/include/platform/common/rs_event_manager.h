@@ -17,6 +17,7 @@
 #define RENDER_SERVICE_BASE_COMMON_RS_EVENT_MANAGER_H
 
 #include <chrono>
+#include <mutex>
 #include "rs_event_detector.h"
 
 namespace OHOS {
