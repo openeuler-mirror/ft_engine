@@ -1,0 +1,60 @@
+# Copyright (c) 2022 Huawei Device Co., Ltd.
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+import("//build/gn/fangtian.gni")
+
+config("display_device_public_config") {
+  include_dirs = [
+    "//display_server/drivers/hal/drm_backend/display_device",
+    "//display_server/drivers/hal/drm_backend/include",
+
+    "//display_server/drivers/interfaces",
+    "//display_server/drivers/base",
+  ]
+}
+
+ft_shared_library("display_device") {
+  sources = [
+    "device_event_monitor.cpp",
+    "drm_atomic_committer.cpp",
+    "drm_connector.cpp",
+    "drm_crtc.cpp",
+    "drm_device.cpp",
+    "drm_display.cpp",
+    "drm_encoder.cpp",
+    "drm_frame_buffer.cpp",
+    "drm_layer.cpp",
+    "drm_mode_info.cpp",
+    "drm_plane.cpp",
+    "drm_property.cpp",
+    "hdi_display.cpp",
+    "hdi_layer.cpp",
+    "hdi_session.cpp",
+  ]
+
+  configs = [
+    "//display_server/drivers/hal:hal_public_config",
+  ]
+  public_configs = [ 
+    ":display_device_public_config",
+    "//display_server/drivers/hal/drm_backend:import_system_gbm_config"
+  ]
+
+  public_deps = [ 
+    "//display_server/drivers/hal/drm_backend:display_drm_dep",
+    "//display_server/drivers/hal/base:hal_base",
+  ]
+
+  deps = [
+    "//display_server/utils/sync_fence/ft_build:sync_fence",
+  ]
+}

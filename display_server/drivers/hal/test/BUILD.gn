@@ -11,18 +11,22 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-group("ft_engine") {
-  deps = [
-    "//display_server/utils/socketpair/ft_build:socketpair",
-    "//display_server/rosen/modules/composer/vsync/ft_build:libvsync",
-    "//display_server/drivers/hal/drm_backend:drm_backend"
-  ]
-}
+import("//build/gn/fangtian.gni")
 
-group("ft_test") {
-  testonly = true
+ft_executable("drm_backend_test") {
+    testonly = true
 
-  deps = [
-    "//display_server/drivers/hal/test:drm_backend_test"
-  ]
+    sources = [
+        "system_test/main.cpp"
+    ]
+
+    deps = [
+        "//display_server/drivers/hal/drm_backend:drm_backend",
+        "//display_server/drivers/hal/base:hal_base",
+        "//display_server/utils/sync_fence/ft_build:sync_fence",
+    ]
+
+    configs = [
+        "//display_server/drivers/hal:hal_public_config"
+    ]
 }
