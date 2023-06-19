@@ -59,6 +59,12 @@ echo -e "\e[36m[-] Prepare system packages...\e[0m"
 # Check & Install required system packages
 python3 ${PROJECT_DIR}/build/builder.py check --install-packages $*
 
+# =============================================================================
+# Prebuild
+# =============================================================================
+#
+# download prebuild files
+
 # install prebuild library
 if [ ! -d ${PROJECT_DIR}/prebuilts/libs ]; then
 git clone https://gitee.com/yanansong/ft_engine_prebuild.git ${PROJECT_DIR}/prebuilts/libs
@@ -81,5 +87,22 @@ cd ${PROJECT_DIR}/prebuilts/inc
 sudo cp -fr * /usr/local/include
 cd ${PROJECT_DIR}
 rm -fr ${PROJECT_DIR}/prebuilts/inc
+
+# install ft_surface_wrapper
+if [ ! -d ${PROJECT_DIR}/prebuilts/rpm/ft_surface_wrapper ]; then
+    git clone https://gitee.com/ShaoboFeng/ft_surface_wrapper.git ${PROJECT_DIR}/prebuilts/rpm/ft_surface_wrapper
+fi
+cd ${PROJECT_DIR}/prebuilts/rpm/ft_surface_wrapper/
+if [ ! -d ${PROJECT_DIR}/prebuilts/rpm/ft_surface_wrapper/build ]; then
+    mkdir build
+fi
+cd build
+cmake ..
+make -j6
+sudo make install
+rm -fr ${PROJECT_DIR}/prebuilts/rpm/ft_surface_wrapper
+cd ${PROJECT_DIR}
+
+# =============================================================================
 
 echo -e "\033[32m[*] Pre-build Done. You need exec 'build.sh'.\033[0m"
