@@ -13,6 +13,8 @@
  * limitations under the License.
  */
 
+#include <cstring>
+
 #include "sync_fence_tracker.h"
 #include "hilog/log.h"
 #include "rs_trace.h"
