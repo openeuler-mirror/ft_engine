@@ -46,7 +46,7 @@ ft_shared_library("sync_fence") {
   ]
 
   configs = [
-    ":sync_fence_config"
+    ":sync_fence_config",
     "//build/gn/configs/system_libs:c_utils_config",
     "//build/gn/configs/system_libs:hilog_config",
     "//build/gn/configs/system_libs:eventhandler_config",

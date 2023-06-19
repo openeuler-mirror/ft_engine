@@ -27,6 +27,7 @@ ft_executable("drm_backend_test") {
     ]
 
     configs = [
+        "//build/gn/configs/system_libs:ipc_core_config",
         "//display_server/drivers/hal:hal_public_config"
     ]
 }

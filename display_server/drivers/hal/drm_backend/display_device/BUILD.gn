@@ -42,6 +42,7 @@ ft_shared_library("display_device") {
   ]
 
   configs = [
+    "//build/gn/configs/system_libs:ipc_core_config",
     "//display_server/drivers/hal:hal_public_config",
   ]
   public_configs = [ 
