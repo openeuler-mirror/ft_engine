@@ -28,4 +28,5 @@ package_deps = [
     "tar",
     #build mesa
     "cmake",
+    "meson",
 ]
