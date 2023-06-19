@@ -13,25 +13,26 @@
 
 import("//build/gn/fangtian.gni")
 import("//display_server/ft_configs/ds_config.gni")
-#import("../../../config.gni")
-# TODO enable hisysevent
-#hisysevent_enable = false
 
-config("export_config") {
+config("platform_config") {
   include_dirs = [
     "$rosen_root/include",
-    "//foundation/graphic/graphic_2d/rosen/modules/composer/vsync/include",
-    "//foundation/graphic/graphic_2d/frameworks/surface/src",
-    "//foundation/graphic/graphic_2d/rosen/modules/2d_graphics/src",
-    "//foundation/graphic/graphic_2d/rosen/modules/2d_graphics/include",
-    "//foundation/multimedia/image_framework/interfaces/innerkits/include",
     "$display_server_root/interfaces/inner_api/surface",
     "$display_server_root/interfaces/inner_api/common",
   ]
 }
 
 ft_source_set("rosen_fangtian_sources") {
-  public_configs = [ ":export_config" ]
+  configs = [
+    ":platform_config",
+    "//build/gn/configs/system_libs:hilog_config",
+    "//build/gn/configs/system_libs:c_utils_config",
+    "//build/gn/configs/system_libs:ipc_core_config",
+    "//build/gn/configs/system_libs:hitrace_meter_config",
+    "//build/gn/configs/system_libs:eventhandler_config",
+    "//build/gn/configs/system_libs:skia_config",
+    "//build/gn/configs/system_libs:samgr_config",
+  ]
 
   cflags_cc = [
     "-std=c++17",
@@ -88,13 +89,6 @@ ft_source_set("rosen_fangtian_sources") {
   }
 
   include_dirs = [
-    "${sys_inc}/c_utils",
-    "${sys_inc}/ipc_core",
-    "${sys_inc}/hitrace_meter",
-    "${sys_inc}/hilog",
-    "${sys_inc}/skia",
-    "${sys_inc}/samgr",
-    "${sys_inc}/eventhandler",
     "$rosen_root/modules/render_service_base/include",
     "$rosen_root/modules/render_service_base/src/platform/fangtian/include",
     "$rosen_root/modules/platform/image_native",
@@ -118,6 +112,4 @@ ft_source_set("rosen_fangtian_sources") {
     ]
     libs = ["crypto"]
   }
-
-  libs = ["ace_skia_fangtian", "ipc_core", "eventhandler", "hilog", "utils", "samgr_proxy", "hitrace_meter"]
 }

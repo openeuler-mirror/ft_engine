@@ -35,3 +35,13 @@ config("eventhandler_config") {
     include_dirs = [ "${sys_inc}/eventhandler" ]
     libs = [ "eventhandler" ]
 }
+
+config("skia_config") {
+    include_dirs = [ "${sys_inc}/skia" ]
+    libs = [ "ace_skia_fangtian" ]
+}
+
+config("samgr_config") {
+    include_dirs = [ "${sys_inc}/samgr" ]
+    libs = [ "samgr_proxy" ]
+}
