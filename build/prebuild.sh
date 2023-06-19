@@ -86,10 +86,26 @@ rm -fr ${PROJECT_DIR}/prebuilts/inc
 if [ ! -d ${PROJECT_DIR}/prebuilts/rpm/ft_surface_wrapper ]; then
 git clone https://gitee.com/ShaoboFeng/ft_surface_wrapper.git ${PROJECT_DIR}/prebuilts/rpm/ft_surface_wrapper
 fi
+cd ${PROJECT_DIR}/prebuilts/rpm/ft_surface_wrapper/
+if [ ! -d ${PROJECT_DIR}/prebuilts/rpm/ft_surface_wrapper/build ]; then
+mkdir build
+fi
+cd build
+pwd
+cmake ..
+make -j6
+sudo make install
+rm -fr ${PROJECT_DIR}/prebuilts/rpm/ft_surface_wrapper
+cd ${PROJECT_DIR}
 
-# copy include files to /usr/include.
-cd ${PROJECT_DIR}/prebuilts/rpm/ft_surface_wrapper/include
-sudo cp -fr * /usr/local/include/
+# install mesa_fangtian
+if [ ! -d ${PROJECT_DIR}/prebuilts/rpm/ft_surface_wrapper ]; then
+git clone https://gitee.com/ShaoboFeng/mesa-fangtian.git -b ft_dev ${PROJECT_DIR}/prebuilts/rpm/mesa-fangtian
+fi
+cd ${PROJECT_DIR}/prebuilts/rpm/mesa-fangtian
+./build.sh
+cd mesa-openEuler-22.03-LTS/mesa-21.3.1/build
+sudo ninja install
 cd ${PROJECT_DIR}
 
 echo -e "\033[32m[*] Pre-build Done. You need exec 'build.sh'.\033[0m"
