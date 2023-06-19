@@ -19,7 +19,7 @@ enable_export_macro = true
 
 config("export_config") {
   cflags_cc = [ "-std=c++17" ]
-  include_dirs = [ "include" ]
+  include_dirs = [ "../include" ]
 
   defines = rs_common_define
 }
@@ -174,19 +174,22 @@ ft_source_set("render_service_base_src") {
     ]
   }
 
+  configs = [
+    "//build/gn/configs/system_libs:c_utils_config",
+    "//build/gn/configs/system_libs:ipc_core_config",
+    "//build/gn/configs/system_libs:hitrace_meter_config",
+    "//build/gn/configs/system_libs:eventhandler_config",
+    "//build/gn/configs/system_libs:skia_config",
+  ]
+
   include_dirs = [
-    "${sys_inc}/c_utils",
-    "${sys_inc}/skia",
-    "${sys_inc}/ipc_core",
-    "${sys_inc}/hitrace_meter",
-    "${sys_inc}/eventhandler",
     "$rosen_root/modules/render_service_base/src",
     "$rosen_root/modules/platform/image_native",
     "$rosen_root/modules/composer/vsync/include",
     "$display_server_root/utils/log",
     "$display_server_root/interfaces/inner_api/surface",
     "$display_server_root/interfaces/inner_api/composer",
-    "../include",
+    "$display_server_root/interfaces/inner_api/common",
   ]
 
   deps += [
