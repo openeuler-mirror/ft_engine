@@ -26,4 +26,6 @@ package_deps = [
     "llvm-devel",
     "python3",
     "tar",
+    #build mesa
+    "cmake",
 ]
