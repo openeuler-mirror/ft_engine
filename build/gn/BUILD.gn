@@ -15,6 +15,5 @@ group("ft_engine") {
   deps = [
     "//display_server/utils/socketpair/ft_build:socketpair",
     "//display_server/rosen/modules/composer/vsync/ft_build:libvsync",
-    "//display_server/frameworks/fence/ft_build:libfence"
   ]
 }
