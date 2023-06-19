@@ -1,0 +1,49 @@
+# Copyright (c) 2022 Huawei Device Co., Ltd.
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+import("//build/gn/fangtian.gni")
+
+config("import_system_drm_config") {
+  cflags = [ "-DUSE_LIBUDEV=1" ]
+  include_dirs = [
+    "/usr/include/libdrm",
+    "/usr/local/include/libdrm",
+  ]
+  libs = [
+    "drm",
+    "udev",
+  ]
+}
+
+config("import_system_gbm_config") {
+  cflags = [ "-DDRM_BACKEND_USE_GBM=1" ]
+  libs = [ "gbm" ]
+}
+
+ft_source_set("display_drm_dep") {
+  if (current_cpu != target_cpu && target_cpu == "aarch64") {
+    print("[GN ERROR] TODO: cross compile for DRM")
+  } else {
+    public_configs = [ ":import_system_drm_config" ]
+  }
+}
+
+group("drm_backend") {
+  public_configs = [
+    "display_device:display_device_public_config",
+    "display_gralloc:display_gralloc_public_config",
+  ]
+  public_deps = [
+    "display_device:display_device",
+    "display_gralloc:display_gralloc",
+  ]
+}

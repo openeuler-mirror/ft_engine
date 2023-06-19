@@ -11,24 +11,27 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-title = "Fangtian System Dependencies"
+config("c_utils_config") {
+    include_dirs = [ "${sys_inc}/c_utils" ]
+    libs = [ "utils", "sec_shared" ]
+}
 
-[dependencies]
-supported_os = ["openeuler"]
+config("ipc_core_config") {
+    include_dirs = [ "${sys_inc}/ipc_core" ]
+    libs = [ "ipc_core" ]
+}
 
-[dependencies.openeuler]
-supported_version = ["22.03"]
+config("hilog_config") {
+    include_dirs = [ "${sys_inc}/hilog" ]
+    libs = [ "hilog" ]
+}
 
-[openeuler."22.03"]
-package_deps = [
-    "clang",
-    "compiler-rt",
-    "llvm-devel",
-    "python3",
-    "tar",
-    "cmake",
-    # DRM Backend
-    "libdrm-devel",
-    "systemd-devel",
-    "mesa-libgbm-devel",
-]
+config("hitrace_meter_config") {
+    include_dirs = [ "${sys_inc}/hitrace_meter" ]
+    libs = [ "hitrace_meter" ]
+}
+
+config("eventhandler_config") {
+    include_dirs = [ "${sys_inc}/eventhandler" ]
+    libs = [ "eventhandler" ]
+}

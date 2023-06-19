@@ -46,7 +46,6 @@ declare_args() {
   # We add this parameter to speed up link process, enable_lto_O0 default is false.
   enable_lto_O0 = false
 
-
   is_official_build = false
   # Component build. Setting to true compiles targets declared as "components"
   # as shared libraries loaded dynamically. This speeds up development time.
@@ -76,6 +75,8 @@ declare_args() {
   project_root_dir = ""
 
   is_ft_build = current_os == "linux"
+
+  sys_inc = "/usr/local/include"
 }
 
 if (use_musl_oh == true) {

@@ -26,18 +26,15 @@ config("sync_fence_config") {
   ]
 
   include_dirs = [
-    "${sys_inc}/c_utils",
-    "${sys_inc}/eventhandler",
-    "${sys_inc}/ipc_core",
-    "${sys_inc}/hilog",
-    "${sys_inc}/hitrace_meter",
     "$display_server_root/utils/log",
   ]
 }
 
-config("sync_fence_config_public") {
+
+config("sync_fence_public_config") {
   include_dirs = [
     "../export",
+    "//display_server/utils/log",
   ]
 }
 
@@ -47,9 +44,17 @@ ft_shared_library("sync_fence") {
     "../src/sync_fence_timeline.cpp",
     "../src/sync_fence_tracker.cpp",
   ]
-  libs = ["ipc_core", "eventhandler", "hilog", "utils", "hitrace_meter", "sec_shared"]
 
-  configs = [ ":sync_fence_config" ]
+  configs = [
+    ":sync_fence_config"
+    "//build/gn/configs/system_libs:c_utils_config",
+    "//build/gn/configs/system_libs:hilog_config",
+    "//build/gn/configs/system_libs:eventhandler_config",
+    "//build/gn/configs/system_libs:hitrace_meter_config",
+    "//build/gn/configs/system_libs:ipc_core_config",
+  ]
 
-  public_configs = [":sync_fence_config_public"]
+  public_configs = [ 
+    ":sync_fence_public_config",
+  ]
 }

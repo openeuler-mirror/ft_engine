@@ -15,7 +15,4 @@ import("//build/gn/templates/build_targets.gni")
 
 declare_args() {
   is_fangtian_build = true
-
 }
-
-sys_inc = "/usr/local/include"
