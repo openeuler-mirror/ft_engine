@@ -11,24 +11,22 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-title = "Fangtian System Dependencies"
+import("//build/gn/fangtian.gni")
 
-[dependencies]
-supported_os = ["openeuler"]
+ft_executable("drm_backend_test") {
+    testonly = true
 
-[dependencies.openeuler]
-supported_version = ["22.03"]
+    sources = [
+        "system_test/main.cpp"
+    ]
 
-[openeuler."22.03"]
-package_deps = [
-    "clang",
-    "compiler-rt",
-    "llvm-devel",
-    "python3",
-    "tar",
-    "cmake",
-    # DRM Backend
-    "libdrm-devel",
-    "systemd-devel",
-    "mesa-libgbm-devel",
-]
+    deps = [
+        "//display_server/drivers/hal/drm_backend:drm_backend",
+        "//display_server/drivers/hal/base:hal_base",
+        "//display_server/utils/sync_fence/ft_build:sync_fence",
+    ]
+
+    configs = [
+        "//display_server/drivers/hal:hal_public_config"
+    ]
+}
