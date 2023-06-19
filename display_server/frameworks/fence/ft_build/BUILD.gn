@@ -16,18 +16,18 @@ import("//build/gn/fangtian.gni")
 config("fence_config") {
   visibility = [ ":*" ]
   include_dirs = [ "../include" ]
-  include_dirs += [ "${sys_inc}/c_utils", "${sys_inc}/hilog" ]
-
   cflags = [
     "-Wall",
     "-Werror",
     "-g3",
   ]
-
-  libs = ["utils", "hilog", "sec_shared"]
 }
 
 ft_shared_library("libfence") {
   sources = [ "../src/fence.cpp" ]
-  configs = [ ":fence_config" ]
+  configs = [
+    ":fence_config",
+    "//build/gn/configs/system_libs:hilog_config",
+    "//build/gn/configs/system_libs:c_utils_config"
+  ]
 }
