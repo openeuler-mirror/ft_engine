@@ -11,18 +11,27 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-group("ft_engine") {
-  deps = [
-    "//display_server/utils/socketpair/ft_build:socketpair",
-    "//display_server/rosen/modules/composer/vsync/ft_build:libvsync",
-    "//display_server/drivers/hal/drm_backend:drm_backend"
-  ]
+config("c_utils_config") {
+    include_dirs = [ "${sys_inc}/c_utils" ]
+    libs = [ "utils", "sec_shared" ]
 }
 
-group("ft_test") {
-  testonly = true
+config("ipc_core_config") {
+    include_dirs = [ "${sys_inc}/ipc_core" ]
+    libs = [ "ipc_core" ]
+}
 
-  deps = [
-    "//display_server/drivers/hal/test:drm_backend_test"
-  ]
+config("hilog_config") {
+    include_dirs = [ "${sys_inc}/hilog" ]
+    libs = [ "hilog" ]
+}
+
+config("hitrace_meter_config") {
+    include_dirs = [ "${sys_inc}/hitrace_meter" ]
+    libs = [ "hitrace_meter" ]
+}
+
+config("eventhandler_config") {
+    include_dirs = [ "${sys_inc}/eventhandler" ]
+    libs = [ "eventhandler" ]
 }
