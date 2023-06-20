@@ -15,8 +15,8 @@
 
 #include "transaction/rs_render_service_client.h"
 
-#include "backend/rs_surface_ohos_gl.h"
-#include "backend/rs_surface_ohos_raster.h"
+#include "backend/rs_surface_gl.h"
+#include "backend/rs_surface_raster.h"
 #include "command/rs_command.h"
 #include "ipc_callbacks/screen_change_callback_stub.h"
 #include "ipc_callbacks/surface_capture_callback_stub.h"
@@ -25,7 +25,7 @@
 #include "ipc_callbacks/rs_render_mode_change_callback_stub.h"
 #include "platform/common/rs_log.h"
 #include "rs_render_service_connect_hub.h"
-#include "rs_surface_ohos.h"
+#include "rs_surface.h"
 
 namespace OHOS {
 namespace Rosen {

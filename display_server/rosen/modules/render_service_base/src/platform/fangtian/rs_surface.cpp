@@ -13,15 +13,40 @@
  * limitations under the License.
  */
 
-#include "rs_surface_frame_ohos.h"
-
-#include "platform/common/rs_log.h"
-
+#include "rs_surface_frame.h"
+#include "rs_surface.h"
 namespace OHOS {
 namespace Rosen {
-void RSSurfaceFrameOhos::SetRenderContext(RenderContext* context)
+RenderContext* RSSurfaceOhos::GetRenderContext()
 {
-    renderContext_ = context;
+    return context_;
+}
+
+void RSSurfaceOhos::SetRenderContext(RenderContext* context)
+{
+    context_ = context;
+}
+
+void RSSurfaceOhos::SetColorSpace(ColorGamut colorSpace)
+{
+    colorSpace_ = colorSpace;
+}
+
+ColorGamut RSSurfaceOhos::GetColorSpace() const
+{
+    return colorSpace_;
+}
+
+uint32_t RSSurfaceOhos::GetQueueSize() const
+{
+    return producer_->GetQueueSize();
+}
+
+void RSSurfaceOhos::ClearAllBuffer()
+{
+    if (producer_ != nullptr) {
+        producer_->Disconnect();
+    }
 }
 } // namespace Rosen
 } // namespace OHOS
