@@ -16,9 +16,9 @@ import("//display_server/ft_configs/ds_config.gni")
 
 ft_source_set("mock_image_native") {
 
-  include_dirs = [
-    "${sys_inc}/c_utils",
-    "${sys_inc}/skia",
+  configs = [
+    "//build/gn/configs/system_libs:c_utils_config",
+    "//build/gn/configs/system_libs:skia_config",
   ]
 
   sources = [
