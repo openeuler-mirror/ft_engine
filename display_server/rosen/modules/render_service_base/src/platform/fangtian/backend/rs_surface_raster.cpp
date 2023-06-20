@@ -13,12 +13,12 @@
  * limitations under the License.
  */
 
-#include "rs_surface_ohos_raster.h"
+#include "rs_surface_raster.h"
 
 #include <sync_fence.h>
 
 #include "platform/common/rs_log.h"
-#include "rs_surface_frame_ohos_raster.h"
+#include "rs_surface_frame_raster.h"
 
 namespace OHOS {
 namespace Rosen {

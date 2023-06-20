@@ -12,27 +12,16 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
+#include "rs_surface_frame.h"
+
 #include "platform/common/rs_log.h"
-#include "platform/drawing/rs_surface_converter.h"
-#include "rs_surface_ohos.h"
-#include "platform/ohos/backend/rs_surface_ohos_raster.h"
-#include "platform/ohos/backend/rs_surface_ohos_gl.h"
 
 namespace OHOS {
 namespace Rosen {
-sptr<Surface> RSSurfaceConverter::ConvertToOhosSurface(std::shared_ptr<RSSurface> surface)
+void RSSurfaceFrameOhos::SetRenderContext(RenderContext* context)
 {
-    if (surface == nullptr) {
-        ROSEN_LOGE("nullptr input");
-        return nullptr;
-    }
-#ifdef ACE_ENABLE_GL
-    auto derivedPtr = std::static_pointer_cast<RSSurfaceOhosGl>(surface); // gpu render
-#else
-    auto derivedPtr = std::static_pointer_cast<RSSurfaceOhosRaster>(surface); // cpu render
-#endif
-    return derivedPtr->GetSurface();
+    renderContext_ = context;
 }
-
 } // namespace Rosen
 } // namespace OHOS

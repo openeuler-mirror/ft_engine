@@ -44,8 +44,8 @@ ft_source_set("rosen_fangtian_sources") {
 
   sources = [
     #backend
-    "backend/rs_surface_frame_ohos_raster.cpp",
-    "backend/rs_surface_ohos_raster.cpp",
+    "backend/rs_surface_frame_raster.cpp",
+    "backend/rs_surface_raster.cpp",
     "rs_ashmem_helper.cpp",
 
     #overdraw
@@ -63,9 +63,9 @@ ft_source_set("rosen_fangtian_sources") {
     "rs_render_service_connect_hub.cpp",
     "rs_render_service_connection_proxy.cpp",
     "rs_render_service_proxy.cpp",
-    "rs_surface_frame_ohos.cpp",
-    "rs_surface_ohos.cpp",
-    "rs_surface_ohos_converter.cpp",
+    "rs_surface_frame.cpp",
+    "rs_surface.cpp",
+    "rs_surface_converter.cpp",
     "rs_system_properties.cpp",
     "rs_vsync_client.cpp",
   ]
@@ -76,8 +76,8 @@ ft_source_set("rosen_fangtian_sources") {
     ]
 
     sources += [
-      "backend/rs_surface_frame_ohos_gl.cpp",
-      "backend/rs_surface_ohos_gl.cpp",
+      "backend/rs_surface_frame_gl.cpp",
+      "backend/rs_surface_gl.cpp",
     ]
 
     sources += [

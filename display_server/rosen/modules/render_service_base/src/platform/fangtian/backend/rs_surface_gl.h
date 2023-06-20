@@ -19,9 +19,9 @@
 #include <surface.h>
 
 #include "platform/drawing/rs_surface.h"
-#include "platform/ohos/rs_surface_ohos.h"
+#include "platform/fangtian/rs_surface.h"
 #include "EGL/egl.h"
-#include "rs_surface_frame_ohos_gl.h"
+#include "rs_surface_frame_gl.h"
 #include "window.h"
 
 namespace OHOS {

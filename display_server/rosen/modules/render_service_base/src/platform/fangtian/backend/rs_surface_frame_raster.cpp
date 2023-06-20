@@ -13,7 +13,7 @@
  * limitations under the License.
  */
 
-#include "rs_surface_frame_ohos_raster.h"
+#include "rs_surface_frame_raster.h"
 #include <cstdint>
 
 #include "platform/common/rs_log.h"
