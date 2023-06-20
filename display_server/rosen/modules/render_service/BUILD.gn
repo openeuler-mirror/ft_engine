@@ -23,7 +23,7 @@ ohos_shared_library("librender_service") {
     defines += []
   }
   defines += gpu_defines
-  
+
   if (use_musl) {
     defines += [ "FRAME_AWARE_TRACE" ]
   }

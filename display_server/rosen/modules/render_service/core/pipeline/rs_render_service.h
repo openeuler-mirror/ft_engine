@@ -15,9 +15,12 @@
 
 #ifndef RENDER_SERVICE_PIPELINE_RS_RENDER_SERVICE_H
 #define RENDER_SERVICE_PIPELINE_RS_RENDER_SERVICE_H
+
 #include <map>
 #include <unordered_set>
 
+#include <singleton.h>
+#include <system_ability.h>
 #include "screen_manager/rs_screen_manager.h"
 #include "transaction/rs_render_service_stub.h"
 #include "vsync_controller.h"
@@ -29,16 +32,17 @@ class RSMainThread;
 class RSSyncTask;
 class RSRenderServiceConnection;
 
-class RSRenderService : public RSRenderServiceStub {
+class RSRenderService : public SystemAbility, public RSRenderServiceStub {
+    DECLARE_DELAYED_SINGLETON(RSRenderService);
+    DECLARE_SYSTEM_ABILITY(RSRenderService);
 public:
-    RSRenderService();
-    ~RSRenderService() noexcept;
-
-    RSRenderService(const RSRenderService&) = delete;
-    RSRenderService& operator=(const RSRenderService&) = delete;
-
     bool Init();
     void Run();
+
+    // sa_main implementation
+    void OnStart() override;
+    void OnStop() override;
+    void OnAddSystemAbility(int32_t systemAbilityId, const std::string &deviceId) override;
 
 private:
     int Dump(int fd, const std::vector<std::u16string>& args) override;
