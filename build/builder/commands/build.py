@@ -24,10 +24,12 @@ class Builder:
         self.args = args
 
         self.project_dir = args.project_dir
-        os_name = "linux"
-        arch = "x64"
-        if args.target_cpu == "auto":
-            arch, os_name = get_machine_info()
+        arch, os_name = get_machine_info()
+        if args.target_cpu != "auto":
+            if arch != args.target_cpu:
+                exit("current mechine is not " + args.target_cpu + " don't use -t " + args.target_cpu)
+            if os_name != "linux":
+                exit("this build system is only support linux")
         self.build_output_dir = os.path.join(args.project_dir, "out", args.build_type.title(), arch)
         self._build_tools_dir = os.path.join(args.project_dir, "prebuilts", "build-tools", os_name+"-"+arch, "bin")
         self.gn_path = os.path.join(self._build_tools_dir, "gn")

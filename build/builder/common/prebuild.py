@@ -16,9 +16,9 @@ def get_machine_info():
 def build_deps(output_dir):
     arch, os_name = get_machine_info()
     copy_path = "prebuilts/build-tools/" + os_name + "-" + arch + "/bin/"
-    abs_copy_path = os.path.join(output_dir, "../../", copy_path)
-    ninja_path = os.path.abspath(os.path.join(abs_copy_path, "ninja"))
-    gn_path = os.path.abspath(os.path.join(abs_copy_path, "gn"))
+    abs_copy_path = os.path.abspath(os.path.join(output_dir, "../../", copy_path))
+    ninja_path = os.path.join(abs_copy_path, "ninja")
+    gn_path = os.path.join(abs_copy_path, "gn")
     if os.path.exists(ninja_path) and os.path.exists(gn_path):
         return
 
