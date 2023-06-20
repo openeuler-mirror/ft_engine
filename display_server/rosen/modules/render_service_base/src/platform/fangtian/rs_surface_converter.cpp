@@ -12,41 +12,27 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+#include "platform/common/rs_log.h"
+#include "platform/drawing/rs_surface_converter.h"
+#include "rs_surface.h"
+#include "platform/fangtian/backend/rs_surface_raster.h"
+#include "platform/fangtian/backend/rs_surface_gl.h"
 
-#include "rs_surface_frame_ohos.h"
-#include "rs_surface_ohos.h"
 namespace OHOS {
 namespace Rosen {
-RenderContext* RSSurfaceOhos::GetRenderContext()
+sptr<Surface> RSSurfaceConverter::ConvertToOhosSurface(std::shared_ptr<RSSurface> surface)
 {
-    return context_;
-}
-
-void RSSurfaceOhos::SetRenderContext(RenderContext* context)
-{
-    context_ = context;
-}
-
-void RSSurfaceOhos::SetColorSpace(ColorGamut colorSpace)
-{
-    colorSpace_ = colorSpace;
-}
-
-ColorGamut RSSurfaceOhos::GetColorSpace() const
-{
-    return colorSpace_;
-}
-
-uint32_t RSSurfaceOhos::GetQueueSize() const
-{
-    return producer_->GetQueueSize();
-}
-
-void RSSurfaceOhos::ClearAllBuffer()
-{
-    if (producer_ != nullptr) {
-        producer_->Disconnect();
+    if (surface == nullptr) {
+        ROSEN_LOGE("nullptr input");
+        return nullptr;
     }
+#ifdef ACE_ENABLE_GL
+    auto derivedPtr = std::static_pointer_cast<RSSurfaceOhosGl>(surface); // gpu render
+#else
+    auto derivedPtr = std::static_pointer_cast<RSSurfaceOhosRaster>(surface); // cpu render
+#endif
+    return derivedPtr->GetSurface();
 }
+
 } // namespace Rosen
 } // namespace OHOS
