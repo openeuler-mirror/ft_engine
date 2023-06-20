@@ -22,17 +22,18 @@ config("socketpair_config") {
   ]
   include_dirs = [
     "../export",
-    "${sys_inc}/c_utils",
-    "${sys_inc}/ipc_core",
-    "${sys_inc}/hilog",
   ]
-  libs = ["hilog", "ipc_core", "utils"]
 }
 
 ft_shared_library("socketpair") {
   sources = [ "../src/local_socketpair.cpp" ]
-  configs = [ ":socketpair_config" ]
+
+  configs = [
+    ":socketpair_config",
+    "//build/gn/configs/system_libs:c_utils_config",
+    "//build/gn/configs/system_libs:hilog_config",
+    "//build/gn/configs/system_libs:ipc_core_config",
+  ]
+
   deps = [ "//display_server/utils/scoped_bytrace/ft_build:scoped_bytrace" ]
-  part_name = "graphic_standard"
-  subsystem_name = "graphic"
 }
