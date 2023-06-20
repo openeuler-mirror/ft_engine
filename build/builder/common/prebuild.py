@@ -54,7 +54,7 @@ def build_deps(output_dir):
         os.makedirs(os.path.join(gn_dir, 'out'))
         exec_sys_command(['cp', 'last_commit_position.h', 'out/'])
         exec_sys_command(['python3', 'build/gen.py', '--no-last-commit-position', '--no-static-libstdc++'])
-        exec_sys_command([os.path.join(ninja_dir, "ninja-1.10.2", "ninja"), '-C', 'out'])
+        exec_sys_command([os.path.join(ninja_dir, "ninja-1.10.2", "ninja"), 'gn', '-C', 'out'])
         os.chdir(os.path.join(gn_dir, "out"))
         if os.path.exists("gn"):
             exec_sys_command(['cp', 'gn', gn_path])
