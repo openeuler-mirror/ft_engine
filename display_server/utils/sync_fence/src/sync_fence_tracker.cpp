@@ -18,6 +18,7 @@
 #include "sync_fence_tracker.h"
 #include "hilog/log.h"
 #include "rs_trace.h"
+#include <string.h>
 
 namespace OHOS {
 using namespace OHOS::HiviewDFX;

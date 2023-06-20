@@ -1,4 +1,4 @@
-# Copyright (c) 2023 Huawei Device Co., Ltd.
+# Copyright (c) 2021-2023 Huawei Technologies Co., Ltd.
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
 # You may obtain a copy of the License at
@@ -12,22 +12,17 @@
 # limitations under the License.
 
 import("//build/gn/fangtian.gni")
+import("//display_server/ft_configs/ds_config.gni")
 
-ft_executable("drm_backend_test") {
-    testonly = true
+ft_source_set("mock_image_native") {
 
-    sources = [
-        "system_test/main.cpp"
-    ]
+  configs = [
+    "//build/gn/configs/system_libs:c_utils_config",
+    "//build/gn/configs/system_libs:skia_config",
+  ]
 
-    deps = [
-        "//display_server/drivers/hal/drm_backend:drm_backend",
-        "//display_server/drivers/hal/base:hal_base",
-        "//display_server/utils/sync_fence/ft_build:sync_fence",
-    ]
-
-    configs = [
-        "//build/gn/configs/system_libs:ipc_core_config",
-        "//display_server/drivers/hal:hal_public_config"
-    ]
+  sources = [
+    "../../../platform/image_native/pixel_map.cpp",
+    "../../../platform/image_native/pixel_map_rosen_utils.cpp",
+  ]
 }

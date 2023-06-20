@@ -19,8 +19,10 @@
 #include <map>
 #include <memory>
 #include <atomic>
+#include <climits>
+#include <functional>
 #include "rs_log.h"
-#include "base/hiviewdfx/hisysevent/interfaces/native/innerkits/hisysevent/include/hisysevent.h"
+#include "hisysevent.h"
 
 namespace OHOS {
 namespace Rosen {

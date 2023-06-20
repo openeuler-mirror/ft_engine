@@ -1,4 +1,4 @@
-# Copyright (c) 2023 Huawei Device Co., Ltd.
+# Copyright (c) 2021-2022 Huawei Technologies Co., Ltd.
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
 # You may obtain a copy of the License at
@@ -11,23 +11,8 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-import("//build/gn/fangtian.gni")
-
-ft_executable("drm_backend_test") {
-    testonly = true
-
-    sources = [
-        "system_test/main.cpp"
-    ]
-
-    deps = [
-        "//display_server/drivers/hal/drm_backend:drm_backend",
-        "//display_server/drivers/hal/base:hal_base",
-        "//display_server/utils/sync_fence/ft_build:sync_fence",
-    ]
-
-    configs = [
-        "//build/gn/configs/system_libs:ipc_core_config",
-        "//display_server/drivers/hal:hal_public_config"
-    ]
-}
+display_server_root = "//display_server"
+rosen_root = "//display_server/rosen"
+rs_enable_gpu = false
+ace_enable_gpu = false
+gpu_defines = []

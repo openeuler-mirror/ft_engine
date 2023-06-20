@@ -1,0 +1,111 @@
+# Copyright (c) 2021-2023 Huawei Technologies Co., Ltd.
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+import("//build/gn/fangtian.gni")
+import("//display_server/ft_configs/ds_config.gni")
+
+config("platform_config") {
+  include_dirs = [
+    "$rosen_root/include",
+    "$display_server_root/interfaces/inner_api/surface",
+    "$display_server_root/interfaces/inner_api/common",
+  ]
+}
+
+ft_source_set("rosen_fangtian_sources") {
+  configs = [
+    ":platform_config",
+    "//build/gn/configs/system_libs:hilog_config",
+    "//build/gn/configs/system_libs:c_utils_config",
+    "//build/gn/configs/system_libs:ipc_core_config",
+    "//build/gn/configs/system_libs:hitrace_meter_config",
+    "//build/gn/configs/system_libs:eventhandler_config",
+    "//build/gn/configs/system_libs:skia_config",
+    "//build/gn/configs/system_libs:samgr_config",
+  ]
+
+  cflags_cc = [
+    "-std=c++17",
+    "-Wno-c++11-narrowing",
+  ]
+
+  defines = [ "ROSEN_OHOS" ]
+  defines += gpu_defines
+
+  sources = [
+    #backend
+    "backend/rs_surface_frame_raster.cpp",
+    "backend/rs_surface_raster.cpp",
+    "rs_ashmem_helper.cpp",
+
+    #overdraw
+    "overdraw/rs_cpu_overdraw_canvas_listener.cpp",
+    "overdraw/rs_gpu_overdraw_canvas_listener.cpp",
+    "overdraw/rs_listened_canvas.cpp",
+    "overdraw/rs_overdraw_controller.cpp",
+    "rs_event_manager.cpp",
+    "rs_frame_report.cpp",
+    "rs_innovation.cpp",
+    "rs_log.cpp",
+    "rs_param.cpp",
+    "rs_marshalling_helper.cpp",
+    "rs_render_service_client.cpp",
+    "rs_render_service_connect_hub.cpp",
+    "rs_render_service_connection_proxy.cpp",
+    "rs_render_service_proxy.cpp",
+    "rs_surface_frame.cpp",
+    "rs_surface.cpp",
+    "rs_surface_converter.cpp",
+    "rs_system_properties.cpp",
+    "rs_vsync_client.cpp",
+  ]
+  sources += ["rs_event_detector.cpp",]
+  if (ace_enable_gpu) {
+    defines += [
+      "GR_TEST_UTILS=1",
+    ]
+
+    sources += [
+      "backend/rs_surface_frame_gl.cpp",
+      "backend/rs_surface_gl.cpp",
+    ]
+
+    sources += [
+      "//display_server/rosen/modules/2d_graphics/src/render_context/cache_data.cpp",
+      "//display_server/rosen/modules/2d_graphics/src/render_context/memory_handler.cpp",
+      "//display_server/rosen/modules/2d_graphics/src/render_context/render_context.cpp",
+      "//display_server/rosen/modules/2d_graphics/src/render_context/shader_cache.cpp",
+    ]
+  }
+
+  include_dirs = [
+    "$rosen_root/modules/render_service_base/include",
+    "$rosen_root/modules/render_service_base/src/platform/fangtian/include",
+    "$rosen_root/modules/platform/image_native",
+    "$rosen_root/modules/render_service_base/src",
+    "//utils/system/safwk/native/include",
+    "//drivers/peripheral/display/interfaces/include/",
+    "$display_server_root/utils/log",
+  ]
+
+  deps = [
+    "$display_server_root/frameworks/surface/ft_build:surface",
+    "$rosen_root/modules/composer/vsync/ft_build:libvsync",
+    "$display_server_root/utils/sync_fence/ft_build:sync_fence",
+    "$display_server_root/utils/buffer_handle/ft_build:buffer_handle",
+  ]
+
+  if (rs_enable_gpu) {
+    libs = [ "EGL", "GLESv2" ]
+  }
+}
