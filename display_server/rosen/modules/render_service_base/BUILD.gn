@@ -199,7 +199,6 @@ ohos_source_set("render_service_base_src") {
     sources -= graphic_2d_ext_configs.librender_service_base_ext_sources_del
     sources += graphic_2d_ext_configs.librender_service_base_ext_sources
   }
-  libs = ["ace_skia_fangtian"]
 }
 
 config("render_service_base_all_deps_config") {

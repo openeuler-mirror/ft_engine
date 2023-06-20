@@ -106,10 +106,6 @@ ft_source_set("rosen_fangtian_sources") {
   ]
 
   if (rs_enable_gpu) {
-    public_deps += [
-      "//third_party/EGL:libEGL",
-      "//third_party/openGLES:libGLES",
-    ]
-    libs = ["crypto"]
+    libs = [ "EGL", "GLESv2" ]
   }
 }
