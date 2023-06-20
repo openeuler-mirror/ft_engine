@@ -26,10 +26,6 @@ config("surface_config") {
   ]
 
   include_dirs = [
-    "${sys_inc}/c_utils",
-    "${sys_inc}/ipc_core",
-    "${sys_inc}/hilog",
-    "${sys_inc}/hitrace_meter",
     "../include",
     "$display_server_root/interfaces/inner_api/surface",
     "$display_server_root/interfaces/inner_api/common",
@@ -67,7 +63,13 @@ ft_shared_library("surface") {
     "mock/display_gralloc_client.cpp",
   ]
 
-  configs = [ ":surface_config" ]
+  configs = [
+    ":surface_config",
+    "//build/gn/configs/system_libs:c_utils_config",
+    "//build/gn/configs/system_libs:ipc_core_config",
+    "//build/gn/configs/system_libs:hilog_config",
+    "//build/gn/configs/system_libs:hitrace_meter_config",
+  ]
 
 
   deps = [
