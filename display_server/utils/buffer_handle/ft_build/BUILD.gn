@@ -1,4 +1,4 @@
-# Copyright (c) 2023 Huawei Device Co., Ltd.
+# Copyright (c) 2021 Huawei Technologies Co., Ltd.
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
 # You may obtain a copy of the License at
@@ -13,21 +13,21 @@
 
 import("//build/gn/fangtian.gni")
 
-ft_executable("drm_backend_test") {
-    testonly = true
+config("buffer_handle_public") {
+  include_dirs = [
+    "../export",
+  ]
+}
+ft_static_library("buffer_handle") {
+  include_dirs = [
+    "${sys_inc}/c_utils",
+    "${sys_inc}/ipc_core",
+    "${sys_inc}/hilog",
+    "//drivers/peripheral/base",
+  ]
+  public_configs = [ ":buffer_handle_public" ]
 
-    sources = [
-        "system_test/main.cpp"
-    ]
+  libs = [ "ipc_core", "hilog", "utils", "sec_shared" ]
 
-    deps = [
-        "//display_server/drivers/hal/drm_backend:drm_backend",
-        "//display_server/drivers/hal/base:hal_base",
-        "//display_server/utils/sync_fence/ft_build:sync_fence",
-    ]
-
-    configs = [
-        "//build/gn/configs/system_libs:ipc_core_config",
-        "//display_server/drivers/hal:hal_public_config"
-    ]
+  sources = [ "../src/buffer_handle.cpp" ]
 }
