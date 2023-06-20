@@ -1,0 +1,74 @@
+# Copyright (c) 2023 Huawei Technologies Co., Ltd. All rights reserved.
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License
+
+import("//build/gn/fangtian.gni")
+
+config("libwmutil_private_config") {
+  cflags = [ "-Wno-c++11-narrowing" ]
+
+  include_dirs = [
+    "../include",
+    "//window_manager/interfaces/innerkits/dm",
+    "//window_manager/interfaces/innerkits/wm",
+    "//window_manager/ft_adapter",
+    "//display_server/interfaces/inner_api/surface",
+    "//display_server/interfaces/inner_api/common",
+    "//display_server/utils/buffer_handle/export",
+    "//display_server/rosen/modules/render_service_base/include",
+  ]
+}
+
+config("libwmutil_public_config") {
+  include_dirs = [ "//window_manager/utils/include" ]
+}
+
+ft_shared_library("libwmutil") {
+  sources = [
+    "../src/agent_death_recipient.cpp",
+    "../src/cutout_info.cpp",
+    "../src/display_info.cpp",
+    "../src/perform_reporter.cpp",
+    "../src/permission.cpp",
+    "../src/screen_group_info.cpp",
+    "../src/screen_info.cpp",
+    "../src/screenshot_info.cpp",
+    "../src/singleton_container.cpp",
+    "../src/string_util.cpp",
+    "../src/surface_reader.cpp",
+    "../src/surface_reader_handler_impl.cpp",
+    "../src/sys_cap_util.cpp",
+    "../src/window_property.cpp",
+    "../src/window_transition_info.cpp",
+    "../src/wm_math.cpp",
+    "../src/wm_occlusion_region.cpp",
+  ]
+
+  configs = [
+    ":libwmutil_private_config",
+    "//window_manager/resources/config/build:coverage_flags",
+    "//build/gn/configs/system_libs:hilog_config",
+    "//build/gn/configs/system_libs:c_utils_config",
+    "//build/gn/configs/system_libs:ipc_core_config",
+    "//build/gn/configs/system_libs:samgr_config",
+    "//build/gn/configs/system_libs:eventhandler_config",
+    "//build/gn/configs/system_libs:image_config",
+    "//build/gn/configs/system_libs:mmi_config",
+  ]
+
+  public_configs = [ ":libwmutil_public_config" ]
+
+  deps = [
+    "//display_server/frameworks/surface/ft_build:surface",
+    "//display_server/rosen/modules/render_service_base/ft_build:librender_service_base",
+  ]
+}

@@ -14,9 +14,11 @@
  */
 
 #include "perform_reporter.h"
-#include "window_manager_hilog.h"
+
+#include <sstream>
 
 #include <hisysevent.h>
+#include "window_manager_hilog.h"
 
 namespace OHOS {
 namespace Rosen {
