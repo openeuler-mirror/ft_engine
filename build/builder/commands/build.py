@@ -33,7 +33,7 @@ class Builder:
         self.build_output_dir = os.path.join(args.project_dir, "out", args.build_type.title(), arch)
         self._build_tools_dir = os.path.join(args.project_dir, "prebuilts", "build-tools", os_name+"-"+arch, "bin")
         self.gn_path = os.path.join(self._build_tools_dir, "gn")
-        self.ninja_path = os.path.join(self._build_tools_dir, "ninja")
+        self.ninja_path = "ninja"
 
         self._args_list = []
 
