@@ -549,10 +549,10 @@ int32_t DeviceInitialize(DeviceFuncs **funcs)
     return DISPLAY_SUCCESS;
 }
 
-int32_t DeviceUnInitialize(DeviceFuncs *funcs)
+int32_t DeviceUninitialize(DeviceFuncs *funcs)
 {
     if (funcs == nullptr) {
-        LOG_ERROR("DeviceUnInitialize: param funcs is nullptr.");
+        LOG_ERROR("DeviceUninitialize: param funcs is nullptr.");
         return DISPLAY_PARAM_ERR;
     }
 
@@ -596,10 +596,10 @@ int32_t LayerInitialize(LayerFuncs **funcs)
     return DISPLAY_SUCCESS;
 }
 
-int32_t LayerUnInitialize(LayerFuncs *funcs)
+int32_t LayerUninitialize(LayerFuncs *funcs)
 {
     if (funcs == nullptr) {
-        LOG_ERROR("LayerUnInitialize: param funcs is nullptr.");
+        LOG_ERROR("LayerUninitialize: param funcs is nullptr.");
         return DISPLAY_PARAM_ERR;
     }
 
