@@ -1,0 +1,67 @@
+# Copyright (c) 2023 Huawei Technologies Co., Ltd. All rights reserved.
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License
+
+import("//build/gn/fangtian.gni")
+
+config("libdm_private_config") {
+  cflags = [ "-Wno-c++11-narrowing" ]
+
+  include_dirs = [
+    "//window_manager/dm/include",
+    "//window_manager/dmserver/include",
+    "//window_manager/ft_adapter",
+    "//display_server/interfaces/inner_api/surface",
+    "//display_server/interfaces/inner_api/common",
+    "//display_server/utils/buffer_handle/export",
+    "//display_server/rosen/modules/render_service_base/include",
+  ]
+}
+
+config("libdm_public_config") {
+  include_dirs = [
+    "//window_manager/interfaces/innerkits/dm",
+    "//window_manager/utils/include",
+  ]
+}
+
+ft_shared_library("libdm") {
+  sources = [
+    "//window_manager/dm/src/display.cpp",
+    "//window_manager/dm/src/display_manager.cpp",
+    "//window_manager/dm/src/display_manager_adapter.cpp",
+    "//window_manager/dm/src/screen.cpp",
+    "//window_manager/dm/src/screen_group.cpp",
+    "//window_manager/dm/src/screen_manager.cpp",
+    "//window_manager/dm/src/zidl/display_manager_agent_stub.cpp",
+    "//window_manager/dmserver/src/display_manager_proxy.cpp",
+  ]
+
+  configs = [
+    ":libdm_private_config",
+    "//window_manager/resources/config/build:coverage_flags",
+    "//build/gn/configs/system_libs:hilog_config",
+    "//build/gn/configs/system_libs:c_utils_config",
+    "//build/gn/configs/system_libs:ipc_core_config",
+    "//build/gn/configs/system_libs:image_config",
+    "//build/gn/configs/system_libs:samgr_config",
+    "//build/gn/configs/system_libs:skia_config",
+  ]
+
+  public_configs = [ ":libdm_public_config" ]
+
+  deps = [
+    "//display_server/frameworks/surface/ft_build:surface",
+    "//display_server/rosen/modules/render_service_base/ft_build:librender_service_base",
+    "//window_manager/utils/ft_build:libwmutil",
+  ]
+}
