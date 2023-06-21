@@ -27,6 +27,7 @@ package_deps = [
     "python3",
     "tar",
     "cmake",
+    "ninja-build",
     # DRM Backend
     "libdrm-devel",
     "systemd-devel",

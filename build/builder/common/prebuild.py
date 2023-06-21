@@ -17,33 +17,17 @@ def build_deps(output_dir):
     arch, os_name = get_machine_info()
     copy_path = "prebuilts/build-tools/" + os_name + "-" + arch + "/bin/"
     abs_copy_path = os.path.abspath(os.path.join(output_dir, "../../", copy_path))
-    ninja_path = os.path.join(abs_copy_path, "ninja")
+    gn_path = os.path.abspath(os.path.join(abs_copy_path, "gn"))
     gn_path = os.path.join(abs_copy_path, "gn")
-    if os.path.exists(ninja_path) and os.path.exists(gn_path):
+    if os.path.exists(gn_path):
         return
 
-    # build ninja
     if os.path.exists(output_dir):
         shutil.rmtree(output_dir)
     if not os.path.exists(abs_copy_path):
-        os.makedirs(abs_copy_path)
-    ninja_dir = os.path.join(output_dir, "ninja-build")
-    os.makedirs(ninja_dir)
-    cmd = ['git', 'clone', 'https://gitee.com/src-openeuler/ninja-build.git', '-b', 'openEuler-22.03-LTS', ninja_dir]
-    is_success, _output = exec_sys_command(cmd)
-    if is_success:
-        cur_work_dir = os.getcwd()
-        exec_sys_command(['tar', 'xf', os.path.join(ninja_dir, 'ninja-1.10.2.tar.gz'), '-C', ninja_dir])
-        os.chdir(os.path.join(ninja_dir, 'ninja-1.10.2'))
-        exec_sys_command(['python3', 'configure.py', '--bootstrap'])
-        if os.path.exists("ninja"):
-            exec_sys_command(['cp', 'ninja', ninja_path])
-            logger.info("build ninja success")
-        os.chdir(cur_work_dir)
-
+        os.makedirs(abs_copy_path) 
     # build gn
     gn_dir = os.path.join(output_dir, "gn-build")
-    os.makedirs(gn_dir)
     cmd = ['git', 'clone', 'https://gitee.com/src-openeuler/gn.git', '-b', 'openEuler-22.03-LTS-SP1', gn_dir]
     is_success, _output = exec_sys_command(cmd)
     if is_success:
@@ -54,7 +38,11 @@ def build_deps(output_dir):
         os.makedirs(os.path.join(gn_dir, 'out'))
         exec_sys_command(['cp', 'last_commit_position.h', 'out/'])
         exec_sys_command(['python3', 'build/gen.py', '--no-last-commit-position', '--no-static-libstdc++'])
+<<<<<<< HEAD
         exec_sys_command([os.path.join(ninja_dir, "ninja-1.10.2", "ninja"), 'gn', '-C', 'out'])
+=======
+        exec_sys_command(['ninja', '-C', 'out'])
+>>>>>>> f82207b (rpm instand of runtime build for speed CI)
         os.chdir(os.path.join(gn_dir, "out"))
         if os.path.exists("gn"):
             exec_sys_command(['cp', 'gn', gn_path])
