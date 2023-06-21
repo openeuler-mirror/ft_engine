@@ -16,9 +16,9 @@ def get_machine_info():
 def build_deps(output_dir):
     arch, os_name = get_machine_info()
     copy_path = "prebuilts/build-tools/" + os_name + "-" + arch + "/bin/"
-    abs_copy_path = os.path.join(output_dir, "../../", copy_path)
-    ninja_path = os.path.abspath(os.path.join(abs_copy_path, "ninja"))
-    gn_path = os.path.abspath(os.path.join(abs_copy_path, "gn"))
+    abs_copy_path = os.path.abspath(os.path.join(output_dir, "../../", copy_path))
+    ninja_path = os.path.join(abs_copy_path, "ninja")
+    gn_path = os.path.join(abs_copy_path, "gn")
     if os.path.exists(ninja_path) and os.path.exists(gn_path):
         return
 
@@ -54,7 +54,7 @@ def build_deps(output_dir):
         os.makedirs(os.path.join(gn_dir, 'out'))
         exec_sys_command(['cp', 'last_commit_position.h', 'out/'])
         exec_sys_command(['python3', 'build/gen.py', '--no-last-commit-position', '--no-static-libstdc++'])
-        exec_sys_command([os.path.join(ninja_dir, "ninja-1.10.2", "ninja"), '-C', 'out'])
+        exec_sys_command([os.path.join(ninja_dir, "ninja-1.10.2", "ninja"), 'gn', '-C', 'out'])
         os.chdir(os.path.join(gn_dir, "out"))
         if os.path.exists("gn"):
             exec_sys_command(['cp', 'gn', gn_path])
