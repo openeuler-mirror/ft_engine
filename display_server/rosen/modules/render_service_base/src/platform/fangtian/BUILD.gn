@@ -46,6 +46,7 @@ ft_source_set("rosen_fangtian_sources") {
     #backend
     "backend/rs_surface_frame_raster.cpp",
     "backend/rs_surface_raster.cpp",
+    "rs_accessibility.cpp",
     "rs_ashmem_helper.cpp",
 
     #overdraw
@@ -93,9 +94,8 @@ ft_source_set("rosen_fangtian_sources") {
     "$rosen_root/modules/render_service_base/src/platform/fangtian/include",
     "$rosen_root/modules/platform/image_native",
     "$rosen_root/modules/render_service_base/src",
-    "//utils/system/safwk/native/include",
-    "//drivers/peripheral/display/interfaces/include/",
     "$display_server_root/utils/log",
+    "$display_server_root/interfaces/inner_api/composer",
   ]
 
   deps = [
@@ -103,6 +103,7 @@ ft_source_set("rosen_fangtian_sources") {
     "$rosen_root/modules/composer/vsync/ft_build:libvsync",
     "$display_server_root/utils/sync_fence/ft_build:sync_fence",
     "$display_server_root/utils/buffer_handle/ft_build:buffer_handle",
+    "$display_server_root/utils/sandbox/ft_build:sandbox_utils",
   ]
 
   if (rs_enable_gpu) {

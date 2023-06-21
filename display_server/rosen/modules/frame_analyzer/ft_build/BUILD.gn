@@ -1,0 +1,55 @@
+# Copyright (c) 2021 Huawei Technologies Co., Ltd.
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+import("//build/gn/fangtian.gni")
+import("//display_server/ft_configs/ds_config.gni")
+
+config("libframe_analyzer_config") {
+  visibility = [ ":*" ]
+
+  cflags = [
+    "-Wall",
+    "-Werror",
+    "-g3",
+    "-Wno-c++11-narrowing",
+  ]
+}
+
+config("libframe_analyzer_public_config") {
+  include_dirs = [ "../export" ]
+}
+
+ft_shared_library("libframe_analyzer") {
+  sources = [
+    "../src/frame_collector.cpp",
+    "../src/frame_painter.cpp",
+    "../src/frame_saver.cpp",
+  ]
+
+  include_dirs = [ "//foundation/graphic/graphic_2d/utils/sandbox" ]
+
+  deps = [
+    "$display_server_root/utils/sandbox/ft_build:sandbox_utils",
+  ]
+
+  configs = [ 
+    ":libframe_analyzer_config", 
+    "//build/gn/configs/system_libs:hitrace_meter_config",
+    "//build/gn/configs/system_libs:hilog_config",
+    "//build/gn/configs/system_libs:c_utils_config",
+    "//build/gn/configs/system_libs:skia_config",
+    "//build/gn/configs/system_libs:syspara_config",
+  ]
+
+  public_configs = [ ":libframe_analyzer_public_config" ]
+}
