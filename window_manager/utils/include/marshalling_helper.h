@@ -16,6 +16,7 @@
 #ifndef FOUNDATION_MARSHALLING_HELPER_H
 #define FOUNDATION_MARSHALLING_HELPER_H
 
+#include <climits>
 #include <parcel.h>
 
 namespace OHOS::Rosen {
