@@ -27,14 +27,14 @@ config("composer_config") {
 
 config("composer_public_config") {
   include_dirs = [
-    "//display_server/rosen/include/common",
-    "//display_server/drivers/interfaces",
-    "//display_server/interfaces/inner_api/common",
-    "//display_server/interfaces/inner_api/surface",
-    "//display_server/rosen/modules/composer/hdi_backend/include",
-    "//display_server/rosen/modules/composer/vsync/include",
-    "//display_server/interfaces/inner_api/composer",
-    "//display_server/rosen/modules/render_service_base/include"
+    "$display_server_root/rosen/include/common",
+    "$display_server_root/drivers/interfaces",
+    "$display_server_root/interfaces/inner_api/common",
+    "$display_server_root/interfaces/inner_api/surface",
+    "$display_server_root/rosen/modules/composer/hdi_backend/include",
+    "$display_server_root/rosen/modules/composer/vsync/include",
+    "$display_server_root/interfaces/inner_api/composer",
+    "$display_server_root/rosen/modules/render_service_base/include"
   ]
 }
 
@@ -49,9 +49,9 @@ ft_shared_library("libcomposer") {
   ]
 
   include_dirs = [
-    "//display_server/rosen/modules/render_frame_trace/include",
-    "//display_server/rosen/modules/render_service_base/src",
-    "//display_server/utils/log",
+    "$display_server_root/rosen/modules/render_frame_trace/include",
+    "$display_server_root/rosen/modules/render_service_base/src",
+    "$display_server_root/utils/log",
   ]
 
   configs = [
@@ -69,17 +69,17 @@ ft_shared_library("libcomposer") {
   ]
 
   deps = [
-    "//display_server/frameworks/surface/ft_build:surface",
-    "//display_server/rosen/modules/render_frame_trace/ft_build:render_frame_trace",
-    "//display_server/rosen/modules/render_service_base/ft_build:librender_service_base",
+    "$display_server_root/frameworks/surface/ft_build:surface",
+    "$display_server_root/rosen/modules/render_frame_trace/ft_build:render_frame_trace",
+    "$display_server_root/rosen/modules/render_service_base/ft_build:librender_service_base",
   ]
 
   public_deps = [
     "../vsync/ft_build:libvsync",
-    "//display_server/utils/buffer_handle/ft_build:buffer_handle",
-    "//display_server/utils/scoped_bytrace/ft_build:scoped_bytrace",
-    "//display_server/utils/sync_fence/ft_build:sync_fence",
-    "//display_server/drivers/hal/drm_backend/display_device:display_device",
-    "//display_server/drivers/hal/drm_backend/display_gralloc:display_gralloc",
+    "$display_server_root/utils/buffer_handle/ft_build:buffer_handle",
+    "$display_server_root/utils/scoped_bytrace/ft_build:scoped_bytrace",
+    "$display_server_root/utils/sync_fence/ft_build:sync_fence",
+    "$display_server_root/drivers/hal/drm_backend/display_device:display_device",
+    "$display_server_root/drivers/hal/drm_backend/display_gralloc:display_gralloc",
   ]
 }
