@@ -16,6 +16,7 @@
 #ifndef HDI_BACKEND_HDI_LAYER_H
 #define HDI_BACKEND_HDI_LAYER_H
 
+#include <climits>
 #include <array>
 #include <stdint.h>
 #include <surface.h>
