@@ -19,6 +19,8 @@ group("ft_engine") {
     "//display_server/utils/sync_fence/ft_build:sync_fence",
     "//display_server/frameworks/surface/ft_build:surface",
     "//display_server/rosen/modules/render_service_base/ft_build:librender_service_base",
+    "//display_server/drivers/hdi_service/gralloc/client:hdi_gralloc_client",
+    "//display_server/rosen/modules/composer/ft_build:libcomposer",
 
     "//window_manager/utils/ft_build:libwmutil",
     "//window_manager/dm/ft_build:libdm",
