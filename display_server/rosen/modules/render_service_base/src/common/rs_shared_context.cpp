@@ -16,7 +16,7 @@
 #include "common/rs_shared_context.h"
 
 #include <EGL/egl.h>
-#include "tools/gpu/GrContextFactory.h"
+#include <gpu/gl/GrGLInterface.h>
 
 #include "platform/common/rs_log.h"
 #include "rs_trace.h"

@@ -13,7 +13,7 @@
  * limitations under the License.
  */
 
-#include "rs_surface_frame_ohos_gl.h"
+#include "rs_surface_frame_gl.h"
 #include "platform/common/rs_log.h"
 #include "render_context/render_context.h"
 

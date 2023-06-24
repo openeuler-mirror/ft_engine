@@ -13,7 +13,7 @@
  * limitations under the License.
  */
 
-#include "rs_surface_ohos_gl.h"
+#include "rs_surface_gl.h"
 #include "platform/common/rs_log.h"
 #include "window.h"
 #include <hilog/log.h>
