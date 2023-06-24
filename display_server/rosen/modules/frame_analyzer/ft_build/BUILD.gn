@@ -36,7 +36,10 @@ ft_shared_library("libframe_analyzer") {
     "../src/frame_saver.cpp",
   ]
 
-  include_dirs = [ "//foundation/graphic/graphic_2d/utils/sandbox" ]
+  include_dirs = [
+    "$display_server_root/utils/sandbox",
+    "$rosen_root/modules/render_service_base/src/platform/fangtian/include"
+  ]
 
   deps = [
     "$display_server_root/utils/sandbox/ft_build:sandbox_utils",
