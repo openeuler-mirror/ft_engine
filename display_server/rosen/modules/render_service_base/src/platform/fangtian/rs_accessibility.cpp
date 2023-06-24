@@ -24,11 +24,11 @@ public:
 
 RSAccessibility &RSAccessibility::GetInstance()
 {
-    static RSAccessibilityWindows instance;
+    static RSAccessibilityFangTian instance;
     return instance;
 }
 
-void RSAccessibilityWindows::ListenHighContrastChange(OnHighContrastChange callback)
+void RSAccessibilityFangTian::ListenHighContrastChange(OnHighContrastChange callback)
 {
 }
 } // namespace Rosen
