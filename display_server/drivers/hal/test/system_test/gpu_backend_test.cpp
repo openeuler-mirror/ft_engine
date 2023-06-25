@@ -53,6 +53,7 @@ public:
     std::shared_ptr<FrameBuffer> fb[2];
 };
 std::unordered_map<uint32_t, Screen*> g_screens;
+EGLDisplay defaultDisplay;
 
 bool CreateBuffer(uint32_t devId, BufferHandle **handle)
 {
@@ -203,6 +204,10 @@ void Screen::OnVsync(uint32_t sequence, uint64_t timestamp, void *data)
                 screen->fb[1] = std::make_shared<FrameBuffer>();
                 CreateBuffer(devId, &(screen->fb[1]->handle));
             }
+	    defaultDisplay = eglGetDisplay(EGL_DEFAULT_DISPLAY); 
+	    int major, minor;
+	    eglInitialize(defaultDisplay, &major, &minor);
+	    printf("%d %d", major, minor);
         }
         screen->firstFrame = false;
 
