@@ -35,7 +35,7 @@ config("surface_config") {
   ]
 
   defines = []
-  if (ace_enable_gpu) {
+  if (enable_gpu) {
     defines = [ "ACE_ENABLE_GPU" ]
   }
   defines += gpu_defines
