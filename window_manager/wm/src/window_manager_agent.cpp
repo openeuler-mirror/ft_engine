@@ -14,7 +14,7 @@
  */
 
 #include "window_manager_agent.h"
-#include "foundation/window/window_manager/interfaces/innerkits/wm/window_manager.h"
+#include "window_manager.h"
 #include "singleton_container.h"
 #include "wm_common.h"
 
