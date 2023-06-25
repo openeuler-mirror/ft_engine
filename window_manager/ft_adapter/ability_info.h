@@ -16,6 +16,9 @@
 #ifndef ABILITY_INFO_H
 #define ABILITY_INFO_H
 
+#include <string>
+#include <parcel.h>
+
 namespace OHOS {
 namespace AppExecFwk {
 enum class SupportWindowMode {
@@ -38,6 +41,18 @@ enum class DisplayOrientation {
     AUTO_ROTATION_LANDSCAPE_RESTRICTED,
     AUTO_ROTATION_PORTRAIT_RESTRICTED,
     LOCKED,
+};
+
+struct AbilityInfo : public Parcelable {
+    std::string name;
+    DisplayOrientation orientation = DisplayOrientation::UNSPECIFIED;
+    std::vector<SupportWindowMode> windowModes;
+    double maxWindowRatio = 0;
+    double minWindowRatio = 0;
+    uint32_t maxWindowWidth = 0;
+    uint32_t minWindowWidth = 0;
+    uint32_t maxWindowHeight = 0;
+    uint32_t minWindowHeight = 0;
 };
 }  // namespace AppExecFwk
 }  // namespace OHOS
