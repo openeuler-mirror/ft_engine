@@ -20,6 +20,7 @@
 #include <memory>
 #include <vector>
 #include <string>
+#include <string.h>
 #include <fcntl.h>
 #include <unistd.h>
 #include <cstdint>
