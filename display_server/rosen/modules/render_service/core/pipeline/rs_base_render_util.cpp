@@ -103,7 +103,6 @@ inline float ResponsePq(float x, const TransferParameters& p)
     return powf(std::max((tmp - p.c), p.f) / (p.d - p.e * tmp), 1.f / p.a);
 }
 
-
 static constexpr float RcpResponse(float x, const TransferParameters& p)
 {
     return x >= p.d * p.c ? (std::pow(x, 1.0f / p.g) - p.b) / p.a : x / p.c;
