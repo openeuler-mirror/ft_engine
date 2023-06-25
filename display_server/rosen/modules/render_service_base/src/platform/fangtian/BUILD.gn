@@ -69,9 +69,17 @@ ft_source_set("rosen_fangtian_sources") {
     "rs_surface_converter.cpp",
     "rs_system_properties.cpp",
     "rs_vsync_client.cpp",
+    "rs_event_detector.cpp",
   ]
-  sources += ["rs_event_detector.cpp",]
-  if (ace_enable_gpu) {
+  include_dirs = [
+    "$rosen_root/modules/render_service_base/include",
+    "$rosen_root/modules/render_service_base/src/platform/fangtian/include",
+    "$rosen_root/modules/platform/image_native",
+    "$rosen_root/modules/render_service_base/src",
+    "$display_server_root/utils/log",
+    "$display_server_root/interfaces/inner_api/composer",
+  ]
+  if (enable_gpu) {
     defines += [
       "GR_TEST_UTILS=1",
     ]
@@ -82,21 +90,20 @@ ft_source_set("rosen_fangtian_sources") {
     ]
 
     sources += [
-      "//display_server/rosen/modules/2d_graphics/src/render_context/cache_data.cpp",
-      "//display_server/rosen/modules/2d_graphics/src/render_context/memory_handler.cpp",
-      "//display_server/rosen/modules/2d_graphics/src/render_context/render_context.cpp",
-      "//display_server/rosen/modules/2d_graphics/src/render_context/shader_cache.cpp",
+      "$rosen_root/modules/2d_graphics/src/render_context/cache_data.cpp",
+      "$rosen_root/modules/2d_graphics/src/render_context/memory_handler.cpp",
+      "$rosen_root/modules/2d_graphics/src/render_context/render_context.cpp",
+      "$rosen_root/modules/2d_graphics/src/render_context/shader_cache.cpp",
     ]
+
+    include_dirs += [
+      "$rosen_root/modules/2d_graphics/include",
+      "$rosen_root/modules/2d_graphics/src",
+      "$rosen_root/modules/render_service_client/core",
+    ]
+    libs = [ "crypto", "EGL", "GLESv2" ]
   }
 
-  include_dirs = [
-    "$rosen_root/modules/render_service_base/include",
-    "$rosen_root/modules/render_service_base/src/platform/fangtian/include",
-    "$rosen_root/modules/platform/image_native",
-    "$rosen_root/modules/render_service_base/src",
-    "$display_server_root/utils/log",
-    "$display_server_root/interfaces/inner_api/composer",
-  ]
 
   deps = [
     "$display_server_root/frameworks/surface/ft_build:surface",
@@ -105,8 +112,4 @@ ft_source_set("rosen_fangtian_sources") {
     "$display_server_root/utils/buffer_handle/ft_build:buffer_handle",
     "$display_server_root/utils/sandbox/ft_build:sandbox_utils",
   ]
-
-  if (rs_enable_gpu) {
-    libs = [ "EGL", "GLESv2" ]
-  }
 }

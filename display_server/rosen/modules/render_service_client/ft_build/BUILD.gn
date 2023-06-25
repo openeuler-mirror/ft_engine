@@ -24,8 +24,6 @@ config("render_service_client_config") {
     "$display_server_root/interfaces/inner_api/common",
     "$display_server_root/interfaces/inner_api/surface",
     "$display_server_root/interfaces/inner_api/composer",
-    #"//drivers/peripheral/display/interfaces/include",
-    #"//drivers/peripheral/base",
   ]
   defines = [ "ROSEN_OHOS" ]
 }
@@ -108,10 +106,6 @@ ft_source_set("render_service_client_src") {
     "-std=c++17",
     "-fvisibility-inlines-hidden",
   ]
-
-  #if (enable_export_macro) {
-  #  defines += [ "ENABLE_EXPORT_MACRO" ]
-  #}
 
   deps = [
     "$rosen_root/modules/composer/vsync/ft_build:libvsync",
