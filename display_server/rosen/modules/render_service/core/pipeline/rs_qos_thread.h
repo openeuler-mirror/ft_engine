@@ -17,6 +17,7 @@
 #define RS_QOS_THREAD
 
 #include <cstdint>
+#include <climits>
 #include "vsync_distributor.h"
 
 namespace OHOS::Rosen {

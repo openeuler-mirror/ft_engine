@@ -37,7 +37,7 @@ config("eventhandler_config") {
 }
 
 config("skia_config") {
-    include_dirs = [ "${sys_inc}/skia" ]
+    include_dirs = [ "${sys_inc}/skia", "${sys_inc}/skia/include/core" ]
     libs = [ "ace_skia_fangtian" ]
 }
 
@@ -59,4 +59,9 @@ config("mmi_config") {
 config("syspara_config") {
     include_dirs = [ "${sys_inc}/syspara" ]
     libs = [ "beget_proxy", "begetutil" ]
+}
+
+config("safwk_config") {
+    include_dirs = [ "${sys_inc}/safwk" ]
+    libs = [ "system_ability_fwk" ]
 }
