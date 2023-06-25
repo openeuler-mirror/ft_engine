@@ -18,6 +18,8 @@
 #include <map>
 #include <sstream>
 #include <string>
+#include <errno.h>
+#include <string.h>
 #include <sys/stat.h>
 #include <unistd.h>
 
