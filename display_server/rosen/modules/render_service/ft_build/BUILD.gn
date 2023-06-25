@@ -67,7 +67,6 @@ ft_shared_library("librender_service") {
     "$display_server_root/utils/log",
     "$display_server_root/rosen/modules/render_service_base/src/platform/fangtian/include",
     "$display_server_root/utils/socketpair/export",
-    "$display_server_root/rosen/modules/render_service/fangtian"
   ]
 
   configs = [
