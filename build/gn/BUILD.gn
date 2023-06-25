@@ -25,6 +25,7 @@ group("ft_engine") {
 
     "//window_manager/utils/ft_build:libwmutil",
     "//window_manager/dm/ft_build:libdm",
+    "//window_manager/wm/ft_build:libwm",
   ]
 }
 

@@ -17,45 +17,42 @@ config("libwmutil_private_config") {
   cflags = [ "-Wno-c++11-narrowing" ]
 
   include_dirs = [
-    "../include",
-    "//window_manager/interfaces/innerkits/dm",
-    "//window_manager/interfaces/innerkits/wm",
-    "//window_manager/ft_adapter",
-    "//display_server/interfaces/inner_api/surface",
-    "//display_server/interfaces/inner_api/common",
-    "//display_server/utils/buffer_handle/export",
-    "//display_server/rosen/modules/render_service_base/include",
+    "$window_manager_path/utils/include",
+    "$window_manager_path/interfaces/innerkits/dm",
+    "$window_manager_path/interfaces/innerkits/wm",
+    "$window_manager_path/ft_adapter",
+    "$display_server_path/utils/buffer_handle/export",
   ]
 }
 
 config("libwmutil_public_config") {
-  include_dirs = [ "//window_manager/utils/include" ]
+  include_dirs = [ "$window_manager_path/utils/include" ]
 }
 
 ft_shared_library("libwmutil") {
   sources = [
-    "../src/agent_death_recipient.cpp",
-    "../src/cutout_info.cpp",
-    "../src/display_info.cpp",
-    "../src/perform_reporter.cpp",
-    "../src/permission.cpp",
-    "../src/screen_group_info.cpp",
-    "../src/screen_info.cpp",
-    "../src/screenshot_info.cpp",
-    "../src/singleton_container.cpp",
-    "../src/string_util.cpp",
-    "../src/surface_reader.cpp",
-    "../src/surface_reader_handler_impl.cpp",
-    "../src/sys_cap_util.cpp",
-    "../src/window_property.cpp",
-    "../src/window_transition_info.cpp",
-    "../src/wm_math.cpp",
-    "../src/wm_occlusion_region.cpp",
+    "$window_manager_path/utils/src/agent_death_recipient.cpp",
+    "$window_manager_path/utils/src/cutout_info.cpp",
+    "$window_manager_path/utils/src/display_info.cpp",
+    "$window_manager_path/utils/src/perform_reporter.cpp",
+    "$window_manager_path/utils/src/permission.cpp",
+    "$window_manager_path/utils/src/screen_group_info.cpp",
+    "$window_manager_path/utils/src/screen_info.cpp",
+    "$window_manager_path/utils/src/screenshot_info.cpp",
+    "$window_manager_path/utils/src/singleton_container.cpp",
+    "$window_manager_path/utils/src/string_util.cpp",
+    "$window_manager_path/utils/src/surface_reader.cpp",
+    "$window_manager_path/utils/src/surface_reader_handler_impl.cpp",
+    "$window_manager_path/utils/src/sys_cap_util.cpp",
+    "$window_manager_path/utils/src/window_property.cpp",
+    "$window_manager_path/utils/src/window_transition_info.cpp",
+    "$window_manager_path/utils/src/wm_math.cpp",
+    "$window_manager_path/utils/src/wm_occlusion_region.cpp",
   ]
 
   configs = [
     ":libwmutil_private_config",
-    "//window_manager/resources/config/build:coverage_flags",
+    "$window_manager_path/resources/config/build:coverage_flags",
     "//build/gn/configs/system_libs:hilog_config",
     "//build/gn/configs/system_libs:c_utils_config",
     "//build/gn/configs/system_libs:ipc_core_config",
@@ -68,7 +65,7 @@ ft_shared_library("libwmutil") {
   public_configs = [ ":libwmutil_public_config" ]
 
   deps = [
-    "//display_server/frameworks/surface/ft_build:surface",
-    "//display_server/rosen/modules/render_service_base/ft_build:librender_service_base",
+    "$display_server_path/frameworks/surface/ft_build:surface",
+    "$display_server_path/rosen/modules/render_service_client/ft_build:librender_service_client",
   ]
 }

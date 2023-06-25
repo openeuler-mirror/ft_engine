@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Huawei Device Co., Ltd.
+ * Copyright (c) 2023 Huawei Technologies Co., Ltd.
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -18,8 +18,19 @@
 
 #include <memory>
 
+class RSSurfaceNode;
+
+namespace OHOS {
+namespace AppExecFwk {
+class EventHandler;
+}
+}
+
 namespace OHOS {
 namespace Rosen {
+class VSyncReceiver;
+class SurfaceCaptureCallback;
+
 class RSInterfaces {
 public:
     static RSInterfaces &GetInstance()
@@ -36,6 +47,18 @@ public:
     void SetScreenBacklight(uint32_t id, uint32_t level)
     {
         return;
+    }
+
+    std::shared_ptr<VSyncReceiver> CreateVSyncReceiver(
+        const std::string& name, const std::shared_ptr<OHOS::AppExecFwk::EventHandler> &looper = nullptr)
+    {
+        return nullptr;
+    }
+
+    bool TakeSurfaceCapture(std::shared_ptr<RSSurfaceNode> node,
+        std::shared_ptr<SurfaceCaptureCallback> callback, float scaleX = 1.0f, float scaleY = 1.0f)
+    {
+        return true;
     }
 
 private:
