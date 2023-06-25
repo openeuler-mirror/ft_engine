@@ -12,17 +12,18 @@
 # limitations under the License.
 
 import("//build/gn/fangtian.gni")
+import("//display_server/ft_configs/ds_config.gni")
 
 config("vsync_config") {
   visibility = [ ":*" ]
   include_dirs = [
-    "${sys_inc}/c_utils",
-    "${sys_inc}/ipc_core",
-    "${sys_inc}/eventhandler",
-    "${sys_inc}/hilog",
-    "//display_server/utils/log",
-    "//display_server/interfaces/inner_api/common",
-    "//display_server/rosen/modules/composer/vsync/include",
+    "$display_server_root/utils/log",
+    "$display_server_root/interfaces/inner_api/common",
+    "$rosen_root/modules/composer/vsync/include",
+    "$display_server_root/interfaces/inner_api/composer",
+    "$rosen_root/include/common",
+    "$display_server_root/utils/sandbox",
+    "$display_server_root/utils/socketpair/export",
   ]
   cflags = [
     "-Wall",
@@ -30,16 +31,11 @@ config("vsync_config") {
     "-g3",
     "-Wno-c++11-narrowing"
   ]
-  libs = ["ipc_core", "eventhandler", "hilog", "utils"]
 }
 
 config("vsync_public_config") {
   include_dirs = [
-    "//display_server/interfaces/inner_api/composer",
-    "//display_server/rosen/include/common",
-    "//display_server/rosen/modules/composer/vsync/include",
-    "//display_server/utils/sandbox",
-    "//display_server/utils/socketpair/export",
+    "$rosen_root/modules/composer/vsync/include",
   ]
 }
 
@@ -54,7 +50,13 @@ ft_shared_library("libvsync") {
     "../src/vsync_sampler.cpp",
   ]
 
-  configs = [ ":vsync_config" ]
+  configs = [
+    ":vsync_config",
+    "//build/gn/configs/system_libs:eventhandler_config",
+    "//build/gn/configs/system_libs:ipc_core_config",
+    "//build/gn/configs/system_libs:c_utils_config",
+    "//build/gn/configs/system_libs:hilog_config",
+  ]
 
   public_configs = [
     ":vsync_public_config",
