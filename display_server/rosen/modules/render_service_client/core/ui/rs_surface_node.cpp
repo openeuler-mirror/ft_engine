@@ -188,7 +188,7 @@ bool RSSurfaceNode::GetSecurityLayer() const
     return isSecurityLayer_;
 }
 
-#if !defined(__gnu_linux__) && !defined(_WIN32) && !defined(__APPLE__)
+#ifndef ROSEN_CROSS_PLATFORM
 void RSSurfaceNode::SetColorSpace(ColorGamut colorSpace)
 {
     colorSpace_ = colorSpace;

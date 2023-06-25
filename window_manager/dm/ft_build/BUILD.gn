@@ -17,38 +17,35 @@ config("libdm_private_config") {
   cflags = [ "-Wno-c++11-narrowing" ]
 
   include_dirs = [
-    "//window_manager/dm/include",
-    "//window_manager/dmserver/include",
-    "//window_manager/ft_adapter",
-    "//display_server/interfaces/inner_api/surface",
-    "//display_server/interfaces/inner_api/common",
-    "//display_server/utils/buffer_handle/export",
-    "//display_server/rosen/modules/render_service_base/include",
+    "$window_manager_path/dm/include",
+    "$window_manager_path/dmserver/include",
+    "$window_manager_path/ft_adapter",
+    "$display_server_path/utils/buffer_handle/export",
   ]
 }
 
 config("libdm_public_config") {
   include_dirs = [
-    "//window_manager/interfaces/innerkits/dm",
-    "//window_manager/utils/include",
+    "$window_manager_path/interfaces/innerkits/dm",
+    "$window_manager_path/utils/include",
   ]
 }
 
 ft_shared_library("libdm") {
   sources = [
-    "//window_manager/dm/src/display.cpp",
-    "//window_manager/dm/src/display_manager.cpp",
-    "//window_manager/dm/src/display_manager_adapter.cpp",
-    "//window_manager/dm/src/screen.cpp",
-    "//window_manager/dm/src/screen_group.cpp",
-    "//window_manager/dm/src/screen_manager.cpp",
-    "//window_manager/dm/src/zidl/display_manager_agent_stub.cpp",
-    "//window_manager/dmserver/src/display_manager_proxy.cpp",
+    "$window_manager_path/dm/src/display.cpp",
+    "$window_manager_path/dm/src/display_manager.cpp",
+    "$window_manager_path/dm/src/display_manager_adapter.cpp",
+    "$window_manager_path/dm/src/screen.cpp",
+    "$window_manager_path/dm/src/screen_group.cpp",
+    "$window_manager_path/dm/src/screen_manager.cpp",
+    "$window_manager_path/dm/src/zidl/display_manager_agent_stub.cpp",
+    "$window_manager_path/dmserver/src/display_manager_proxy.cpp",
   ]
 
   configs = [
     ":libdm_private_config",
-    "//window_manager/resources/config/build:coverage_flags",
+    "$window_manager_path/resources/config/build:coverage_flags",
     "//build/gn/configs/system_libs:hilog_config",
     "//build/gn/configs/system_libs:c_utils_config",
     "//build/gn/configs/system_libs:ipc_core_config",
@@ -60,8 +57,7 @@ ft_shared_library("libdm") {
   public_configs = [ ":libdm_public_config" ]
 
   deps = [
-    "//display_server/frameworks/surface/ft_build:surface",
-    "//display_server/rosen/modules/render_service_base/ft_build:librender_service_base",
-    "//window_manager/utils/ft_build:libwmutil",
+    "$display_server_path/rosen/modules/render_service_client/ft_build:librender_service_client",
+    "$window_manager_path/utils/ft_build:libwmutil",
   ]
 }

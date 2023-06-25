@@ -17,15 +17,46 @@
 #define FOUNDATION_DM_DISPLAY_H
 
 #include <string>
+#include <parcel.h>
+
 #include "dm_common.h"
+#include "class_var_definition.h"
 #include "noncopyable.h"
 
 namespace OHOS::Rosen {
-class DisplayInfo;
 class CutoutInfo;
 
 enum class DisplayType : uint32_t {
     DEFAULT = 0,
+};
+
+class DisplayInfo : public Parcelable {
+friend class AbstractDisplay;
+public:
+    DisplayInfo() = default;
+    ~DisplayInfo() = default;
+    WM_DISALLOW_COPY_AND_MOVE(DisplayInfo);
+
+    virtual bool Marshalling(Parcel& parcel) const override;
+    static DisplayInfo *Unmarshalling(Parcel& parcel);
+
+    DEFINE_VAR_DEFAULT_FUNC_GET(std::string, Name, name, "");
+    DEFINE_VAR_DEFAULT_FUNC_GET_SET(DisplayId, DisplayId, id, DISPLAY_ID_INVALID);
+    DEFINE_VAR_DEFAULT_FUNC_GET_SET(DisplayType, DisplayType, type, DisplayType::DEFAULT);
+    DEFINE_VAR_DEFAULT_FUNC_GET_SET(int32_t, Width, width, 0);
+    DEFINE_VAR_DEFAULT_FUNC_GET_SET(int32_t, Height, height, 0);
+    DEFINE_VAR_DEFAULT_FUNC_GET_SET(uint32_t, RefreshRate, refreshRate, 0);
+    DEFINE_VAR_DEFAULT_FUNC_GET_SET(ScreenId, ScreenId, screenId, SCREEN_ID_INVALID);
+    DEFINE_VAR_DEFAULT_FUNC_GET_SET(ScreenId, ScreenGroupId, screenGroupId, SCREEN_ID_INVALID);
+    DEFINE_VAR_DEFAULT_FUNC_GET_SET(float, VirtualPixelRatio, virtualPixelRatio, 1.0f);
+    DEFINE_VAR_DEFAULT_FUNC_GET_SET(float, XDpi, xDpi, 0.0f);
+    DEFINE_VAR_DEFAULT_FUNC_GET_SET(float, YDpi, yDpi, 0.0f);
+    DEFINE_VAR_DEFAULT_FUNC_GET_SET(Rotation, Rotation, rotation, Rotation::ROTATION_0);
+    DEFINE_VAR_DEFAULT_FUNC_GET_SET(Orientation, Orientation, orientation, Orientation::UNSPECIFIED);
+    DEFINE_VAR_DEFAULT_FUNC_GET_SET(int32_t, OffsetX, offsetX, 0);
+    DEFINE_VAR_DEFAULT_FUNC_GET_SET(int32_t, OffsetY, offsetY, 0);
+    DEFINE_VAR_DEFAULT_FUNC_GET(DisplayState, DisplayState, displayState, DisplayState::UNKNOWN);
+    DEFINE_VAR_DEFAULT_FUNC_GET_SET(bool, WaterfallDisplayCompressionStatus, waterfallDisplayCompressionStatus, false);
 };
 
 class Display : public RefBase {

@@ -15,7 +15,6 @@
 
 #include "window_impl.h"
 
-
 #include <ability_manager_client.h>
 #include <common/rs_common_def.h>
 #include <hisysevent.h>
