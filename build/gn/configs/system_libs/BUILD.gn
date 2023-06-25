@@ -37,7 +37,10 @@ config("eventhandler_config") {
 }
 
 config("skia_config") {
-    include_dirs = [ "${sys_inc}/skia" ]
+    include_dirs = [
+        "${sys_inc}/skia",
+        "${sys_inc}/skia/include",
+    ]
     libs = [ "ace_skia_fangtian" ]
 }
 

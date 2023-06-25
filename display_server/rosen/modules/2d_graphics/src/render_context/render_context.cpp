@@ -19,6 +19,7 @@
 #include <string>
 
 #include "EGL/egl.h"
+#include "EGL/eglext.h"
 #include "rs_trace.h"
 #include "window.h"
 
@@ -90,7 +91,7 @@ static EGLDisplay GetPlatformEglDisplay(EGLenum platform, void* native_display, 
 RenderContext::RenderContext()
     : grContext_(nullptr),
       skSurface_(nullptr),
-      nativeWindow_(nullptr),
+      nativeWindow_(0),
       eglDisplay_(EGL_NO_DISPLAY),
       eglContext_(EGL_NO_CONTEXT),
       eglSurface_(EGL_NO_SURFACE),
