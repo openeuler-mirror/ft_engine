@@ -55,3 +55,8 @@ config("mmi_config") {
     include_dirs = [ "${sys_inc}/mmi" ]
     libs = [ "mmi-client" ]
 }
+
+config("syspara_config") {
+    include_dirs = [ "${sys_inc}/syspara" ]
+    libs = [ "beget_proxy", "begetutil" ]
+}
