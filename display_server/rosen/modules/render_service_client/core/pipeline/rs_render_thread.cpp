@@ -122,7 +122,7 @@ RSRenderThread::~RSRenderThread()
 
     if (renderContext_ != nullptr) {
         ROSEN_LOGD("Destroy renderContext!!");
-#if !defined(_WIN32) && !defined(__APPLE__) && !defined(__gnu_linux__)
+#ifndef ROSEN_CROSS_PLATFORM
         delete renderContext_;
         renderContext_ = nullptr;
 #endif
@@ -201,12 +201,12 @@ void RSRenderThread::CreateAndInitRenderContextIfNeed()
 {
 #ifdef ACE_ENABLE_GL
     if (needRender_ && renderContext_ == nullptr) {
-#if !defined(_WIN32) && !defined(__APPLE__) && !defined(__gnu_linux__)
+#ifndef ROSEN_CROSS_PLATFORM
         renderContext_ = new RenderContext();
 #endif
         ROSEN_LOGD("Create RenderContext, its pointer is %p", renderContext_);
         RS_TRACE_NAME("InitializeEglContext");
-#if !defined(_WIN32) && !defined(__APPLE__) && !defined(__gnu_linux__)
+#ifndef ROSEN_CROSS_PLATFORM
         renderContext_->InitializeEglContext(); // init egl context on RT
         if (!cacheDir_.empty()) {
             renderContext_->SetCacheDir(cacheDir_);
