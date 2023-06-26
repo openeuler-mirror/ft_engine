@@ -28,7 +28,7 @@ namespace oewm {
 namespace HDI {
 namespace DISPLAY {
 
-#define RANDNAME_PATTERN "/oewm-shm-XXXXXX"
+#define RANDNAME_PATTERN "/ft-shm-XXXXXX"
 
 int32_t ShmAllocator::AllocMem(const AllocInfo &info, BufferHandle **bufferPtr)
 {
@@ -152,14 +152,14 @@ int32_t ShmAllocator::FlushCache(BufferHandle &buffer)
 {
     // TODO: FlushCache is not supported yet.
     UNUSED(buffer);
-    return DISPLAY_FAILURE;
+    return DISPLAY_SUCCESS;
 }
 
 int32_t ShmAllocator::InvalidateCache(BufferHandle &buffer)
 {
     // TODO: InvalidateCache is not supported yet.
     UNUSED(buffer);
-    return DISPLAY_FAILURE;
+    return DISPLAY_SUCCESS;
 }
 
 void ShmAllocator::Randname(char *buf)
@@ -177,7 +177,7 @@ int ShmAllocator::ExclShmOpen(char *name)
 {
     int retries = 100;
     do {
-        Randname(name + strlen(RANDNAME_PATTERN) - 6);
+        Randname(name + (strlen(RANDNAME_PATTERN) - 6));
 
         --retries;
         // CLOEXEC is guaranteed to be set by shm_open

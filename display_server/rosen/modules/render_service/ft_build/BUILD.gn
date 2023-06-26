@@ -74,17 +74,31 @@ ft_shared_library("librender_service") {
     "$display_server_root/rosen/modules/composer/ft_build:libcomposer",
     "$display_server_root/rosen/modules/render_frame_trace/ft_build:render_frame_trace",
     "$display_server_root/rosen/modules/render_service_base/ft_build:librender_service_base",
+  ]
 
+  public_deps = [
+    "//build/gn/configs/system_libs:samgr",
     "//build/gn/configs/system_libs:hitrace_meter",
     "//build/gn/configs/system_libs:skia",
     "//build/gn/configs/system_libs:syspara",
     "//build/gn/configs/system_libs:safwk",
     "//build/gn/configs/system_libs:eventhandler",
-    "//build/gn/configs/system_libs:samgr",
     "//build/gn/configs/system_libs:image",
   ]
 
   libs = ["png"]
 
   cflags = [ "-Wno-c++11-narrowing" ]
+}
+
+ft_executable("render_service") {
+  sources = [ "../core/main.cpp" ]
+
+  include_dirs = [ "../core" ]
+
+  deps = [
+    ":librender_service",
+    "//display_server/rosen/modules/composer/ft_build:libcomposer",
+    "//display_server/rosen/modules/render_service_base/ft_build:librender_service_base",
+  ]
 }

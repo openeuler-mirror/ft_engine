@@ -92,6 +92,11 @@ config("safwk_config") {
   libs = [ "system_ability_fwk" ]
 }
 
+config("libz_config") {
+  visibility = [ ":*" ]
+  libs = [ "shared_libz" ]
+}
+
 group("c_utils") {
   public_configs = [ ":c_utils_config" ]
 }
@@ -160,4 +165,8 @@ group("safwk") {
     ":samgr"
   ]
   public_configs = [ ":safwk_config" ]
+}
+
+group("libz") {
+  public_configs = [ ":libz_config" ]
 }
