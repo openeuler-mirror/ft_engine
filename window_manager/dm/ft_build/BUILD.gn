@@ -21,6 +21,7 @@ config("libdm_private_config") {
     "$window_manager_path/dmserver/include",
     "$window_manager_path/ft_adapter",
     "$display_server_path/utils/buffer_handle/export",
+    "$display_server_path/rosen/modules/composer/vsync/include",
   ]
 }
 
@@ -52,6 +53,7 @@ ft_shared_library("libdm") {
     "//build/gn/configs/system_libs:image_config",
     "//build/gn/configs/system_libs:samgr_config",
     "//build/gn/configs/system_libs:skia_config",
+    "//build/gn/configs/system_libs:eventhandler_config",
   ]
 
   public_configs = [ ":libdm_public_config" ]

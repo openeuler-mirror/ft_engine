@@ -20,6 +20,7 @@
 #include <libxml/globals.h>
 #include <libxml/xmlstring.h>
 #include <map>
+#include <cstring>
 #include <string>
 #include <utility>
 #include <vector>
@@ -70,7 +71,7 @@ std::string DisplayManagerConfig::GetConfigPath(const std::string& configFileNam
     char tmpPath[PATH_MAX + 1] = { 0 };
     if (!configPath || strlen(configPath) == 0 || strlen(configPath) > PATH_MAX || !realpath(configPath, tmpPath)) {
         WLOGFI("[DmConfig] can not get customization config file");
-        return "/system/" + configFileName;
+        return "/usr/share/ft/window_manager/" + configFileName;
     }
     return std::string(tmpPath);
 }

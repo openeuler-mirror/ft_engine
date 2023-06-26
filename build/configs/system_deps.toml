@@ -28,6 +28,7 @@ package_deps = [
     "tar",
     "cmake",
     "ninja-build",
+    "libxml2-devel",
     # DRM Backend
     "libdrm-devel",
     "systemd-devel",

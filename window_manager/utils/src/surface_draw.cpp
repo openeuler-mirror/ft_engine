@@ -180,6 +180,7 @@ std::unique_ptr<OHOS::Media::PixelMap> SurfaceDraw::DecodeImageToPixelMap(const 
 
 void SurfaceDraw::DrawPixelmap(Drawing::Canvas &canvas, const std::string& imagePath)
 {
+#if 0
     std::unique_ptr<OHOS::Media::PixelMap> pixelmap = DecodeImageToPixelMap(imagePath);
     if (pixelmap == nullptr) {
         WLOGFE("drawing pixel map is nullptr");
@@ -192,10 +193,12 @@ void SurfaceDraw::DrawPixelmap(Drawing::Canvas &canvas, const std::string& image
     pen.SetWidth(penWidth);
     canvas.AttachPen(pen);
     canvas.DrawBitmap(*pixelmap, 0, 0);
+#endif
 }
 
 bool SurfaceDraw::DoDraw(uint8_t *addr, uint32_t width, uint32_t height, const std::string& imagePath)
 {
+#if 0
     Drawing::Bitmap bitmap;
     Drawing::BitmapFormat format { Drawing::ColorType::COLORTYPE_RGBA_8888,
         Drawing::AlphaType::ALPHATYPE_OPAQUE };
@@ -210,11 +213,13 @@ bool SurfaceDraw::DoDraw(uint8_t *addr, uint32_t width, uint32_t height, const s
         WLOGFE("draw failed");
         return false;
     }
+#endif
     return true;
 }
 
 bool SurfaceDraw::DoDraw(uint8_t *addr, uint32_t width, uint32_t height, std::shared_ptr<Media::PixelMap> pixelMap)
 {
+#if 0
     Drawing::Bitmap bitmap;
     Drawing::Canvas canvas;
     Drawing::BitmapFormat format { Drawing::ColorType::COLORTYPE_RGBA_8888, Drawing::AlphaType::ALPHATYPE_OPAQUE };
@@ -240,11 +245,13 @@ bool SurfaceDraw::DoDraw(uint8_t *addr, uint32_t width, uint32_t height, std::sh
         WLOGFE("draw failed");
         return false;
     }
+#endif
     return true;
 }
 
 bool SurfaceDraw::DoDraw(uint8_t *addr, uint32_t width, uint32_t height, uint32_t color)
 {
+#if 0
     Drawing::Bitmap bitmap;
     Drawing::BitmapFormat format { Drawing::ColorType::COLORTYPE_RGBA_8888,
         Drawing::AlphaType::ALPHATYPE_OPAQUE };
@@ -259,6 +266,7 @@ bool SurfaceDraw::DoDraw(uint8_t *addr, uint32_t width, uint32_t height, uint32_
         WLOGFE("draw failed");
         return false;
     }
+#endif
     return true;
 }
 
@@ -297,6 +305,7 @@ bool SurfaceDraw::DrawImageRect(std::shared_ptr<RSSurfaceNode> surfaceNode, Rect
 bool SurfaceDraw::DoDrawImageRect(sptr<OHOS::SurfaceBuffer> buffer, const Rect& rect,
     std::shared_ptr<Media::PixelMap> pixelMap, uint32_t color, bool fillWindow)
 {
+#if 0
     int32_t winWidth = static_cast<int32_t>(rect.width_);
     int32_t winHeight = static_cast<int32_t>(rect.height_);
     // actual width of the surface buffer after alignment
@@ -344,6 +353,7 @@ bool SurfaceDraw::DoDrawImageRect(sptr<OHOS::SurfaceBuffer> buffer, const Rect& 
         WLOGFE("draw image rect failed, because copy bitmap to buffer failed.");
         return false;
     }
+#endif
     return true;
 }
 
@@ -368,6 +378,7 @@ bool SurfaceDraw::GetSurfaceSnapshot(const std::shared_ptr<RSSurfaceNode> surfac
 bool SurfaceDraw::DrawMasking(std::shared_ptr<RSSurfaceNode> surfaceNode, Rect screenRect,
     Rect transparentRect)
 {
+#if 0
     int32_t screenHeight = static_cast<int32_t>(screenRect.height_);
     int32_t screenWidth = static_cast<int32_t>(screenRect.width_);
     int32_t transparentHeight = static_cast<int32_t>(transparentRect.height_);
@@ -414,6 +425,7 @@ bool SurfaceDraw::DrawMasking(std::shared_ptr<RSSurfaceNode> surfaceNode, Rect s
         WLOGFE("draw masking FlushBuffer ret:%{public}s", SurfaceErrorStr(surfaceRet).c_str());
         return false;
     }
+#endif
     return true;
 }
 } // Rosen

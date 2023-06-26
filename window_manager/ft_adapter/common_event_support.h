@@ -13,18 +13,19 @@
  * limitations under the License.
  */
 
-#ifndef WINDOW_ANIMATION_RS_IWINDOW_ANIMATION_CONTROLLER_H
-#define WINDOW_ANIMATION_RS_IWINDOW_ANIMATION_CONTROLLER_H
+#ifndef COMMON_EVENT_SUPPORT_H
+#define COMMON_EVENT_SUPPORT_H
 
-#include <iremote_broker.h>
+#include <string>
+#include <vector>
 
 namespace OHOS {
-namespace Rosen {
-class RSIWindowAnimationController : public IRemoteBroker {
+namespace EventFwk {
+class CommonEventSupport {
 public:
-    DECLARE_INTERFACE_DESCRIPTOR(u"ohos.rosen.RSIWindowAnimationController");
+    static const std::string COMMON_EVENT_USER_SWITCHED;
 };
-} // namespace Rosen
-} // namespace OHOS
+}  // namespace EventFwk
+}  // namespace OHOS
 
-#endif // WINDOW_ANIMATION_RS_IWINDOW_ANIMATION_CONTROLLER_H
+#endif  // COMMON_EVENT_SUPPORT_H
