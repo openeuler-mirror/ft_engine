@@ -12,7 +12,7 @@
 # limitations under the License.
 
 import("//build/gn/fangtian.gni")
-import("//display_server/ft_configs/ds_config.gni")
+import("//display_server/ft_build/ds_config.gni")
 
 # On the openEuler platform, display_server and window_manager are in the same process
 # Use sa_main.bin instead of render_service.bin
