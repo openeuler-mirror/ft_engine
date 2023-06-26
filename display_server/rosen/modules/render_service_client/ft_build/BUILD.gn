@@ -14,13 +14,14 @@
 import("//build/gn/fangtian.gni")
 import("//display_server/ft_build/ds_config.gni")
 
-config("render_service_client_config") {
+config("render_service_client_public_config") {
   include_dirs = [
     "$rosen_root/modules",
     "$rosen_root/modules/render_service_client/core",
     "$rosen_root/modules/render_service_base/include",
     "$rosen_root/modules/render_service_base/src/platform/fangtian/include",
     "$rosen_root/modules/platform/image_native",
+    "$rosen_root/modules/2d_graphics/src",
     "$display_server_root/interfaces/inner_api/common",
     "$display_server_root/interfaces/inner_api/surface",
     "$display_server_root/interfaces/inner_api/composer",
@@ -33,7 +34,6 @@ ft_source_set("render_service_client_src") {
   defines += gpu_defines
   defines += [ "MODULE_RSC" ]
   include_dirs = [
-    "$rosen_root/modules/2d_graphics/src",
     "$rosen_root/modules/render_frame_trace/include",
     "$rosen_root/modules/render_service_base/src",
     "$display_server_root/utils/log",
@@ -107,7 +107,7 @@ ft_source_set("render_service_client_src") {
     "-fvisibility-inlines-hidden",
   ]
 
-  deps = [
+  public_deps = [
     "$rosen_root/modules/composer/vsync/ft_build:libvsync",
     "$rosen_root/modules/frame_analyzer/ft_build:libframe_analyzer",
     "$rosen_root/modules/render_frame_trace/ft_build:render_frame_trace",
@@ -122,7 +122,7 @@ ft_source_set("render_service_client_src") {
     "//build/gn/configs/system_libs:hitrace_meter",
   ]
 
-  public_configs = [ ":render_service_client_config" ]
+  public_configs = [ ":render_service_client_public_config" ]
 }
 
 ft_shared_library("librender_service_client") {

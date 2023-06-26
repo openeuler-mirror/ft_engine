@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021-2023 Huawei Technologies Co., Ltd.
+ * Copyright (c) 2021-2022 Huawei Device Co., Ltd.
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -23,8 +23,10 @@
 namespace OHOS {
 namespace Rosen {
 
-RSSurfaceOhosRaster::RSSurfaceOhosRaster(const sptr<Surface>& producer) : RSSurfaceOhos(producer) {}
-
+RSSurfaceOhosRaster::RSSurfaceOhosRaster(const sptr<Surface>& producer) : RSSurfaceOhos(producer) 
+{
+    bufferUsage_ = BUFFER_USAGE_CPU_READ | BUFFER_USAGE_CPU_WRITE;
+}
 
 void RSSurfaceOhosRaster::SetSurfaceBufferUsage(uint64_t usage)
 {
@@ -52,7 +54,6 @@ std::unique_ptr<RSSurfaceFrame> RSSurfaceOhosRaster::RequestFrame(int32_t width,
         ROSEN_LOGE("RSSurfaceOhosRaster::Map Failed, error is : %s", SurfaceErrorStr(err).c_str());
         return nullptr;
     }
-
 
     sptr<SyncFence> tempFence = new SyncFence(frame->releaseFence_);
     int res = tempFence->Wait(3000);

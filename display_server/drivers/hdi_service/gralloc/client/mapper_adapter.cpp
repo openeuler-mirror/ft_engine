@@ -44,9 +44,11 @@ bool MapperAdapter::IsReady() const
 
 int32_t MapperAdapter::MapBuffer(const BufferHandle& handle, void*& outData) const
 {
-    int32_t ret = 0;
     outData = mapperFuncs_->Mmap(const_cast<BufferHandle *>(&handle));
-    return ret;
+    if (outData == nullptr) {
+        return DISPLAY_FAILURE;
+    }
+    return DISPLAY_SUCCESS;
 }
 
 int32_t MapperAdapter::UnmapBuffer(const BufferHandle& handle) const

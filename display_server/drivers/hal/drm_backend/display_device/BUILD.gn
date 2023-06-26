@@ -50,10 +50,10 @@ ft_shared_library("display_device") {
   public_deps = [ 
     "//display_server/drivers/hal/drm_backend:display_drm_dep",
     "//display_server/drivers/hal/base:hal_base",
+    "//display_server/utils/sync_fence/ft_build:sync_fence",
   ]
 
   deps = [
-    "//display_server/utils/sync_fence/ft_build:sync_fence",
     "//build/gn/configs/system_libs:ipc_core",
   ]
 }

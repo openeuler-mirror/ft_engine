@@ -97,19 +97,20 @@ ft_source_set("rosen_fangtian_sources") {
     libs = [ "crypto", "EGL", "GLESv2" ]
   }
 
-
   deps = [
-    "$display_server_root/frameworks/surface/ft_build:surface",
-    "$rosen_root/modules/composer/vsync/ft_build:libvsync",
-    "$display_server_root/utils/sync_fence/ft_build:sync_fence",
-    "$display_server_root/utils/buffer_handle/ft_build:buffer_handle",
-    "$display_server_root/utils/sandbox/ft_build:sandbox_utils",
-
     "//build/gn/configs/system_libs:hilog",
     "//build/gn/configs/system_libs:ipc_core",
     "//build/gn/configs/system_libs:hitrace_meter",
     "//build/gn/configs/system_libs:eventhandler",
     "//build/gn/configs/system_libs:skia",
     "//build/gn/configs/system_libs:samgr",
+  ]
+
+  public_deps = [
+    "$display_server_root/utils/buffer_handle/ft_build:buffer_handle",
+    "$display_server_root/frameworks/surface/ft_build:surface",
+    "$rosen_root/modules/composer/vsync/ft_build:libvsync",
+    "$display_server_root/utils/sync_fence/ft_build:sync_fence",
+    "$display_server_root/utils/sandbox/ft_build:sandbox_utils",
   ]
 }

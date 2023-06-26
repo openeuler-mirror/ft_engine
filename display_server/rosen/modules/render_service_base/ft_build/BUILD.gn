@@ -17,7 +17,7 @@ import("//display_server/ft_build/ds_config.gni")
 rs_common_define = [ "ROSEN_OHOS" ]
 enable_export_macro = true
 
-config("export_config") {
+config("render_service_base_public_config") {
   cflags_cc = [ "-std=c++17" ]
   include_dirs = [ "../include" ]
 
@@ -156,7 +156,7 @@ ft_source_set("render_service_base_src") {
   ]
 
   public_configs = [
-    ":export_config",
+    ":render_service_base_public_config",
   ]
   deps = [
     "../src/platform/fangtian:rosen_fangtian_sources",
@@ -185,10 +185,6 @@ ft_source_set("render_service_base_src") {
   ]
 
   deps += [
-    "$display_server_root/utils/buffer_handle/ft_build:buffer_handle",
-    "$display_server_root/utils/sandbox/ft_build:sandbox_utils",
-    "$display_server_root/utils/sync_fence/ft_build:sync_fence",
-
     "//build/gn/configs/system_libs:c_utils",
     "//build/gn/configs/system_libs:ipc_core",
     "//build/gn/configs/system_libs:hitrace_meter",
@@ -196,10 +192,14 @@ ft_source_set("render_service_base_src") {
     "//build/gn/configs/system_libs:skia",
   ]
 
+  public_deps = [
+    "$display_server_root/utils/sandbox/ft_build:sandbox_utils",
+    "$display_server_root/utils/sync_fence/ft_build:sync_fence",
+  ]
 }
 
 ft_shared_library("librender_service_base") {
-  deps = [
+  public_deps = [
     ":render_service_base_src",
     "../src/platform/fangtian:rosen_fangtian_sources",
   ]

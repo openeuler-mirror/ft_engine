@@ -16,7 +16,7 @@ group("ft_display_server") {
     "//display_server/rosen/modules/composer/ft_build:libcomposer",
     "//display_server/rosen/modules/render_service_base/ft_build:librender_service_base",
     "//display_server/rosen/modules/render_service_client/ft_build:librender_service_client",
-    "//display_server/rosen/modules/render_service/ft_build:librender_service",
+    "//display_server/rosen/modules/render_service/ft_build:render_service",
   ]
 }
 
@@ -33,6 +33,6 @@ group("ft_test") {
     "//display_server/drivers/hal/test:drm_backend_test",
     "//display_server/frameworks/surface/test/ft_build:test",
     "//display_server/rosen/samples/composer/ft_build:hello_composer",
-    # "//display_server/rosen/modules/render_service_client/test:render_service_client_rs_demo"
+    "//display_server/rosen/modules/render_service_client/test/ft_build:render_service_client_rs_demo"
   ]
 }

@@ -44,7 +44,8 @@ public:
 class RSObjGeometry {
 public:
     RSObjGeometry()
-        : x_(-INFINITY), y_(-INFINITY), z_(0), width_(-INFINITY), height_(-INFINITY), trans_(nullptr)
+        // : x_(-INFINITY), y_(-INFINITY), z_(0), width_(-INFINITY), height_(-INFINITY), trans_(nullptr)
+        : x_(0), y_(0), z_(0), width_(0), height_(0), trans_(nullptr)
     {}
 
     virtual ~RSObjGeometry() {}
