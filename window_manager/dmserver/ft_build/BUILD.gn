@@ -13,68 +13,63 @@
 
 import("//build/gn/fangtian.gni")
 
-config("libwm_private_config") {
-  visibility = [ ":*" ]
-
+config("libdms_private_config") {
   cflags = [ "-Wno-c++11-narrowing" ]
 
   include_dirs = [
-    "$window_manager_path/wm/include",
-    "$window_manager_path/wmserver/include",
+    "$window_manager_path/dm/include",
     "$window_manager_path/interfaces/innerkits/dm",
     "$window_manager_path/ft_adapter",
     "$display_server_path/utils/buffer_handle/export",
     "$display_server_path/rosen/modules/composer/vsync/include",
+    "/usr/include/libxml2"
   ]
 }
 
-config("libwm_public_config") {
-  include_dirs = [
-    "$window_manager_path/interfaces/innerkits/wm",
-    "$window_manager_path/utils/include",
-  ]
+config("libdms_public_config") {
+  include_dirs = [ "$window_manager_path/dmserver/include" ]
 }
 
-ft_shared_library("libwm") {
+ft_shared_library("libdms") {
   sources = [
-    "$window_manager_path/wm/src/color_parser.cpp",
-    "$window_manager_path/wm/src/input_transfer_station.cpp",
-    "$window_manager_path/wm/src/vsync_station.cpp",
-    "$window_manager_path/wm/src/window.cpp",
-    "$window_manager_path/wm/src/window_accessibility_controller.cpp",
-    "$window_manager_path/wm/src/window_adapter.cpp",
-    "$window_manager_path/wm/src/window_agent.cpp",
-    "$window_manager_path/wm/src/window_frame_trace_impl.cpp",
-    "$window_manager_path/wm/src/window_impl.cpp",
-    "$window_manager_path/wm/src/window_input_channel.cpp",
-    "$window_manager_path/wm/src/window_manager.cpp",
-    "$window_manager_path/wm/src/window_manager_agent.cpp",
-    "$window_manager_path/wm/src/window_option.cpp",
-    "$window_manager_path/wm/src/zidl/window_manager_agent_stub.cpp",
-    "$window_manager_path/wm/src/zidl/window_stub.cpp",
-    "$window_manager_path/wmserver/src/zidl/window_manager_proxy.cpp",
+    "$window_manager_path/dm/src/zidl/display_manager_agent_proxy.cpp",
+    "$window_manager_path/dmserver/src/abstract_display.cpp",
+    "$window_manager_path/dmserver/src/abstract_display_controller.cpp",
+    "$window_manager_path/dmserver/src/abstract_screen.cpp",
+    "$window_manager_path/dmserver/src/abstract_screen_controller.cpp",
+    "$window_manager_path/dmserver/src/display_cutout_controller.cpp",
+    "$window_manager_path/dmserver/src/display_dumper.cpp",
+    "$window_manager_path/dmserver/src/display_manager_agent_controller.cpp",
+    "$window_manager_path/dmserver/src/display_manager_config.cpp",
+    "$window_manager_path/dmserver/src/display_manager_service.cpp",
+    "$window_manager_path/dmserver/src/display_manager_service_inner.cpp",
+    "$window_manager_path/dmserver/src/display_manager_stub.cpp",
+    "$window_manager_path/dmserver/src/display_power_controller.cpp",
+    "$window_manager_path/dmserver/src/screen_rotation_controller.cpp",
+    "$window_manager_path/dmserver/src/sensor_connector.cpp",
   ]
 
   configs = [
-    ":libwm_private_config",
+    ":libdms_private_config",
     "$window_manager_path/resources/config/build:coverage_flags",
     "//build/gn/configs/system_libs:hilog_config",
+    "//build/gn/configs/system_libs:hitrace_meter_config",
     "//build/gn/configs/system_libs:c_utils_config",
     "//build/gn/configs/system_libs:ipc_core_config",
-    "//build/gn/configs/system_libs:image_config",
     "//build/gn/configs/system_libs:samgr_config",
+    "//build/gn/configs/system_libs:safwk_config",
     "//build/gn/configs/system_libs:eventhandler_config",
-    "//build/gn/configs/system_libs:mmi_config",
     "//build/gn/configs/system_libs:skia_config",
   ]
 
-  public_configs = [ ":libwm_public_config" ]
+  public_configs = [ ":libdms_public_config" ]
+
+  libs = [ "xml2" ]
 
   deps = [
-    "$display_server_path/rosen/modules/animation/window_animation/ft_build:window_animation",
+    "$display_server_path/frameworks/surface/ft_build:surface",
     "$display_server_path/rosen/modules/render_service_base/ft_build:librender_service_base",
     "$display_server_path/rosen/modules/render_service_client/ft_build:librender_service_client",
-    "$window_manager_path/dm/ft_build:libdm",
     "$window_manager_path/utils/ft_build:libwmutil",
   ]
 }
