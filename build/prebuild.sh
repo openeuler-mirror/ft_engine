@@ -73,10 +73,16 @@ if [ ! -d ${PROJECT_DIR}/prebuilts/libs ]; then
 git clone https://gitee.com/yanansong/ft_engine_prebuild.git ${PROJECT_DIR}/prebuilts/libs
 fi
 
-# copy prebuild library to /usr/lib64
 ARCHNAME=`uname -m`
 cd ${PROJECT_DIR}/prebuilts/libs/library/${ARCHNAME}
+# copy prebuild library to /usr/local/lib64
 sudo cp -fr *.so /usr/local/lib64
+# copy prebuild binarys to /usr/local/bin
+sudo cp -f hilog /usr/local/bin
+sudo cp -f hilogd /usr/local/bin
+sudo cp -f sa_main /usr/local/bin
+sudo cp -f samgr /usr/local/bin
+
 cd ${PROJECT_DIR}
 rm -fr ${PROJECT_DIR}/prebuilts/libs
 
