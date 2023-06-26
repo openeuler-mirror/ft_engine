@@ -57,6 +57,7 @@ static struct gbm_device *gbm_device;
 static EGLContext context;
 static struct gbm_surface *gbm_surface;
 static EGLSurface egl_surface;
+static BufferHandle tmpBufferHandle; 
 
 EGLConfig GetEGLConfig()
 {
@@ -85,25 +86,46 @@ EGLConfig GetEGLConfig()
 		assert(eglGetConfigAttrib(defaultDisplay, configs[i],
 					  EGL_NATIVE_VISUAL_ID, &gbm_format) == EGL_TRUE);
 		printf("gbm format %x\n", gbm_format);
-		/*如果找到与目标GBM格式（GBM_FORMAT_ARGB8888）匹配的配置，
-		即gbm_format等于目标格式，就释放configs的内存并返回该配置。*/
 		if (gbm_format == GBM_FORMAT_ARGB8888) {
 			EGLConfig ret = configs[i];
 			free(configs);
 			return ret;
 		}
 	}
-	// 未找到匹配的配置，调用abort函数终止程序。
+	// not find config, exit.
 	abort();
 }
 
-void SwapBuffer(BufferHandle *handle) {
+struct gbm_bo* SwapBuffer(BufferHandle *handle)
+{
 	//交换EGL表面的前后缓冲区。
 	eglSwapBuffers (defaultDisplay, egl_surface);
+
 	//锁定GBM表面的前端缓冲区，以便进行后续操作。
 	struct gbm_bo *bo = gbm_surface_lock_front_buffer (gbm_surface);
+    if (bo == nullptr) {
+        printf("gbm bo is null\n");
+        return nullptr;
+    }
 	//获取前端缓冲区的句柄
 	handle->key = gbm_bo_get_handle(bo).u32;
+    handle->stride = gbm_bo_get_stride(bo); 
+    handle->size = handle->stride * handle->height; 
+    handle->format = gbm_bo_get_format(bo);
+    return bo;
+}
+
+static struct gbm_bo *previous_bo = NULL;
+static uint32_t previous_fb;
+
+void ReleaseBuffer(struct gbm_bo* bo)
+{
+    if (previous_bo) {  //检查是否存在前一个帧缓冲区对象。
+		//释放前一个GBM表面的缓冲区。
+		gbm_surface_release_buffer (gbm_surface, previous_bo);
+	}
+	//更新前一个帧缓冲区对象为当前帧缓冲区对象
+	previous_bo = bo;
 }
 
 bool InitEGL(uint32_t devId, BufferHandle **handle)
@@ -157,32 +179,11 @@ bool InitEGL(uint32_t devId, BufferHandle **handle)
     }
     printf("CreateBuffer: choose display mode 0 to create fb: width=%d, height=%d.\n", width, height);
 
-    /*
-    // Get allocator
-    AllocInfo info = {
-        .width = width,
-        .height = height,
-        .usage = HBM_USE_MEM_DMA | HBM_USE_MEM_FB , // allocate gbm buffer
-        .format = PIXEL_FMT_BGRA_8888};
-    auto allocator = g_alloc_controller.GetAllocator(info.usage); 
-    if (allocator == nullptr) {
-        printf("CreateBuffer: Failed to get buffer allocator.\n");
-        return false;
-    }
-    
-    // Do allocate memory
-    ret = allocator->AllocMem(info, handle);
-    if (*handle == nullptr || ret != DISPLAY_SUCCESS) {
-        printf("CreateBuffer: Failed to alloc fb.\n");
-        return false;
-    }
-    printf("CreateBuffer: end. handle fd: %i.\n", (*handle)->fd);
-    */
     gbm_device = g_session.GetDisplayDevice()->GetGbmDevice();
 	defaultDisplay = eglGetDisplay(gbm_device); 
 	int major, minor;
 	eglInitialize(defaultDisplay, &major, &minor);
-	printf("%d %d", major, minor);
+	printf("EGL version:%d.%d\n", major, minor);
 
     eglBindAPI(EGL_OPENGL_ES2_BIT);
     EGLConfig config = GetEGLConfig();
@@ -195,15 +196,10 @@ bool InitEGL(uint32_t devId, BufferHandle **handle)
 	//将OpenGL上下文与EGL表面进行绑定，使其成为当前上下文。
 	eglMakeCurrent (defaultDisplay, egl_surface, egl_surface, context);
 
-    static BufferHandle tmp; 
-    *handle = &tmp;
-    tmp.virAddr = nullptr;
-    tmp.stride= width;
-    tmp.usage = HBM_USE_MEM_DMA | HBM_USE_MEM_FB;
-    tmp.format = GBM_BO_FORMAT_XRGB8888;
-    tmp.height= height;
-    tmp.width = width;
-    tmp.size = tmp.height * tmp.stride; 
+    *handle = &tmpBufferHandle;
+    tmpBufferHandle.virAddr = nullptr;
+    tmpBufferHandle.height= height;
+    tmpBufferHandle.width = width;
 
     return true;
 }
@@ -212,7 +208,6 @@ void DrawBaseColor(float progress)
 {
     glClearColor (1.0f-progress, progress, 0.0, 1.0);
 	glClear (GL_COLOR_BUFFER_BIT);
-    return;
 }
 
 void SignalHandler(int signum) {
@@ -238,24 +233,6 @@ bool DestoryBufferHandle(BufferHandle **handle)
 	eglTerminate (defaultDisplay);
 	gbm_device_destroy (gbm_device);
 
-    /*
-    printf("DestoryBufferHandle.\n");
-
-    if (handle == nullptr) {
-        return false;
-    }
-
-    auto allocator = g_alloc_controller.GetAllocator((*handle)->usage);
-    if (allocator == nullptr) {
-        printf("DestoryBufferHandle: Failed to get buffer allocator.\n");
-        return false;
-    }
-
-    // Unmap buffer & Close fd
-    allocator->FreeMem(*handle);
-    printf("DestoryBufferHandle: free buffer done.\n");
-    *handle = nullptr;
-    */
     return true;
 }
 
@@ -267,17 +244,8 @@ void Screen::OnVsync(uint32_t sequence, uint64_t timestamp, void *data)
         return;
     }
     
-    // Print first frames
-    static int i = 0;
-    if (i < 3) {
-        printf("OnVSync: screen devId=%d, sequence=%u, timestamp=%lu\n", screen->devId, sequence, timestamp);
-        LOG_DEBUG("DRM Backend Test: OnVSync: screen devId=%{public}d, sequence=%{public}u, timestamp=%{public}lu", 
-            screen->devId, sequence, timestamp);
-        ++i;
-    }
-
     // Do draw in main loop
-    g_mainLoop.RunInLoop([screen]() {
+    g_mainLoop.RunInLoop([screen, sequence, timestamp]() {
         uint32_t devId = screen->devId;
         int32_t fenceFd = -1;
         int32_t ret;
@@ -297,9 +265,11 @@ void Screen::OnVsync(uint32_t sequence, uint64_t timestamp, void *data)
         }
         DrawBaseColor(screen->fbIdx / 100.0);
         screen->fbIdx++;
+        printf("OnVSync %d: screen devId=%d, sequence=%u, timestamp=%lu\n", screen->fbIdx, screen->devId, sequence, timestamp);
+        usleep(100000);
 
         // swap buffer
-        SwapBuffer(screen->fb[0]->handle);
+        struct gbm_bo *bo = SwapBuffer(screen->fb[0]->handle);
 
         // Set fb as screen's current buffer
         ret = g_session.CallDisplayFunction(
@@ -322,15 +292,14 @@ void Screen::OnVsync(uint32_t sequence, uint64_t timestamp, void *data)
         } else {
             auto fence = OHOS::SyncFence(-1);
         }
-        
-        screen->fbIdx++;
+
+        ReleaseBuffer(bo);
     });
 }
 
 static void OnHotPlug(uint32_t devId, bool connected, void *data)
 {
     printf("OnHotPlug: screen devId=%d, connected=%s\n", devId, connected ? "True" : "False");
-    LOG_DEBUG("DRM Backend Test: OnHotPlug: screen devId=%d, connected=%s", devId, connected ? "True" : "False");
 
     // Store screen
     Screen* screen = new Screen();
@@ -342,7 +311,7 @@ static void OnHotPlug(uint32_t devId, bool connected, void *data)
     int32_t ret = g_session.CallDisplayFunction(
         devId, 
         &oewm::HDI::DISPLAY::HdiDisplay::RegDisplayVBlankCallback, 
-        Screen::OnVsync, 
+        Screen::OnVsync,
         static_cast<void *>(g_screens.at(devId))
     );
     if (ret != DISPLAY_SUCCESS) {

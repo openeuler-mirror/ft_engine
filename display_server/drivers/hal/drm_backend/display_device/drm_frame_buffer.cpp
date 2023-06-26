@@ -37,21 +37,13 @@ bool AddFb(int drmFd, uint32_t fbHandle, FrameBufferInfo &fbInfo)
     pitches[0] = fbInfo.stride;
     offsets[0] = 0;
 
-    if (drmModeAddFB2(
-            drmFd,
-            fbInfo.width,
-            fbInfo.height,
-            DRM_FORMAT_XRGB8888, // need use DRM_FORMAT_XRGB8888
-            handles,
-            pitches,
-            offsets,
-            &fbInfo.fbId,
-            0) != 0) {
-        LOG_ERROR("drmModeAddFB2 failed, error: %{public}s", ErrnoToString(errno).c_str());
+    printf("AddFb: fd=%d, width=%u, height=%u, pixel_format=DRM_FORMAT_XRGB8888, handle=%u, pitch=%u, offset=%u, fbId=%u\n",
+        drmFd, fbInfo.width, fbInfo.height, handles[0], pitches[0], offsets[0], fbInfo.fbId);
+    if (drmModeAddFB2(drmFd, fbInfo.width, fbInfo.height, DRM_FORMAT_XRGB8888, // need use DRM_FORMAT_XRGB8888
+                      handles, pitches, offsets, &fbInfo.fbId, 0) != 0) {
+        printf("drmModeAddFB2 failed, error: %s\n", ErrnoToString(errno).c_str());
         return false;
     }
-    LOG_DEBUG("AddFb: fd=%{public}d, width=%{public}u, height=%{public}u, pixel_format=DRM_FORMAT_XRGB8888, handle=%{public}u, pitch=%{public}u, offset=%{public}u, fbId=%{public}u",
-        drmFd, fbInfo.width, fbInfo.height, handles[0], pitches[0], offsets[0], fbInfo.fbId);
 
     return true;
 }
