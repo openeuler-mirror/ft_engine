@@ -1,0 +1,54 @@
+# Copyright (c) 2021 Huawei Device Co., Ltd.
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+import("//build/gn/fangtian.gni")
+import("//display_server/ft_configs/ds_config.gni")
+
+utils_dir = "//display_server/utils"
+
+group("buffer_handle") {
+  public_deps = [ "${utils_dir}/buffer_handle/ft_build:buffer_handle" ]
+}
+
+group("scoped_bytrace") {
+  public_deps = [ "${utils_dir}/scoped_bytrace/ft_build:scoped_bytrace" ]
+}
+
+group("socketpair") {
+  public_deps = [ "${utils_dir}/socketpair/ft_build:socketpair" ]
+}
+
+group("sync_fence") {
+  public_deps = [ "${utils_dir}/sync_fence/ft_build:sync_fence" ]
+}
+
+group("sandbox_utils") {
+  public_deps = [ "${utils_dir}/sandbox/ft_build:sandbox_utils" ]
+}
+
+config("libgraphic_utils_public_config") {
+  include_dirs =
+      [ "//foundation/graphic/graphic_2d/interfaces/inner_api/common" ]
+}
+
+ft_shared_library("libgraphic_utils") {
+  public_configs = [ ":libgraphic_utils_public_config" ]
+
+  public_deps = [
+    ":buffer_handle",
+    ":scoped_bytrace",
+    ":socketpair",
+    ":sync_fence",
+    ":sandbox_utils",
+  ]
+}

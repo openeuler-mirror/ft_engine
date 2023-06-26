@@ -12,28 +12,28 @@
 # limitations under the License.
 
 config("c_utils_config") {
-    include_dirs = [ "${sys_inc}/c_utils" ]
-    libs = [ "utils", "sec_shared" ]
+  include_dirs = [ "${sys_inc}/c_utils" ]
+  libs = [ "utils", "sec_shared" ]
 }
 
 config("ipc_core_config") {
-    include_dirs = [ "${sys_inc}/ipc_core" ]
-    libs = [ "ipc_core" ]
+  include_dirs = [ "${sys_inc}/ipc_core" ]
+  libs = [ "ipc_core" ]
 }
 
 config("hilog_config") {
-    include_dirs = [ "${sys_inc}/hilog" ]
-    libs = [ "hilog" ]
+  include_dirs = [ "${sys_inc}/hilog" ]
+  libs = [ "hilog" ]
 }
 
 config("hitrace_meter_config") {
-    include_dirs = [ "${sys_inc}/hitrace_meter" ]
-    libs = [ "hitrace_meter" ]
+  include_dirs = [ "${sys_inc}/hitrace_meter" ]
+  libs = [ "hitrace_meter" ]
 }
 
 config("eventhandler_config") {
-    include_dirs = [ "${sys_inc}/eventhandler" ]
-    libs = [ "eventhandler" ]
+  include_dirs = [ "${sys_inc}/eventhandler" ]
+  libs = [ "eventhandler" ]
 }
 
 config("skia_config") {
@@ -46,26 +46,82 @@ config("skia_config") {
 }
 
 config("samgr_config") {
-    include_dirs = [ "${sys_inc}/samgr" ]
-    libs = [ "samgr_proxy" ]
+  include_dirs = [ "${sys_inc}/samgr" ]
+  libs = [ "samgr_proxy" ]
 }
 
 config("image_config") {
-    include_dirs = [ "${sys_inc}/image" ]
-    libs = [ "image_native" ]
+  include_dirs = [ "${sys_inc}/image" ]
+  libs = [ "image_native" ]
 }
 
 config("mmi_config") {
-    include_dirs = [ "${sys_inc}/mmi" ]
-    libs = [ "mmi-client" ]
+  include_dirs = [ "${sys_inc}/mmi" ]
+  libs = [ "mmi-client" ]
 }
 
 config("syspara_config") {
-    include_dirs = [ "${sys_inc}/syspara" ]
-    libs = [ "beget_proxy", "begetutil" ]
+  include_dirs = [ "${sys_inc}/syspara" ]
+  libs = [ "beget_proxy", "begetutil" ]
 }
 
 config("safwk_config") {
+    visibility = [ ":*" ]
+
     include_dirs = [ "${sys_inc}/safwk" ]
     libs = [ "system_ability_fwk" ]
+}
+
+group("ipc_core") {
+  public_configs = [
+    ":c_utils_config",
+    ":ipc_core_config"
+  ]
+}
+
+group("hilog") {
+  public_configs = [
+    ":hilog_config",
+  ]
+}
+
+group("hitrace_meter") {
+  public_configs = [
+    ":c_utils_config",
+    ":hitrace_meter_config",
+  ]
+}
+
+group("samgr") {
+  public_configs = [
+    ":c_utils_config",
+    ":samgr_config",
+  ]
+}
+
+group("ipc_core") {
+  public_configs = [
+    ":c_utils_config",
+    ":ipc_core_config"
+  ]
+}
+
+group("hilog") {
+  public_configs = [
+    ":hilog_config",
+  ]
+}
+
+group("hitrace_meter") {
+  public_configs = [
+    ":c_utils_config",
+    ":hitrace_meter_config",
+  ]
+}
+
+group("samgr") {
+  public_configs = [
+    ":c_utils_config",
+    ":samgr_config",
+  ]
 }

@@ -167,7 +167,7 @@ ft_source_set("render_service_base_src") {
     defines += [ "ENABLE_EXPORT_MACRO" ]
   }
 
-  if (enable_gpu) {
+  if (ds_enable_gpu) {
     sources += [ "../src/common/rs_shared_context.cpp" ]
     defines += [
       "GR_TEST_UTILS=1",

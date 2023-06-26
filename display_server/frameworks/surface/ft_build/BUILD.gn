@@ -24,22 +24,18 @@ config("surface_config") {
     "-Wno-error=deprecated-declarations",
     "-Wno-c++11-narrowing",
   ]
+}
 
+config("surface_public_config") {
   include_dirs = [
     "../include",
     "$display_server_root/interfaces/inner_api/surface",
     "$display_server_root/interfaces/inner_api/common",
     "$display_server_root/utils/sandbox",
     "$display_server_root/utils/buffer_handle/export",
-    "mock",
   ]
 
-  defines = []
-  if (enable_gpu) {
-    defines = [ "ACE_ENABLE_GPU" ]
-  }
-  defines += gpu_defines
-
+  defines = gpu_defines
 }
 
 ft_shared_library("surface") {
@@ -60,23 +56,21 @@ ft_shared_library("surface") {
     "../src/surface_delegate.cpp",
     "../src/surface_tunnel_handle.cpp",
     "../src/surface_utils.cpp",
-    "mock/display_gralloc_client.cpp",
   ]
 
   configs = [
     ":surface_config",
-    "//build/gn/configs/system_libs:c_utils_config",
-    "//build/gn/configs/system_libs:ipc_core_config",
-    "//build/gn/configs/system_libs:hilog_config",
-    "//build/gn/configs/system_libs:hitrace_meter_config",
   ]
+  public_configs = [ ":surface_public_config" ]
 
-
-  deps = [
-    "$display_server_root/utils/sync_fence/ft_build:sync_fence",
-    "$display_server_root/utils/buffer_handle/ft_build:buffer_handle",
-    "$display_server_root/utils/sandbox/ft_build:sandbox_utils",
-    "$display_server_root/utils/scoped_bytrace/ft_build:scoped_bytrace",
+  deps = [ 
+    "//build/gn/configs/system_libs:ipc_core",
+    "//build/gn/configs/system_libs:hilog",
+    "//build/gn/configs/system_libs:hitrace_meter",
+  ]
+  public_deps = [ 
+    "$display_server_root/utils/ft_build:libgraphic_utils",
+    "$display_server_root/drivers/hdi_service/gralloc/client:hdi_gralloc_client"
   ]
 }
 
