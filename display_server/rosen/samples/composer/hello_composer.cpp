@@ -432,18 +432,48 @@ void HelloComposer::RemoveOffScreenData(uint32_t offScreenId)
 }
 
 namespace {
+class Color {
+public:
+    uint32_t GetNextColor() {
+        r = NextByteColor(&r_up, r, 10);
+        g = NextByteColor(&g_up, g, 10);
+        b = NextByteColor(&b_up, b, 10);
+        return (r << 24) | (g << 16) | (b << 8) | a;
+    }
+
+private:
+    uint8_t NextByteColor(bool *up, uint8_t cur, unsigned int step)
+    {
+        uint8_t next;
+
+        next = cur + (*up ? 1 : -1) * (rand() % step);
+        if ((*up && next < cur) || (!*up && next > cur)) {
+            *up = !*up;
+            next = cur;
+        }
+
+        return next;
+    }
+
+private:
+    uint8_t r = rand() % 0xff;
+    uint8_t g = rand() % 0xff;
+    uint8_t b = rand() % 0xff;
+    const uint8_t a = 0xff;
+    bool r_up = true;
+    bool g_up = true;
+    bool b_up = true;
+};
+
 void DrawFrameBufferData(void *image, uint32_t width, uint32_t height)
 {
-    static std::vector<uint32_t> colors = {0xff0000ff, 0xffff00ff, 0xaa00ff00, 0xff00ffaa, 0xff0f0f00};
-    static uint32_t index = 0;
-    if (index++ > 4) {
-        index = 0;
-    }
+    static Color color;
+    auto current_color = color.GetNextColor();
 
     uint32_t *pixel = static_cast<uint32_t *>(image);
     for (uint32_t x = 0; x < width; x++) {
         for (uint32_t y = 0;  y < height; y++) {
-            *pixel++ = colors[index];
+            *pixel++ = current_color;
         }
     }
 }
