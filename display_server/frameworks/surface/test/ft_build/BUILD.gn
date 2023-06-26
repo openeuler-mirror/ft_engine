@@ -1,0 +1,60 @@
+# Copyright (c) 2023 Huawei Technologies Co., Ltd.
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+# 
+#     http://www.apache.org/licenses/LICENSE-2.0
+# 
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+import("//build/gn/fangtian.gni")
+
+group("test") {
+  testonly = true
+
+  deps = [
+    ":native_window_buffer_test_oe",
+  ]
+}
+
+ft_executable("native_window_buffer_test_oe") {
+  testonly = true
+
+  sources = [ "../systemtest/native_window_buffer_test_oe.cpp" ]
+
+  include_dirs = [
+    "//foundation/graphic/graphic_2d/frameworks/surface/include",
+    "//base/security/access_token/interfaces/innerkits/nativetoken/include",
+    "//base/security/access_token/interfaces/innerkits/accesstoken/include",
+    "//base/security/access_token/interfaces/innerkits/token_setproc/include",
+  ]
+
+  cflags = [
+    "-Wall",
+    "-Werror",
+    "-g3",
+    "-Dprivate=public",
+    "-Dprotected=public",
+  ]
+
+  deps = [
+    "//display_server/frameworks/surface/ft_build:surface",
+    "//display_server/utils/sync_fence/ft_build:sync_fence",
+    
+    "//build/gn/configs/system_libs:ipc_core",
+    "//build/gn/configs/system_libs:hilog",
+    "//build/gn/configs/system_libs:samgr",
+  ]
+
+  configs = [
+    # "//build/gn/configs/system_libs:hilog_config",
+    # "//build/gn/configs/system_libs:samgr_config",
+    # "//build/gn/configs/system_libs:syspara_config",
+    # "//build/gn/configs/system_libs:eventhandler_config",
+    # "//build/gn/configs/system_libs:hitrace_meter_config",
+  ]
+}

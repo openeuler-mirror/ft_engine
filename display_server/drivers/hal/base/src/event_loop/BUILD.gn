@@ -23,7 +23,7 @@ ft_shared_library("hal_event_loop") {
     "timer_queue.cpp",
   ]
   configs = [ "//display_server/drivers/hal:hal_public_config" ]
-  deps = [
+  public_deps = [
     "//display_server/drivers/hal/base:hal_base",
   ]
 }
