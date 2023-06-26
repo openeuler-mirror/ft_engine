@@ -16,6 +16,14 @@
 #ifndef OHOS_ABILITY_RUNTIME_ABILITY_MANAGER_CLIENT_H
 #define OHOS_ABILITY_RUNTIME_ABILITY_MANAGER_CLIENT_H
 
+#include <memory>
+#include <iremote_object.h>
+
+#include "ability_info.h"
+#include "want.h"
+#include "snapshot.h"
+#include "window_manager_service_handler_stub.h"
+
 namespace OHOS {
 namespace AbilityRuntime {
 class AbilityContext {
@@ -77,6 +85,23 @@ public:
     {
         return 0;
     }
+    int32_t TerminateAbility(const sptr<IRemoteObject> &token, int resultCode, const Want *resultWant)
+    {
+        return 0;
+    }
+    int32_t CloseAbility(const sptr<IRemoteObject> &token, int resultCode = -1, const Want *resultWant = nullptr)
+    {
+        return 0;
+    }
+    int32_t RegisterSnapshotHandler(const sptr<ISnapshotHandler>& handler)
+    {
+        return 0;
+    }
+    int32_t RegisterWindowManagerServiceHandler(const sptr<IWindowManagerServiceHandler>& handler)
+    {
+        return 0;
+    }
+    void CompleteFirstFrameDrawing(const sptr<IRemoteObject> &abilityToken) {}
 };
 }  // namespace AAFwk
 }  // namespace OHOS

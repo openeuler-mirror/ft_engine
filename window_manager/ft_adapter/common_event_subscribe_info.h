@@ -13,20 +13,25 @@
  * limitations under the License.
  */
 
-#ifndef WINDOW_ANIMATION_RS_IWINDOW_ANIMATION_FINISHED_CALLBACK_H
-#define WINDOW_ANIMATION_RS_IWINDOW_ANIMATION_FINISHED_CALLBACK_H
+#ifndef COMMON_EVENT_SUBSCRIBE_INFO_H
+#define COMMON_EVENT_SUBSCRIBE_INFO_H
 
-#include <iremote_broker.h>
+#include "matching_skills.h"
 
 namespace OHOS {
-namespace Rosen {
-struct RSWindowAnimationTarget;
-
-class RSIWindowAnimationFinishedCallback : public IRemoteBroker {
+namespace EventFwk {
+class CommonEventSubscribeInfo : public Parcelable {
 public:
-    DECLARE_INTERFACE_DESCRIPTOR(u"ohos.rosen.RSIWindowAnimationFinishedCallback");
-};
-} // namespace Rosen
-} // namespace OHOS
+    CommonEventSubscribeInfo(const MatchingSkills &matchingSkills) {};
+    explicit CommonEventSubscribeInfo(const CommonEventSubscribeInfo &commonEventSubscribeInfo);
+    virtual ~CommonEventSubscribeInfo() = default;
 
-#endif // WINDOW_ANIMATION_RS_IWINDOW_ANIMATION_FINISHED_CALLBACK_H
+    bool Marshalling(Parcel &parcel) const override
+    {
+        return true;
+    }
+};
+}  // namespace EventFwk
+}  // namespace OHOS
+
+#endif  // COMMON_EVENT_SUBSCRIBE_INFO_H
