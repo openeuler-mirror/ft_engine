@@ -79,7 +79,7 @@ ft_source_set("rosen_fangtian_sources") {
     "$display_server_root/utils/log",
     "$display_server_root/interfaces/inner_api/composer",
   ]
-  if (enable_gpu) {
+  if (ds_enable_gpu) {
     defines += [
       "GR_TEST_UTILS=1",
     ]

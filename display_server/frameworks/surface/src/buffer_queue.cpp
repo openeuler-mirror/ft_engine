@@ -397,7 +397,7 @@ GSError BufferQueue::FlushBuffer(uint32_t sequence, const sptr<BufferExtraData> 
 
 void BufferQueue::DumpToFile(uint32_t sequence)
 {
-    if (access("/data/bq_dump", F_OK) == -1) {
+    if (access("/tmp/bq_enable_dump", F_OK) == -1) {
         return;
     }
 
@@ -408,7 +408,7 @@ void BufferQueue::DumpToFile(uint32_t sequence)
     int64_t nowVal = (int64_t)now.tv_sec * secToUsec + (int64_t)now.tv_usec;
 
     std::stringstream ss;
-    ss << "/data/bq_" << GetRealPid() << "_" << name_ << "_" << nowVal << ".raw";
+    ss << "/tmp/bq_dumps/bq_" << GetRealPid() << "_" << name_ << "_" << nowVal << ".raw";
 
     sptr<SurfaceBuffer>& buffer = bufferQueueCache_[sequence].buffer;
     std::ofstream rawDataFile(ss.str(), std::ofstream::binary);
@@ -418,6 +418,8 @@ void BufferQueue::DumpToFile(uint32_t sequence)
     }
     rawDataFile.write(static_cast<const char *>(buffer->GetVirAddr()), buffer->GetSize());
     rawDataFile.close();
+
+    BLOGND("DumpToFile: %{public}s", ss.str().c_str());
 }
 
 GSError BufferQueue::DoFlushBuffer(uint32_t sequence, const sptr<BufferExtraData> &bedata,
