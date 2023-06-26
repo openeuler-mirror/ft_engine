@@ -22,7 +22,8 @@
 #include "sync_fence.h"
 #include "allocator_controller.h"
 #include <EGL/egl.h>
-
+#include <gbm.h>
+#include <GLES2/gl2.h>
 
 oewm::HDI::DISPLAY::HdiSession& g_session = oewm::HDI::DISPLAY::HdiSession::GetInstance();
 oewm::HDI::DISPLAY::AllocatorController& g_alloc_controller = oewm::HDI::DISPLAY::AllocatorController::GetInstance();
@@ -40,9 +41,6 @@ public:
         if (fb[0]) {
             DestoryBufferHandle(&fb[0]->handle);
         }
-        if (fb[1]) {
-            DestoryBufferHandle(&fb[1]->handle);
-        }
     }
     static void OnVsync(uint32_t sequence, uint64_t timestamp, void *data);
 
@@ -52,12 +50,65 @@ public:
     uint32_t fbIdx = 0;
     std::shared_ptr<FrameBuffer> fb[2];
 };
-std::unordered_map<uint32_t, Screen*> g_screens;
-EGLDisplay defaultDisplay;
 
-bool CreateBuffer(uint32_t devId, BufferHandle **handle)
+std::unordered_map<uint32_t, Screen*> g_screens;
+static EGLDisplay defaultDisplay;
+static struct gbm_device *gbm_device;
+static EGLContext context;
+static struct gbm_surface *gbm_surface;
+static EGLSurface egl_surface;
+
+EGLConfig GetEGLConfig()
 {
-    printf("CreateBuffer: start\n");
+	EGLint egl_config_attribs[] = {
+		EGL_BUFFER_SIZE,	32,   //EGL_BUFFER_SIZE：指定缓冲区的位数为32位。
+		EGL_DEPTH_SIZE,		EGL_DONT_CARE,  //EGL_DEPTH_SIZE：深度缓冲区大小，使用EGL_DONT_CARE表示不关心具体大小。
+		EGL_STENCIL_SIZE,	EGL_DONT_CARE,  //EGL_STENCIL_SIZE：模板缓冲区大小
+		EGL_RENDERABLE_TYPE,	EGL_OPENGL_ES2_BIT, //EGL_RENDERABLE_TYPE：指定可渲染的类型为OpenGL ES 2.0
+		EGL_SURFACE_TYPE,	EGL_WINDOW_BIT, //EGL_SURFACE_TYPE：指定表面类型为窗口。
+		EGL_NONE,  //EGL_NONE：属性数组的结束标志。
+	};
+
+	EGLint num_configs;   //调用eglGetConfigs函数获取系统中可用的EGL配置数量，将结果保存在num_configs变量中
+	assert(eglGetConfigs(defaultDisplay, NULL, 0, &num_configs) == EGL_TRUE);
+
+	EGLConfig *configs = (EGLConfig *)malloc(num_configs * sizeof(EGLConfig));
+
+	assert(eglChooseConfig(defaultDisplay, egl_config_attribs,
+			       configs, num_configs, &num_configs) == EGL_TRUE);
+	assert(num_configs);      //确保至少存在一个满足条件的配置
+	printf("num config %d\n", num_configs);
+
+	for (int i = 0; i < num_configs; ++i) {
+		EGLint gbm_format;
+
+		assert(eglGetConfigAttrib(defaultDisplay, configs[i],
+					  EGL_NATIVE_VISUAL_ID, &gbm_format) == EGL_TRUE);
+		printf("gbm format %x\n", gbm_format);
+		/*如果找到与目标GBM格式（GBM_FORMAT_ARGB8888）匹配的配置，
+		即gbm_format等于目标格式，就释放configs的内存并返回该配置。*/
+		if (gbm_format == GBM_FORMAT_ARGB8888) {
+			EGLConfig ret = configs[i];
+			free(configs);
+			return ret;
+		}
+	}
+	// 未找到匹配的配置，调用abort函数终止程序。
+	abort();
+}
+
+void SwapBuffer(BufferHandle *handle) {
+	//交换EGL表面的前后缓冲区。
+	eglSwapBuffers (defaultDisplay, egl_surface);
+	//锁定GBM表面的前端缓冲区，以便进行后续操作。
+	struct gbm_bo *bo = gbm_surface_lock_front_buffer (gbm_surface);
+	//获取前端缓冲区的句柄
+	handle->key = gbm_bo_get_handle(bo).u32;
+}
+
+bool InitEGL(uint32_t devId, BufferHandle **handle)
+{
+    printf("InitEGL\n");
 
     /* Get Display modes */
     std::vector<DisplayModeInfo> displayModeInfos = {};
@@ -106,6 +157,7 @@ bool CreateBuffer(uint32_t devId, BufferHandle **handle)
     }
     printf("CreateBuffer: choose display mode 0 to create fb: width=%d, height=%d.\n", width, height);
 
+    /*
     // Get allocator
     AllocInfo info = {
         .width = width,
@@ -124,14 +176,42 @@ bool CreateBuffer(uint32_t devId, BufferHandle **handle)
         printf("CreateBuffer: Failed to alloc fb.\n");
         return false;
     }
-
     printf("CreateBuffer: end. handle fd: %i.\n", (*handle)->fd);
+    */
+    gbm_device = g_session.GetDisplayDevice()->GetGbmDevice();
+	defaultDisplay = eglGetDisplay(gbm_device); 
+	int major, minor;
+	eglInitialize(defaultDisplay, &major, &minor);
+	printf("%d %d", major, minor);
+
+    eglBindAPI(EGL_OPENGL_ES2_BIT);
+    EGLConfig config = GetEGLConfig();
+    context = eglCreateContext (defaultDisplay, config, EGL_NO_CONTEXT, NULL);
+
+	// create the GBM and EGL surface
+	gbm_surface = gbm_surface_create (gbm_device, width, height, GBM_BO_FORMAT_XRGB8888, GBM_BO_USE_LINEAR|GBM_BO_USE_SCANOUT|GBM_BO_USE_RENDERING);
+	//创建EGL窗口表面对象，将GBM表面与EGL绑定
+	egl_surface = eglCreateWindowSurface (defaultDisplay, config, gbm_surface, NULL);
+	//将OpenGL上下文与EGL表面进行绑定，使其成为当前上下文。
+	eglMakeCurrent (defaultDisplay, egl_surface, egl_surface, context);
+
+    static BufferHandle tmp; 
+    *handle = &tmp;
+    tmp.virAddr = nullptr;
+    tmp.stride= width;
+    tmp.usage = HBM_USE_MEM_DMA | HBM_USE_MEM_FB;
+    tmp.format = GBM_BO_FORMAT_XRGB8888;
+    tmp.height= height;
+    tmp.width = width;
+    tmp.size = tmp.height * tmp.stride; 
+
     return true;
 }
 
-void DrawBaseColor(BufferHandle *handle, uint32_t width, uint32_t height)
+void DrawBaseColor(float progress)
 {
-    
+    glClearColor (1.0f-progress, progress, 0.0, 1.0);
+	glClear (GL_COLOR_BUFFER_BIT);
     return;
 }
 
@@ -152,6 +232,13 @@ void SignalHandler(int signum) {
 
 bool DestoryBufferHandle(BufferHandle **handle)
 {
+    eglDestroySurface (defaultDisplay, egl_surface);
+	gbm_surface_destroy (gbm_surface);
+	eglDestroyContext (defaultDisplay, context);
+	eglTerminate (defaultDisplay);
+	gbm_device_destroy (gbm_device);
+
+    /*
     printf("DestoryBufferHandle.\n");
 
     if (handle == nullptr) {
@@ -168,6 +255,7 @@ bool DestoryBufferHandle(BufferHandle **handle)
     allocator->FreeMem(*handle);
     printf("DestoryBufferHandle: free buffer done.\n");
     *handle = nullptr;
+    */
     return true;
 }
 
@@ -198,30 +286,26 @@ void Screen::OnVsync(uint32_t sequence, uint64_t timestamp, void *data)
         if (screen->firstFrame) {
             if (screen->fb[0] == nullptr) {
                 screen->fb[0] = std::make_shared<FrameBuffer>();
-                CreateBuffer(devId, &(screen->fb[0]->handle));
+                InitEGL(devId, &(screen->fb[0]->handle));
             }
-            if (screen->fb[1] == nullptr) {
-                screen->fb[1] = std::make_shared<FrameBuffer>();
-                CreateBuffer(devId, &(screen->fb[1]->handle));
-            }
-	    defaultDisplay = eglGetDisplay(EGL_DEFAULT_DISPLAY); 
-	    int major, minor;
-	    eglInitialize(defaultDisplay, &major, &minor);
-	    printf("%d %d", major, minor);
         }
         screen->firstFrame = false;
 
         // Fill fb with plain color
-        DrawBaseColor(
-            screen->fb[screen->fbIdx]->handle,
-            screen->fb[screen->fbIdx]->handle->width,
-            screen->fb[screen->fbIdx]->handle->height);
+        if (screen->fbIdx == 100) {
+            screen->fbIdx = 0;
+        }
+        DrawBaseColor(screen->fbIdx / 100.0);
+        screen->fbIdx++;
+
+        // swap buffer
+        SwapBuffer(screen->fb[0]->handle);
 
         // Set fb as screen's current buffer
         ret = g_session.CallDisplayFunction(
             devId, 
             &oewm::HDI::DISPLAY::HdiDisplay::SetDisplayClientBuffer, 
-            static_cast<const BufferHandle*>(screen->fb[screen->fbIdx]->handle), 
+            static_cast<const BufferHandle*>(screen->fb[0]->handle), 
             fenceFd);
         if (ret != DISPLAY_SUCCESS) {
             printf("Draw: Failed to set display client buffer, ret=%d\n", ret);
@@ -239,7 +323,7 @@ void Screen::OnVsync(uint32_t sequence, uint64_t timestamp, void *data)
             auto fence = OHOS::SyncFence(-1);
         }
         
-        screen->fbIdx ^= 1;
+        screen->fbIdx++;
     });
 }
 
