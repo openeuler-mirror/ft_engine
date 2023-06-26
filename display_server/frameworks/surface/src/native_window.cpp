@@ -104,7 +104,7 @@ int32_t NativeWindowRequestBuffer(OHNativeWindow *window,
 }
 
 int32_t NativeWindowFlushBuffer(OHNativeWindow *window, OHNativeWindowBuffer *buffer,
-    int fenceFd, struct DirtyRegion region)
+    int fenceFd, struct OHNativeWindowRegion region)
 {
     if (window == nullptr || buffer == nullptr || window->surface == nullptr) {
         BLOGE("parameter error, please check input parameter");
