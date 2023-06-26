@@ -15,6 +15,7 @@
 
 #include "input_window_monitor.h"
 
+#include <sstream>
 #include <ipc_skeleton.h>
 #include <ability_manager_client.h>
 
@@ -139,13 +140,16 @@ void InputWindowMonitor::UpdateDisplayInfo(const std::vector<sptr<DisplayInfo>>&
             displayInfo->GetRotation() == Rotation::ROTATION_270) {
             std::swap(displayWidth, displayHeight);
         }
+        std::stringstream oss;
+        oss << "display ";
+        oss << displayInfo->GetDisplayId();
         MMI::DisplayInfo display = {
             .id = static_cast<int32_t>(displayInfo->GetDisplayId()),
             .x = offsetX,
             .y = offsetY,
             .width = static_cast<int32_t>(displayWidth),
             .height = static_cast<int32_t>(displayHeight),
-            .name = (std::stringstream("display ")<<displayInfo->GetDisplayId()).str(),
+            .name = oss.str(),
             .uniq = "default" + std::to_string(displayInfo->GetDisplayId()),
             .direction = GetDisplayDirectionForMmi(displayInfo->GetRotation()),
         };
