@@ -11,26 +11,17 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-title = "Fangtian System Dependencies"
+import("//build/gn/fangtian.gni")
+import("ds_config.gni")
 
-[dependencies]
-supported_os = ["openeuler"]
+group("libsurface") {
+  public_deps = [ "frameworks/surface:surface" ]
+}
 
-[dependencies.openeuler]
-supported_version = ["22.03"]
+group("libfence") {
+  public_deps = [ "frameworks/fence:libfence" ]
+}
 
-[openeuler."22.03"]
-package_deps = [
-    "clang",
-    "compiler-rt",
-    "llvm-devel",
-    "python3",
-    "tar",
-    "cmake",
-    "ninja-build",
-    "libxml2-devel",
-    "libpng-devel",
-    # DRM Backend
-    "libdrm-devel",
-    "systemd-devel",
-]
+group("libgl") {
+  public_deps = libgl
+}
