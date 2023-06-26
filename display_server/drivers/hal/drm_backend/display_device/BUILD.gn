@@ -41,10 +41,7 @@ ft_shared_library("display_device") {
     "hdi_session.cpp",
   ]
 
-  configs = [
-    "//build/gn/configs/system_libs:ipc_core_config",
-    "//display_server/drivers/hal:hal_public_config",
-  ]
+  configs = [ "//display_server/drivers/hal:hal_public_config" ]
   public_configs = [ 
     ":display_device_public_config",
     "//display_server/drivers/hal/drm_backend:import_system_gbm_config"
@@ -57,5 +54,6 @@ ft_shared_library("display_device") {
 
   deps = [
     "//display_server/utils/sync_fence/ft_build:sync_fence",
+    "//build/gn/configs/system_libs:ipc_core",
   ]
 }

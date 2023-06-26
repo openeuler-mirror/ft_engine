@@ -27,8 +27,8 @@ int32_t main(int32_t argc, const char *argv[])
         runArgs[i] = argv[i];
     }
 
-    OHOS::Rosen::HelloComposer m;
-    m.Run(runArgs);
+    OHOS::Rosen::HelloComposer hello_composer;
+    hello_composer.Run(runArgs);
 
     return 0;
 }
