@@ -38,6 +38,8 @@ namespace DISPLAY {
 
 int32_t DumbAllocator::Init()
 {
+    LOG_DEBUG("[Gralloc::DumbAllocator::Init] Initing...");
+
     // Get DRM fd from HDI Session
     int drmFd = GrallocUtils::GetDrmFdFromSession();
     if (IsInvalidFd(drmFd)) {
@@ -53,6 +55,8 @@ int32_t DumbAllocator::Init()
     //     return DISPLAY_FD_ERR;
     // }
     // drmFd_ = newFd;
+
+    LOG_DEBUG("[Gralloc::DumbAllocator::Init] Init done.");
 
     return DISPLAY_SUCCESS;
 }
@@ -182,7 +186,7 @@ void *DumbAllocator::Mmap(BufferHandle &buffer)
     }
 
     /* Prepare buffer for mmap */
-    LOG_DEBUG("[Gralloc::DumbAllocator::Mmap] prepare buffer for mmap");
+    LOG_DEBUG("[Gralloc::DumbAllocator::Mmap] prepare buffer for mmap. handle = %{public}u", handle);
     struct drm_mode_map_dumb map {};
     map.handle = handle;
     if (drmIoctl(drmFd_, DRM_IOCTL_MODE_MAP_DUMB, &map) != 0) {

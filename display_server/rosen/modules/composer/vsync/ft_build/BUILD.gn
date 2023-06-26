@@ -57,15 +57,14 @@ ft_shared_library("libvsync") {
   ]
 
   deps = [
-    "//display_server/utils/sandbox/ft_build:sandbox_utils",
-    "//display_server/utils/socketpair/ft_build:socketpair",
-
     "//build/gn/configs/system_libs:eventhandler",
     "//build/gn/configs/system_libs:ipc_core",
     "//build/gn/configs/system_libs:hilog",
   ]
 
   public_deps = [
+    "//display_server/utils/sandbox/ft_build:sandbox_utils",
+    "//display_server/utils/socketpair/ft_build:socketpair",
     "//display_server/utils/scoped_bytrace/ft_build:scoped_bytrace",
   ]
 }

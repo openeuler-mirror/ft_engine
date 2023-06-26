@@ -33,9 +33,14 @@ class RSSyncTask;
 class RSRenderServiceConnection;
 
 class RSRenderService : public SystemAbility, public RSRenderServiceStub {
-    DECLARE_DELAYED_SINGLETON(RSRenderService);
     DECLARE_SYSTEM_ABILITY(RSRenderService);
 public:
+    RSRenderService();
+    ~RSRenderService() noexcept;
+
+    RSRenderService(const RSRenderService&) = delete;
+    RSRenderService& operator=(const RSRenderService&) = delete;
+
     bool Init();
     void Run();
 
