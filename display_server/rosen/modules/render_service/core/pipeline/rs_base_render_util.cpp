@@ -94,15 +94,14 @@ struct TransferParameters {
 inline float RcpResponsePq(float x, const TransferParameters& p)
 {
     float tmp = powf(x, p.a);
-    return std::powf((p.c + p.d * tmp) / (1 + p.e * tmp), p.b);
+    return powf((p.c + p.d * tmp) / (1 + p.e * tmp), p.b);
 }
 
 inline float ResponsePq(float x, const TransferParameters& p)
 {
     float tmp = powf(x, 1.f / p.b);
-    return std::powf(std::max((tmp - p.c), p.f) / (p.d - p.e * tmp), 1.f / p.a);
+    return powf(std::max((tmp - p.c), p.f) / (p.d - p.e * tmp), 1.f / p.a);
 }
-
 
 static constexpr float RcpResponse(float x, const TransferParameters& p)
 {
@@ -607,7 +606,7 @@ bool ConvertBufferColorGamut(std::vector<uint8_t>& dstBuf, const sptr<OHOS::Surf
     ColorGamut srcGamut, ColorGamut dstGamut, const std::vector<GraphicHDRMetaData>& metaDatas)
 {
     RS_TRACE_NAME("ConvertBufferColorGamut");
-    
+
     int32_t pixelFormat = srcBuf->GetFormat();
     if (!IsSupportedFormatForGamutConversion(pixelFormat)) {
         RS_LOGE("ConvertBufferColorGamut: the buffer's format is not supported.");
