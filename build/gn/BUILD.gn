@@ -13,14 +13,8 @@
 
 group("ft_display_server") {
   deps = [
-    "//display_server/utils/socketpair/ft_build:socketpair",
-    "//display_server/rosen/modules/composer/vsync/ft_build:libvsync",
-    "//display_server/drivers/hal/drm_backend:drm_backend",
-    "//display_server/utils/sync_fence/ft_build:sync_fence",
-    "//display_server/frameworks/surface/ft_build:surface",
-    "//display_server/rosen/modules/render_service_base/ft_build:librender_service_base",
-    "//display_server/drivers/hdi_service/gralloc/client:hdi_gralloc_client",
     "//display_server/rosen/modules/composer/ft_build:libcomposer",
+    "//display_server/rosen/modules/render_service_base/ft_build:librender_service_base",
     "//display_server/rosen/modules/render_service_client/ft_build:librender_service_client",
     "//display_server/rosen/modules/render_service/ft_build:librender_service",
   ]
@@ -38,7 +32,7 @@ group("ft_test") {
   deps = [
     "//display_server/drivers/hal/test:drm_backend_test",
     "//display_server/frameworks/surface/test/ft_build:test",
-    # "//display_server/rosen/samples/composer:hello_composer",
+    "//display_server/rosen/samples/composer/ft_build:hello_composer",
     # "//display_server/rosen/modules/render_service_client/test:render_service_client_rs_demo"
   ]
 }

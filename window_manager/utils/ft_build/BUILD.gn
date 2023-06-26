@@ -58,14 +58,6 @@ ft_shared_library("libwmutil") {
   configs = [
     ":libwmutil_private_config",
     "$window_manager_path/resources/config/build:coverage_flags",
-    "//build/gn/configs/system_libs:hilog_config",
-    "//build/gn/configs/system_libs:c_utils_config",
-    "//build/gn/configs/system_libs:ipc_core_config",
-    "//build/gn/configs/system_libs:samgr_config",
-    "//build/gn/configs/system_libs:skia_config",
-    "//build/gn/configs/system_libs:eventhandler_config",
-    "//build/gn/configs/system_libs:image_config",
-    "//build/gn/configs/system_libs:mmi_config",
   ]
 
   public_configs = [ ":libwmutil_public_config" ]
@@ -73,5 +65,13 @@ ft_shared_library("libwmutil") {
   deps = [
     "$display_server_path/frameworks/surface/ft_build:surface",
     "$display_server_path/rosen/modules/render_service_client/ft_build:librender_service_client",
+
+    "//build/gn/configs/system_libs:hilog",
+    "//build/gn/configs/system_libs:ipc_core",
+    "//build/gn/configs/system_libs:samgr",
+    "//build/gn/configs/system_libs:eventhandler",
+    "//build/gn/configs/system_libs:image",
+    "//build/gn/configs/system_libs:mmi",
+    "//build/gn/configs/system_libs:skia",
   ]
 }
