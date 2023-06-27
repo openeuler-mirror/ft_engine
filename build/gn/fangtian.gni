@@ -15,6 +15,4 @@ import("//build/gn/templates/build_targets.gni")
 
 declare_args() {
   is_fangtian_build = true
-  window_manager_path = "//window_manager"
-  display_server_path = "//display_server"
 }

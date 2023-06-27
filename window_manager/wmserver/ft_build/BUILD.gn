@@ -1,0 +1,106 @@
+# Copyright (c) 2023 Huawei Technologies Co., Ltd.
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+import("//build/gn/fangtian.gni")
+import("//config.gni")
+
+config("libwms_config") {
+  visibility = [ ":*" ]
+
+  cflags = [ "-Wno-c++11-narrowing" ]
+
+  include_dirs = [
+    "$window_manager_path/wmserver/include",
+    "$window_manager_path/wmserver/include/window_snapshot",
+    "$window_manager_path/interfaces/innerkits/wm",
+    "$window_manager_path/interfaces/innerkits/dm",
+    "$window_manager_path/ft_adapter",
+    "$window_manager_path/wm/include",
+    "$window_manager_path/utils/include",
+    "$window_manager_path/dm/include",
+    "$display_server_path/utils/buffer_handle/export",
+    "$display_server_path/rosen/modules/composer/vsync/include",
+    "$display_server_path/rosen/modules/2d_graphics/include",
+    "$display_server_path/rosen/modules/2d_graphics/src",
+    "/usr/include/libxml2",
+  ]
+}
+
+ft_shared_library("libwms") {
+  defines = ft_engine_defines
+
+  sources = [
+    "$window_manager_path/wm/src/zidl/window_manager_agent_proxy.cpp",
+    "$window_manager_path/wm/src/zidl/window_proxy.cpp",
+    "$window_manager_path/wmserver/src/accessibility_connection.cpp",
+    "$window_manager_path/wmserver/src/avoid_area_controller.cpp",
+    "$window_manager_path/wmserver/src/display_group_controller.cpp",
+    "$window_manager_path/wmserver/src/display_group_info.cpp",
+    "$window_manager_path/wmserver/src/display_zoom_controller.cpp",
+    "$window_manager_path/wmserver/src/drag_controller.cpp",
+    "$window_manager_path/wmserver/src/freeze_controller.cpp",
+    "$window_manager_path/wmserver/src/inner_window.cpp",
+    "$window_manager_path/wmserver/src/input_window_monitor.cpp",
+    "$window_manager_path/wmserver/src/memory_guard.cpp",
+    "$window_manager_path/wmserver/src/minimize_app.cpp",
+    "$window_manager_path/wmserver/src/remote_animation.cpp",
+    "$window_manager_path/wmserver/src/starting_window.cpp",
+    "$window_manager_path/wmserver/src/window_common_event.cpp",
+    "$window_manager_path/wmserver/src/window_controller.cpp",
+    "$window_manager_path/wmserver/src/window_dumper.cpp",
+    "$window_manager_path/wmserver/src/window_inner_manager.cpp",
+    "$window_manager_path/wmserver/src/window_layout_policy.cpp",
+    "$window_manager_path/wmserver/src/window_layout_policy_cascade.cpp",
+    "$window_manager_path/wmserver/src/window_layout_policy_tile.cpp",
+    "$window_manager_path/wmserver/src/window_manager_agent_controller.cpp",
+    "$window_manager_path/wmserver/src/window_manager_config.cpp",
+    "$window_manager_path/wmserver/src/window_manager_service.cpp",
+    "$window_manager_path/wmserver/src/window_node.cpp",
+    "$window_manager_path/wmserver/src/window_node_container.cpp",
+    "$window_manager_path/wmserver/src/window_node_state_machine.cpp",
+    "$window_manager_path/wmserver/src/window_pair.cpp",
+    "$window_manager_path/wmserver/src/window_root.cpp",
+    "$window_manager_path/wmserver/src/window_snapshot/snapshot_controller.cpp",
+    "$window_manager_path/wmserver/src/window_snapshot/snapshot_proxy.cpp",
+    "$window_manager_path/wmserver/src/window_snapshot/snapshot_stub.cpp",
+    "$window_manager_path/wmserver/src/window_zorder_policy.cpp",
+    "$window_manager_path/wmserver/src/zidl/ressched_report.cpp",
+    "$window_manager_path/wmserver/src/zidl/window_manager_stub.cpp",
+  ]
+
+  configs = [
+    ":libwms_config",
+    "$window_manager_path/resources/config/build:coverage_flags",
+    "//build/gn/configs/system_libs:hilog_config",
+    "//build/gn/configs/system_libs:hitrace_meter_config",
+    "//build/gn/configs/system_libs:c_utils_config",
+    "//build/gn/configs/system_libs:ipc_core_config",
+    "//build/gn/configs/system_libs:samgr_config",
+    "//build/gn/configs/system_libs:safwk_config",
+    "//build/gn/configs/system_libs:eventhandler_config",
+    "//build/gn/configs/system_libs:skia_config",
+    "//build/gn/configs/system_libs:image_config",
+    "//build/gn/configs/system_libs:mmi_config",
+  ]
+
+  libs = [ "xml2" ]
+
+  deps = [
+    "$display_server_path/rosen/modules/animation/window_animation/ft_build:window_animation",
+    "$display_server_path/rosen/modules/render_service_base/ft_build:librender_service_base",
+    "$display_server_path/rosen/modules/render_service_client/ft_build:librender_service_client",
+    "$window_manager_path/dmserver/ft_build:libdms",
+    "$window_manager_path/utils/ft_build:libwmutil",
+    "$window_manager_path/wm/ft_build:libwm",
+  ]
+}
