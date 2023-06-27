@@ -17,7 +17,7 @@
 
 #include <functional>
 
-#include "noncopyable.h"
+#include "noncopyable_hal.h"
 #include "timestamp.h"
 
 namespace oewm {

@@ -66,8 +66,6 @@ ft_shared_library("libwmutil") {
     "$display_server_path/frameworks/surface/ft_build:surface",
     "$display_server_path/rosen/modules/render_service_client/ft_build:librender_service_client",
 
-    "//build/gn/configs/system_libs:hilog",
-    "//build/gn/configs/system_libs:ipc_core",
     "//build/gn/configs/system_libs:samgr",
     "//build/gn/configs/system_libs:eventhandler",
     "//build/gn/configs/system_libs:image",
