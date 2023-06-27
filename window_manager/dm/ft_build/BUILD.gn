@@ -55,11 +55,9 @@ ft_shared_library("libdm") {
     "$display_server_path/rosen/modules/render_service_client/ft_build:librender_service_client",
     "$window_manager_path/utils/ft_build:libwmutil",
 
-    "//build/gn/configs/system_libs:hilog",
-    "//build/gn/configs/system_libs:ipc_core",
     "//build/gn/configs/system_libs:image",
     "//build/gn/configs/system_libs:samgr",
     "//build/gn/configs/system_libs:skia",
-    "//build/gn/configs/system_libs:event_handler",
+    "//build/gn/configs/system_libs:eventhandler",
   ]
 }

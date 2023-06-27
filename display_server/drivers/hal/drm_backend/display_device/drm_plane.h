@@ -15,7 +15,7 @@
 
 #pragma once
 
-#include "noncopyable.h"
+#include "noncopyable_hal.h"
 #include "drm_common.h"
 #include "drm_property.h"
 

@@ -21,7 +21,7 @@
 #include "unique_fd.h"
 #include "buffer_handle.h"
 #include "display_type.h"
-#include "noncopyable.h"
+#include "noncopyable_hal.h"
 
 namespace oewm {
 namespace HDI {

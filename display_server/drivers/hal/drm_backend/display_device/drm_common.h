@@ -20,7 +20,7 @@
 #include <unordered_map>
 #include <memory>
 
-#include "noncopyable.h"
+#include "noncopyable_hal.h"
 #include "types.h"
 
 namespace oewm {
