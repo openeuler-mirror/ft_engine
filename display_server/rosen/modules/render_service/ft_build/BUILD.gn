@@ -17,25 +17,28 @@ import("//display_server/ft_build/ds_config.gni")
 # On the openEuler platform, display_server and window_manager are in the same process
 # Use sa_main.bin instead of render_service.bin
 
+config("render_service_config") {
+  if (rs_main_executable) {
+    defines += [ "RS_MAIN_EXECUTABLE" ]
+  }
+}
+
 group("render_service_group") {
   deps = [ ":librender_service" ]
 
   if (rs_main_executable) {
-    print("[GN INFO] Build render_service.")
+    print("[GN INFO] Enable RS exec building.")
     deps += [ ":render_service" ]
   }
 }
 
 ft_shared_library("librender_service") {
-  defines = []
-  defines += gpu_defines
-
+  defines = gpu_defines
   if (use_musl) {
     defines += [ "FRAME_AWARE_TRACE" ]
   }
-  if (rs_main_executable) {
-    defines += [ "RS_MAIN_EXECUTABLE" ]
-  }
+
+  cflags = [ "-Wno-c++11-narrowing" ]
 
   sources = [
     "../core/pipeline/rs_base_render_engine.cpp",
@@ -99,9 +102,9 @@ ft_shared_library("librender_service") {
     "//build/gn/configs/system_libs:image",
   ]
 
-  libs = ["png"]
+  public_configs = [ ":render_service_config" ]
 
-  cflags = [ "-Wno-c++11-narrowing" ]
+  libs = ["png"]
 }
 
 if (rs_main_executable) {
@@ -115,5 +118,7 @@ if (rs_main_executable) {
       "//display_server/rosen/modules/composer/ft_build:libcomposer",
       "//display_server/rosen/modules/render_service_base/ft_build:librender_service_base",
     ]
+
+    configs = [ ":render_service_config" ]
   }
 }
