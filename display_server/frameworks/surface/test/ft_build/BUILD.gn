@@ -26,13 +26,6 @@ ft_executable("native_window_buffer_test_oe") {
 
   sources = [ "../systemtest/native_window_buffer_test_oe.cpp" ]
 
-  include_dirs = [
-    "//foundation/graphic/graphic_2d/frameworks/surface/include",
-    "//base/security/access_token/interfaces/innerkits/nativetoken/include",
-    "//base/security/access_token/interfaces/innerkits/accesstoken/include",
-    "//base/security/access_token/interfaces/innerkits/token_setproc/include",
-  ]
-
   cflags = [
     "-Wall",
     "-Werror",
@@ -48,13 +41,5 @@ ft_executable("native_window_buffer_test_oe") {
     "//build/gn/configs/system_libs:ipc_core",
     "//build/gn/configs/system_libs:hilog",
     "//build/gn/configs/system_libs:samgr",
-  ]
-
-  configs = [
-    # "//build/gn/configs/system_libs:hilog_config",
-    # "//build/gn/configs/system_libs:samgr_config",
-    # "//build/gn/configs/system_libs:syspara_config",
-    # "//build/gn/configs/system_libs:eventhandler_config",
-    # "//build/gn/configs/system_libs:hitrace_meter_config",
   ]
 }

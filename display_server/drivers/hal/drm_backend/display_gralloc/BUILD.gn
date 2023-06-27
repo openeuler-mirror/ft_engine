@@ -46,9 +46,7 @@ ft_shared_library("display_gralloc") {
   
   public_deps = [ 
     "//display_server/drivers/hal/drm_backend:display_drm_dep",
-    "//display_server/drivers/hal/base:hal_base"
-  ]
-  deps = [ 
+    "//display_server/drivers/hal/base:hal_base",
     "//display_server/drivers/hal/drm_backend/display_device:display_device",
   ]
 }

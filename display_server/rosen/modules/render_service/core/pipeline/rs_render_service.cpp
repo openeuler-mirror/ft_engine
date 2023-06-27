@@ -76,17 +76,19 @@ bool RSRenderService::Init()
     RSQosThread::ThreadStart();
 
     // Wait samgr ready for up to 5 second to ensure adding service to samgr.
-    // int status = WaitParameter("bootevent.samgr.ready", "true", 5);
-    // if (status != 0) {
-    //     RS_LOGE("RSRenderService wait SAMGR error, return value [%d].", status);
-    // }
+    int status = WaitParameter("bootevent.samgr.ready", "true", 5);
+    if (status != 0) {
+        RS_LOGE("RSRenderService wait SAMGR error, return value [%d].", status);
+    }
 
+#ifdef RS_MAIN_EXECUTABLE
     auto samgr = SystemAbilityManagerClient::GetInstance().GetSystemAbilityManager();
     if (samgr == nullptr) {
         RS_LOGE("RSRenderService GetSystemAbilityManager fail.");
         return false;
     }
     samgr->AddSystemAbility(RENDER_SERVICE, this);
+#endif // RS_MAIN_EXECUTABLE
 
     return true;
 }
