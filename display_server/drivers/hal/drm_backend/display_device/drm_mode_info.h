@@ -15,7 +15,7 @@
 
 #pragma once
 
-#include "noncopyable.h"
+#include "noncopyable_hal.h"
 
 #include "display_type.h"
 #include "drm_common.h"
