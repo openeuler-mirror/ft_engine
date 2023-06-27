@@ -17,6 +17,15 @@ import("//display_server/ft_build/ds_config.gni")
 # On the openEuler platform, display_server and window_manager are in the same process
 # Use sa_main.bin instead of render_service.bin
 
+group("render_service_group") {
+  deps = [ ":librender_service" ]
+
+  if (rs_main_executable) {
+    print("[GN INFO] Build render_service.")
+    deps += [ ":render_service" ]
+  }
+}
+
 ft_shared_library("librender_service") {
   defines = []
   defines += gpu_defines
@@ -24,6 +33,10 @@ ft_shared_library("librender_service") {
   if (use_musl) {
     defines += [ "FRAME_AWARE_TRACE" ]
   }
+  if (rs_main_executable) {
+    defines += [ "RS_MAIN_EXECUTABLE" ]
+  }
+
   sources = [
     "../core/pipeline/rs_base_render_engine.cpp",
     "../core/pipeline/rs_base_render_util.cpp",

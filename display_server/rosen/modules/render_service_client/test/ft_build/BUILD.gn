@@ -33,22 +33,3 @@ ft_executable("render_service_client_rs_demo") {
     "//build/gn/configs/system_libs:image",
   ]
 }
-
-# ft_executable("render_service_client_gravity_demo") {
-#   sources = [ "render_service_client_gravity_demo.cpp" ]
-
-#   include_dirs = [ "//window_manager/interfaces/innerkits" ]
-
-#   deps = [
-#     "//base/hiviewdfx/hilog/interfaces/native/innerkits:libhilog",
-#     # "//display_server/rosen/modules/2d_graphics:2d_graphics",
-#     "//display_server/rosen/modules/render_service_base:librender_service_base",
-#     "//display_server/rosen/modules/render_service_client:librender_service_client",
-#     "//foundation/systemabilitymgr/safwk/interfaces/innerkits/safwk:system_ability_fwk",
-#     "//window_manager/wm:libwm",
-#     "//window_manager/wmserver:libwms",
-#     "//third_party/zlib:libz",
-#   ]
-
-#   public_deps = [ "//third_party/flutter/build/fangtian/skia:ace_skia_fangtian" ]
-# }
