@@ -12,6 +12,7 @@
 # limitations under the License.
 
 import("//build/gn/fangtian.gni")
+import("//config.gni")
 
 config("libwms_config") {
   visibility = [ ":*" ]
@@ -36,6 +37,8 @@ config("libwms_config") {
 }
 
 ft_shared_library("libwms") {
+  defines = ft_engine_defines
+
   sources = [
     "$window_manager_path/wm/src/zidl/window_manager_agent_proxy.cpp",
     "$window_manager_path/wm/src/zidl/window_proxy.cpp",

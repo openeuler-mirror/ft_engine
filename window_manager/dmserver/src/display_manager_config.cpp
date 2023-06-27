@@ -66,14 +66,18 @@ bool inline DisplayManagerConfig::IsNumber(std::string str)
 
 std::string DisplayManagerConfig::GetConfigPath(const std::string& configFileName)
 {
+#ifdef _FANGTIAN
+    return "/usr/local/share/ft/window_manager/display_manager_config.xml";
+#else
     char buf[PATH_MAX + 1];
     char* configPath = GetOneCfgFile(configFileName.c_str(), buf, PATH_MAX + 1);
     char tmpPath[PATH_MAX + 1] = { 0 };
     if (!configPath || strlen(configPath) == 0 || strlen(configPath) > PATH_MAX || !realpath(configPath, tmpPath)) {
         WLOGFI("[DmConfig] can not get customization config file");
-        return "/usr/share/ft/window_manager/" + configFileName;
+        return "/system/" + configFileName;
     }
     return std::string(tmpPath);
+#endif
 }
 
 bool DisplayManagerConfig::LoadConfigXml()
