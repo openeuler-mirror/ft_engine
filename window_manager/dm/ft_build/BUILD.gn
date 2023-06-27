@@ -12,6 +12,7 @@
 # limitations under the License
 
 import("//build/gn/fangtian.gni")
+import("//config.gni")
 
 config("libdm_private_config") {
   cflags = [ "-Wno-c++11-narrowing" ]

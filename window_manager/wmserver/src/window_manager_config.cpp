@@ -86,14 +86,18 @@ std::vector<std::string> WindowManagerConfig::ReadNumberStrings(const xmlNodePtr
 
 std::string WindowManagerConfig::GetConfigPath(const std::string& configFileName)
 {
+#ifdef _FANGTIAN
+    return "/usr/local/share/ft/window_manager/window_manager_config.xml";
+#else
     char buf[PATH_MAX + 1];
     char* configPath = GetOneCfgFile(configFileName.c_str(), buf, PATH_MAX + 1);
     char tmpPath[PATH_MAX + 1] = { 0 };
     if (!configPath || strlen(configPath) == 0 || strlen(configPath) > PATH_MAX || !realpath(configPath, tmpPath)) {
         WLOGFI("[WmConfig] can not get customization config file");
-        return "/usr/share/ft/window_manager/" + configFileName;
+        return "/system/" + configFileName;
     }
     return std::string(tmpPath);
+#endif
 }
 
 void WindowManagerConfig::ReadConfig(const xmlNodePtr& rootPtr, std::map<std::string, ConfigItem>& mapValue)
