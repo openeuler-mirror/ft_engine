@@ -21,10 +21,6 @@ namespace oewm {
 namespace drm {
 DrmFrameBuffer *DrmLayer::GetFrameBuffer(int drmFd)
 {
-    // if (currentFrameBuffer_ != nullptr) {
-    //     return currentFrameBuffer_.get();
-    // }
-
     if (IsInvalidFd(drmFd)) {
         LOG_ERROR("DrmLayer::GetFrameBuffer: invalid drm fd");
         return nullptr;

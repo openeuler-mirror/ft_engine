@@ -497,7 +497,6 @@ int32_t DrmDisplay::Commit(int32_t *fence)
         return DISPLAY_NULL_PTR;
     }
 
-    // const DrmFrameBuffer *fb = reservedFb_.get();
     const DrmFrameBuffer *fb = layer->GetFrameBuffer(drmFd_);
     if (fb == nullptr) {
         LOG_ERROR("DrmDisplay::Commit: failed to get framebuffer, use reservedFb_ instead.");
