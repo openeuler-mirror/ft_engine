@@ -12,7 +12,7 @@
 # limitations under the License.
 
 import("//build/gn/fangtian.gni")
-import("//display_server/ft_configs/ds_config.gni")
+import("//display_server/ft_build/ds_config.gni")
 
 config("vsync_config") {
   visibility = [ ":*" ]
@@ -50,24 +50,21 @@ ft_shared_library("libvsync") {
     "../src/vsync_sampler.cpp",
   ]
 
-  configs = [
-    ":vsync_config",
-    "//build/gn/configs/system_libs:eventhandler_config",
-    "//build/gn/configs/system_libs:ipc_core_config",
-    "//build/gn/configs/system_libs:c_utils_config",
-    "//build/gn/configs/system_libs:hilog_config",
-  ]
+  configs = [ ":vsync_config" ]
 
   public_configs = [
     ":vsync_public_config",
   ]
 
   deps = [
-    "//display_server/utils/sandbox/ft_build:sandbox_utils",
-    "//display_server/utils/socketpair/ft_build:socketpair",
+    "//build/gn/configs/system_libs:eventhandler",
+    "//build/gn/configs/system_libs:ipc_core",
+    "//build/gn/configs/system_libs:hilog",
   ]
 
   public_deps = [
+    "//display_server/utils/sandbox/ft_build:sandbox_utils",
+    "//display_server/utils/socketpair/ft_build:socketpair",
     "//display_server/utils/scoped_bytrace/ft_build:scoped_bytrace",
   ]
 }

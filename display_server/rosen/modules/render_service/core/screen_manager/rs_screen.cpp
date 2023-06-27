@@ -298,7 +298,7 @@ void RSScreen::ModeInfoDump(std::string& dumpString)
 void RSScreen::CapabilityTypeDump(InterfaceType capabilityType, std::string& dumpString)
 {
     dumpString += "type=";
-    switch (capability_.type) {
+    switch (static_cast<ScreenInterfaceType>(capability_.type)) {
         case DISP_INTF_HDMI: {
             dumpString += "DISP_INTF_HDMI, ";
             break;
@@ -347,7 +347,7 @@ void RSScreen::PropDump(std::string& dumpString)
 void RSScreen::PowerStatusDump(std::string& dumpString)
 {
     dumpString += "powerstatus=";
-    switch (powerStatus_) {
+    switch (static_cast<ScreenPowerStatus>(powerStatus_)) {
         case POWER_STATUS_ON: {
             dumpString += "POWER_STATUS_ON";
             break;
