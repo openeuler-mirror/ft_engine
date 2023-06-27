@@ -37,7 +37,7 @@ config("libwms_config") {
 }
 
 ft_shared_library("libwms") {
-  defines = ft_engine_defines
+  defines = ft_defines
 
   sources = [
     "$window_manager_path/wm/src/zidl/window_manager_agent_proxy.cpp",
