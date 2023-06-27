@@ -32,7 +32,7 @@ config("libdms_public_config") {
 }
 
 ft_shared_library("libdms") {
-  defines = ft_engine_defines
+  defines = ft_defines
 
   sources = [
     "$window_manager_path/dm/src/zidl/display_manager_agent_proxy.cpp",
