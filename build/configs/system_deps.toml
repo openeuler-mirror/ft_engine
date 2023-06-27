@@ -30,6 +30,7 @@ package_deps = [
     "ninja-build",
     "libxml2-devel",
     "libpng-devel",
+    "libicu",
     # DRM Backend
     "libdrm-devel",
     "systemd-devel",
