@@ -16,6 +16,7 @@ declare_args() {
     graphic_standard_feature_rs_enable_eglimage = false
     graphic_standard_feature_rs_enable_uni_render = false
     graphic_standard_feature_enable_afbc = false
+    rs_main_executable = false
 }
 
 if (graphic_standard_feature_ace_enable_gpu) {
