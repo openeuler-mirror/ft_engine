@@ -12,6 +12,7 @@
 # limitations under the License
 
 import("//build/gn/fangtian.gni")
+import("//config.gni")
 
 config("libwmutil_private_config") {
   cflags = [ "-Wno-c++11-narrowing" ]
@@ -21,7 +22,10 @@ config("libwmutil_private_config") {
     "$window_manager_path/interfaces/innerkits/dm",
     "$window_manager_path/interfaces/innerkits/wm",
     "$window_manager_path/ft_adapter",
+    "$display_server_path/rosen/modules/composer/vsync/include",
     "$display_server_path/utils/buffer_handle/export",
+    "$display_server_path/rosen/modules/2d_graphics/include",
+    "$display_server_path/rosen/modules/2d_graphics/src",
   ]
 }
 
@@ -41,6 +45,7 @@ ft_shared_library("libwmutil") {
     "$window_manager_path/utils/src/screenshot_info.cpp",
     "$window_manager_path/utils/src/singleton_container.cpp",
     "$window_manager_path/utils/src/string_util.cpp",
+    "$window_manager_path/utils/src/surface_draw.cpp",
     "$window_manager_path/utils/src/surface_reader.cpp",
     "$window_manager_path/utils/src/surface_reader_handler_impl.cpp",
     "$window_manager_path/utils/src/sys_cap_util.cpp",
@@ -48,6 +53,7 @@ ft_shared_library("libwmutil") {
     "$window_manager_path/utils/src/window_transition_info.cpp",
     "$window_manager_path/utils/src/wm_math.cpp",
     "$window_manager_path/utils/src/wm_occlusion_region.cpp",
+    "$window_manager_path/utils/src/xml_config_base.cpp",
   ]
 
   configs = [
@@ -57,6 +63,7 @@ ft_shared_library("libwmutil") {
     "//build/gn/configs/system_libs:c_utils_config",
     "//build/gn/configs/system_libs:ipc_core_config",
     "//build/gn/configs/system_libs:samgr_config",
+    "//build/gn/configs/system_libs:skia_config",
     "//build/gn/configs/system_libs:eventhandler_config",
     "//build/gn/configs/system_libs:image_config",
     "//build/gn/configs/system_libs:mmi_config",

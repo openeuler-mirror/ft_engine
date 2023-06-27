@@ -24,9 +24,7 @@ group("ft_engine") {
     "//display_server/rosen/modules/render_service_client/ft_build:librender_service_client",
     "//display_server/rosen/modules/render_service/ft_build:librender_service",
 
-    "//window_manager/utils/ft_build:libwmutil",
-    "//window_manager/dm/ft_build:libdm",
-    "//window_manager/wm/ft_build:libwm",
+    "//window_manager/wmserver/ft_build:libwms",
   ]
 }
 

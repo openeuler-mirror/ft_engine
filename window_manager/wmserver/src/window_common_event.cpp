@@ -24,6 +24,7 @@
 #include "window_manager_service.h"
 
 namespace OHOS {
+const std::string EventFwk::CommonEventSupport::COMMON_EVENT_USER_SWITCHED = "usual.event.USER_SWITCHED";
 namespace Rosen {
 namespace {
     constexpr HiviewDFX::HiLogLabel LABEL = {LOG_CORE, HILOG_DOMAIN_WINDOW, "WindowCommonEvent"};
