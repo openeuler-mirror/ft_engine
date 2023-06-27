@@ -6,7 +6,7 @@ import("//build/gn/configs/compiler/compiler.gni")
 import("//build/gn/toolchain/toolchain.gni")
 
 if (current_cpu == "arm" || current_cpu == "arm64") {
-  import("//build/configs/arm.gni")
+  import("//build/gn/configs/fangtian/arm.gni")
 }
 
 declare_args() {

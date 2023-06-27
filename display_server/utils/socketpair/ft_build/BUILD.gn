@@ -20,6 +20,10 @@ config("socketpair_config") {
     "-Werror",
     "-g3",
   ]
+}
+
+config("socketpair_public_config") {
+  visibility = [ ":socketpair" ]
   include_dirs = [
     "../export",
   ]
@@ -28,12 +32,14 @@ config("socketpair_config") {
 ft_shared_library("socketpair") {
   sources = [ "../src/local_socketpair.cpp" ]
 
-  configs = [
-    ":socketpair_config",
-    "//build/gn/configs/system_libs:c_utils_config",
-    "//build/gn/configs/system_libs:hilog_config",
-    "//build/gn/configs/system_libs:ipc_core_config",
-  ]
+  configs = [ ":socketpair_config" ]
 
-  deps = [ "//display_server/utils/scoped_bytrace/ft_build:scoped_bytrace" ]
+  public_configs = [ ":socketpair_public_config" ]
+
+  deps = [ 
+    "//display_server/utils/scoped_bytrace/ft_build:scoped_bytrace",
+    
+    "//build/gn/configs/system_libs:hilog",
+    "//build/gn/configs/system_libs:ipc_core",
+  ]
 }

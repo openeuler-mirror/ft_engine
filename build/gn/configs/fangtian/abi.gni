@@ -30,7 +30,7 @@ assert(!devtools_instrumentation_dumping || use_order_profiling,
 if (current_cpu == "x86") {
   ft_app_abi = "x86"
 } else if (current_cpu == "arm") {
-  import("//build/config/arm.gni")
+  import("//build/gn/configs/fangtian/arm.gni")
   if (arm_version < 7) {
     ft_app_abi = "armeabi"
   } else {

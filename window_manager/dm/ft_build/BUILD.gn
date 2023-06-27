@@ -48,13 +48,6 @@ ft_shared_library("libdm") {
   configs = [
     ":libdm_private_config",
     "$window_manager_path/resources/config/build:coverage_flags",
-    "//build/gn/configs/system_libs:hilog_config",
-    "//build/gn/configs/system_libs:c_utils_config",
-    "//build/gn/configs/system_libs:ipc_core_config",
-    "//build/gn/configs/system_libs:image_config",
-    "//build/gn/configs/system_libs:samgr_config",
-    "//build/gn/configs/system_libs:skia_config",
-    "//build/gn/configs/system_libs:eventhandler_config",
   ]
 
   public_configs = [ ":libdm_public_config" ]
@@ -62,5 +55,10 @@ ft_shared_library("libdm") {
   deps = [
     "$display_server_path/rosen/modules/render_service_client/ft_build:librender_service_client",
     "$window_manager_path/utils/ft_build:libwmutil",
+
+    "//build/gn/configs/system_libs:image",
+    "//build/gn/configs/system_libs:samgr",
+    "//build/gn/configs/system_libs:skia",
+    "//build/gn/configs/system_libs:eventhandler",
   ]
 }

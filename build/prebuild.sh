@@ -1,4 +1,4 @@
-# Copyright (c) 2023 Huawei Device Co., Ltd.
+# Copyright (c) 2023 Huawei Technologies Co., Ltd.
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
 # You may obtain a copy of the License at
@@ -73,10 +73,11 @@ if [ ! -d ${PROJECT_DIR}/prebuilts/libs ]; then
 git clone https://gitee.com/yanansong/ft_engine_prebuild.git -b rpms ${PROJECT_DIR}/prebuilts/libs
 fi
 
-# copy prebuild library to /usr/lib64
 ARCHNAME=`uname -m`
+
 cd ${PROJECT_DIR}/prebuilts/libs/rpms/${ARCHNAME}
 sudo ./installRPM
+
 cd ${PROJECT_DIR}
 rm -fr ${PROJECT_DIR}/prebuilts/libs
 

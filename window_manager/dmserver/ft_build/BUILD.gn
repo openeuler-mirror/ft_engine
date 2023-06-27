@@ -32,7 +32,7 @@ config("libdms_public_config") {
 }
 
 ft_shared_library("libdms") {
-  defines = ft_engine_defines
+  defines = ft_defines
 
   sources = [
     "$window_manager_path/dm/src/zidl/display_manager_agent_proxy.cpp",
@@ -55,14 +55,6 @@ ft_shared_library("libdms") {
   configs = [
     ":libdms_private_config",
     "$window_manager_path/resources/config/build:coverage_flags",
-    "//build/gn/configs/system_libs:hilog_config",
-    "//build/gn/configs/system_libs:hitrace_meter_config",
-    "//build/gn/configs/system_libs:c_utils_config",
-    "//build/gn/configs/system_libs:ipc_core_config",
-    "//build/gn/configs/system_libs:samgr_config",
-    "//build/gn/configs/system_libs:safwk_config",
-    "//build/gn/configs/system_libs:eventhandler_config",
-    "//build/gn/configs/system_libs:skia_config",
   ]
 
   public_configs = [ ":libdms_public_config" ]
@@ -74,5 +66,10 @@ ft_shared_library("libdms") {
     "$display_server_path/rosen/modules/render_service_base/ft_build:librender_service_base",
     "$display_server_path/rosen/modules/render_service_client/ft_build:librender_service_client",
     "$window_manager_path/utils/ft_build:libwmutil",
+
+    "//build/gn/configs/system_libs:hitrace_meter",
+    "//build/gn/configs/system_libs:safwk",
+    "//build/gn/configs/system_libs:eventhandler",
+    "//build/gn/configs/system_libs:skia",
   ]
 }
