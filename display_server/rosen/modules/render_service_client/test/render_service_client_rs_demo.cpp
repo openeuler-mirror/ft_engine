@@ -334,6 +334,7 @@ public:
 
         RSDisplayNodeConfig config;
         RSDisplayNode::SharedPtr displayNode = RSDisplayNode::Create(config);
+        displayNode->SetBounds(0, 0, screenWidth_, screenheight_);
         displayNode->AddChild(surfaceNode1, -1);
         displayNode->AddChild(surfaceNode2, -1);
 
