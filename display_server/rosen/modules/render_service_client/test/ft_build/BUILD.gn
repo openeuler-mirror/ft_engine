@@ -23,12 +23,10 @@ ft_executable("render_service_client_rs_demo") {
   ]
 
   deps = [
-    # "//display_server/rosen/modules/2d_graphics:2d_graphics",
-    "//display_server/rosen/modules/render_service_base/ft_build:librender_service_base",
     "//display_server/rosen/modules/render_service_client/ft_build:librender_service_client",
 
     "//build/gn/configs/system_libs:hilog",
-    "//build/gn/configs/system_libs:libz", # TODO: include files
+    "//build/gn/configs/system_libs:libz",
     "//build/gn/configs/system_libs:skia",
     "//build/gn/configs/system_libs:image",
   ]

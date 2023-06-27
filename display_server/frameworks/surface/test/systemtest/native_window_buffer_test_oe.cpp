@@ -198,25 +198,6 @@ void NativeWindowBufferTest::DoTest()
     auto pid = ChildProcessMain();
     assert(pid > 0);
 
-    // uint64_t tokenId;
-    // const char *perms[2];
-    // perms[0] = "ohos.permission.DISTRIBUTED_DATASYNC";
-    // perms[1] = "ohos.permission.CAMERA";
-    // NativeTokenInfoParams infoInstance = {
-    //     .dcapsNum = 0,
-    //     .permsNum = 2,
-    //     .aclsNum = 0,
-    //     .dcaps = NULL,
-    //     .perms = perms,
-    //     .acls = NULL,
-    //     .processName = "dcamera_client_demo",
-    //     .aplStr = "system_basic",
-    // };
-    // tokenId = GetAccessTokenId(&infoInstance);
-    // SetSelfTokenID(tokenId);
-    // int32_t rett = Security::AccessToken::AccessTokenKit::ReloadNativeTokenInfo();
-    // ASSERT_EQ(rett, Security::AccessToken::RET_SUCCESS);
-
     std::cout << "[-] Create Consumer Surface." << std::endl;
     HiviewDFX::HiLog::Error({ LOG_CORE, 0xC01400, "SurfaceTest" }, "Create Consumer Surface");
     cSurface = Surface::CreateSurfaceAsConsumer("test");
