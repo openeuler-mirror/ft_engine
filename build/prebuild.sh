@@ -80,8 +80,10 @@ sudo cp -fr *.so /usr/local/lib64
 # copy prebuild binarys to /usr/local/bin
 sudo cp -f hilog /usr/local/bin
 sudo cp -f hilogd /usr/local/bin
-sudo cp -f sa_main /usr/local/bin
-sudo cp -f samgr /usr/local/bin
+if [ ARCHNAME = "x86_64" ]; then
+    sudo cp -f sa_main /usr/local/bin
+    sudo cp -f samgr /usr/local/bin
+fi
 
 cd ${PROJECT_DIR}
 rm -fr ${PROJECT_DIR}/prebuilts/libs
