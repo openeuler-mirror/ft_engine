@@ -24,7 +24,7 @@
 #include "pipeline/rs_node_map.h"
 #include "pipeline/rs_render_thread.h"
 #include "platform/common/rs_log.h"
-#if !defined(__gnu_linux__) && !defined(_WIN32) && !defined(__APPLE__)
+#ifndef ROSEN_CROSS_PLATFORM
 #include "platform/drawing/rs_surface_converter.h"
 #endif
 #include "render_context/render_context.h"
@@ -314,7 +314,7 @@ bool RSSurfaceNode::CreateNodeAndSurface(const RSSurfaceRenderNodeConfig& config
     return (surface_ != nullptr);
 }
 
-#if !defined(__gnu_linux__) && !defined(_WIN32) && !defined(__APPLE__)
+#ifndef ROSEN_CROSS_PLATFORM
 sptr<OHOS::Surface> RSSurfaceNode::GetSurface() const
 {
     if (surface_ == nullptr) {

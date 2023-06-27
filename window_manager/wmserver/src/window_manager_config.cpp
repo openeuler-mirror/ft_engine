@@ -14,6 +14,9 @@
  */
 
 #include "window_manager_config.h"
+
+#include <cstring>
+
 #include "config_policy_utils.h"
 #include "window_helper.h"
 #include "window_manager_hilog.h"
@@ -83,6 +86,9 @@ std::vector<std::string> WindowManagerConfig::ReadNumberStrings(const xmlNodePtr
 
 std::string WindowManagerConfig::GetConfigPath(const std::string& configFileName)
 {
+#ifdef _FANGTIAN
+    return "/usr/local/share/ft/window_manager/window_manager_config.xml";
+#else
     char buf[PATH_MAX + 1];
     char* configPath = GetOneCfgFile(configFileName.c_str(), buf, PATH_MAX + 1);
     char tmpPath[PATH_MAX + 1] = { 0 };
@@ -91,6 +97,7 @@ std::string WindowManagerConfig::GetConfigPath(const std::string& configFileName
         return "/system/" + configFileName;
     }
     return std::string(tmpPath);
+#endif
 }
 
 void WindowManagerConfig::ReadConfig(const xmlNodePtr& rootPtr, std::map<std::string, ConfigItem>& mapValue)
