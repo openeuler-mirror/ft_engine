@@ -36,6 +36,25 @@ public:
     void Run(const std::vector<std::string> &runArgs);
 
 private:
+    void InitLayers(uint32_t screenId);
+    void RequestSync();
+    void CreateLayers();
+    void CreateShowLayers();
+    void Draw();
+    void Sync(int64_t, void *data);
+    void DoPrepareCompleted(sptr<Surface> surface, const struct PrepareCompleteParam &param);
+    void OnHotPlug(std::shared_ptr<HdiOutput> &output, bool connected);
+    void OnHotPlugEvent(std::shared_ptr<HdiOutput> &output, bool connected);
+    void ParseArgs(const std::vector<std::string> &runArgs);
+    void SetRunArgs(const std::unique_ptr<LayerContext> &drawLayer) const;
+    void RemoveOffScreenData(uint32_t offScreenId);
+    uint32_t CreatePhysicalScreen();
+
+    static void OnScreenPlug(std::shared_ptr<HdiOutput> &output, bool connected, void* data);
+    static void OnPrepareCompleted(
+        sptr<Surface> &surface, const struct PrepareCompleteParam &param, void* data);
+
+private:
     uint32_t freq_ = 30;
     uint32_t currScreenId_ = 0;
     // Draw color with PIXEL_FMT_YCBCR_420_SP format in LAYER_EXTRA layer, if YUVFormat_ is true
@@ -54,29 +73,11 @@ private:
     std::shared_ptr<OHOS::AppExecFwk::EventHandler> mainThreadHandler_;
 
     /* map: key is screenId */
-    std::unordered_map<uint32_t, uint32_t> displayWidthsMap_;
-    std::unordered_map<uint32_t, uint32_t> displayHeightsMap_;
+    std::unordered_map<uint32_t, int32_t> displayWidthsMap_;
+    std::unordered_map<uint32_t, int32_t> displayHeightsMap_;
     std::unordered_map<uint32_t, std::shared_ptr<HdiOutput>> outputMap_;
     std::unordered_map<uint32_t, std::unique_ptr<HdiScreen>> screensMap_;
     std::unordered_map<uint32_t, std::vector<std::unique_ptr<LayerContext>>> drawLayersMap_;
-
-    void InitLayers(uint32_t screenId);
-    void RequestSync();
-    void CreateLayers();
-    void CreateShowLayers();
-    void Draw();
-    void Sync(int64_t, void *data);
-    void DoPrepareCompleted(sptr<Surface> surface, const struct PrepareCompleteParam &param);
-    void OnHotPlug(std::shared_ptr<HdiOutput> &output, bool connected);
-    void OnHotPlugEvent(std::shared_ptr<HdiOutput> &output, bool connected);
-    void ParseArgs(const std::vector<std::string> &runArgs);
-    void SetRunArgs(const std::unique_ptr<LayerContext> &drawLayer) const;
-    void RemoveOffScreenData(uint32_t offScreenId);
-    uint32_t CreatePhysicalScreen();
-
-    static void OnScreenPlug(std::shared_ptr<HdiOutput> &output, bool connected, void* data);
-    static void OnPrepareCompleted(
-        sptr<Surface> &surface, const struct PrepareCompleteParam &param, void* data);
 };
 } // namespace Rosen
 } // namespace OHOS

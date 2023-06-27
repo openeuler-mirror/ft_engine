@@ -18,6 +18,7 @@ config("buffer_handle_public") {
     "../export",
   ]
 }
+
 ft_static_library("buffer_handle") {
   include_dirs = [
     "${sys_inc}/c_utils",

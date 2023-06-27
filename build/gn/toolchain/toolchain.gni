@@ -108,6 +108,8 @@ template("clang_toolchain") {
       ar = "llvm-ar"
     }
 
+    print("[GN INFO] cc = ${cc}, cxx = ${cxx}, ld = ${ld}, asm = ${asm}, ar = ${ar}")
+
     # Bring these into our scope for string interpolation with default values.
     if (defined(invoker.link_libs_section_prefix)) {
       link_libs_section_prefix = invoker.link_libs_section_prefix

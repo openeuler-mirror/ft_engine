@@ -81,6 +81,7 @@ void VSyncSampler::SetHardwareVSyncStatus(bool enabled)
 {
     std::lock_guard<std::mutex> lock(mutex_);
     hardwareVSyncStatus_ = enabled;
+    VLOGI("VSyncSampler::SetHardwareVSyncStatus: enabled: %{public}d", enabled);
 }
 
 bool VSyncSampler::GetHardwareVSyncStatus() const

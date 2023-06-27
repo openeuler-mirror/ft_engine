@@ -31,9 +31,6 @@
 #include "ui/rs_display_node.h"
 #include "ui/rs_surface_node.h"
 #include "render_context/render_context.h"
-// temporary debug
-#include "foundation/graphic/graphic_2d/rosen/modules/render_service_base/src/platform/ohos/rs_surface_frame_ohos.h"
-#include "foundation/graphic/graphic_2d/rosen/modules/render_service_base/src/platform/ohos/rs_surface_ohos.h"
 
 using namespace OHOS;
 using namespace OHOS::Rosen;
@@ -337,6 +334,7 @@ public:
 
         RSDisplayNodeConfig config;
         RSDisplayNode::SharedPtr displayNode = RSDisplayNode::Create(config);
+        displayNode->SetBounds(0, 0, screenWidth_, screenheight_);
         displayNode->AddChild(surfaceNode1, -1);
         displayNode->AddChild(surfaceNode2, -1);
 

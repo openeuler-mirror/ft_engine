@@ -35,6 +35,4 @@ ft_static_library("scoped_bytrace") {
   sources = [ "../src/scoped_bytrace.cpp" ]
   configs = [ ":scoped_bytrace_config" ]
   public_configs = [ ":scoped_bytrace_public_config" ]
-  subsystem_name = "graphic"
-  part_name = "graphic_standard"
 }
