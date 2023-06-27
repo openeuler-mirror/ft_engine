@@ -32,3 +32,24 @@ ft_executable("drm_backend_test") {
     "//display_server/drivers/hal:hal_public_config"
   ]
 }
+
+ft_executable("gpu_backend_test") {
+    testonly = true
+
+    sources = [
+        "system_test/gpu_backend_test.cpp"
+    ]
+
+    deps = [
+        "//display_server/drivers/hal/drm_backend:drm_backend",
+        "//display_server/drivers/hal/base:hal_base",
+        "//display_server/utils/sync_fence/ft_build:sync_fence",
+        "//build/gn/configs/system_libs:ipc_core",
+    ]
+
+    configs = [
+        "//display_server/drivers/hal:hal_public_config"
+    ]
+    libs = [ "EGL", "GLESv2" ]
+}
+
