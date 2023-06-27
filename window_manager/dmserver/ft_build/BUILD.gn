@@ -12,6 +12,7 @@
 # limitations under the License.
 
 import("//build/gn/fangtian.gni")
+import("//config.gni")
 
 config("libdms_private_config") {
   cflags = [ "-Wno-c++11-narrowing" ]
@@ -22,7 +23,7 @@ config("libdms_private_config") {
     "$window_manager_path/ft_adapter",
     "$display_server_path/utils/buffer_handle/export",
     "$display_server_path/rosen/modules/composer/vsync/include",
-    "/usr/include/libxml2"
+    "/usr/include/libxml2",
   ]
 }
 
@@ -31,6 +32,8 @@ config("libdms_public_config") {
 }
 
 ft_shared_library("libdms") {
+  defines = ft_engine_defines
+
   sources = [
     "$window_manager_path/dm/src/zidl/display_manager_agent_proxy.cpp",
     "$window_manager_path/dmserver/src/abstract_display.cpp",

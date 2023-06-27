@@ -114,4 +114,9 @@ cd ${PROJECT_DIR}/prebuilts/rpm/binary
 ./install.sh
 cd ${PROJECT_DIR}
 
+# copy config files to /usr/local/share/ft/window_manager
+sudo mkdir -p /usr/local/share/ft/window_manager
+sudo cp ${PROJECT_DIR}/window_manager/resources/config/other/display_manager_config.xml /usr/local/share/ft/window_manager
+sudo cp ${PROJECT_DIR}/window_manager/resources/config/other/window_manager_config.xml /usr/local/share/ft/window_manager
+
 echo -e "\033[32m[*] Pre-build Done. You need exec 'build.sh'.\033[0m"
