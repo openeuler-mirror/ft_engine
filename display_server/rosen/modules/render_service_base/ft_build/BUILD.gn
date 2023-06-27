@@ -12,12 +12,12 @@
 # limitations under the License.
 
 import("//build/gn/fangtian.gni")
-import("//display_server/ft_configs/ds_config.gni")
+import("//display_server/ft_build/ds_config.gni")
 
 rs_common_define = [ "ROSEN_OHOS" ]
 enable_export_macro = true
 
-config("export_config") {
+config("render_service_base_public_config") {
   cflags_cc = [ "-std=c++17" ]
   include_dirs = [ "../include" ]
 
@@ -156,7 +156,7 @@ ft_source_set("render_service_base_src") {
   ]
 
   public_configs = [
-    ":export_config",
+    ":render_service_base_public_config",
   ]
   deps = [
     "../src/platform/fangtian:rosen_fangtian_sources",
@@ -167,20 +167,12 @@ ft_source_set("render_service_base_src") {
     defines += [ "ENABLE_EXPORT_MACRO" ]
   }
 
-  if (enable_gpu) {
+  if (ds_enable_gpu) {
     sources += [ "../src/common/rs_shared_context.cpp" ]
     defines += [
       "GR_TEST_UTILS=1",
     ]
   }
-
-  configs = [
-    "//build/gn/configs/system_libs:c_utils_config",
-    "//build/gn/configs/system_libs:ipc_core_config",
-    "//build/gn/configs/system_libs:hitrace_meter_config",
-    "//build/gn/configs/system_libs:eventhandler_config",
-    "//build/gn/configs/system_libs:skia_config",
-  ]
 
   include_dirs = [
     "$rosen_root/modules/render_service_base/src",
@@ -193,15 +185,21 @@ ft_source_set("render_service_base_src") {
   ]
 
   deps += [
-    "$display_server_root/utils/buffer_handle/ft_build:buffer_handle",
+    "//build/gn/configs/system_libs:c_utils",
+    "//build/gn/configs/system_libs:ipc_core",
+    "//build/gn/configs/system_libs:hitrace_meter",
+    "//build/gn/configs/system_libs:eventhandler",
+    "//build/gn/configs/system_libs:skia",
+  ]
+
+  public_deps = [
     "$display_server_root/utils/sandbox/ft_build:sandbox_utils",
     "$display_server_root/utils/sync_fence/ft_build:sync_fence",
   ]
-
 }
 
 ft_shared_library("librender_service_base") {
-  deps = [
+  public_deps = [
     ":render_service_base_src",
     "../src/platform/fangtian:rosen_fangtian_sources",
   ]
