@@ -81,16 +81,6 @@ ft_shared_library("libwms") {
   configs = [
     ":libwms_config",
     "$window_manager_path/resources/config/build:coverage_flags",
-    "//build/gn/configs/system_libs:hilog_config",
-    "//build/gn/configs/system_libs:hitrace_meter_config",
-    "//build/gn/configs/system_libs:c_utils_config",
-    "//build/gn/configs/system_libs:ipc_core_config",
-    "//build/gn/configs/system_libs:samgr_config",
-    "//build/gn/configs/system_libs:safwk_config",
-    "//build/gn/configs/system_libs:eventhandler_config",
-    "//build/gn/configs/system_libs:skia_config",
-    "//build/gn/configs/system_libs:image_config",
-    "//build/gn/configs/system_libs:mmi_config",
   ]
 
   libs = [ "xml2" ]
@@ -102,5 +92,11 @@ ft_shared_library("libwms") {
     "$window_manager_path/dmserver/ft_build:libdms",
     "$window_manager_path/utils/ft_build:libwmutil",
     "$window_manager_path/wm/ft_build:libwm",
+
+    "//build/gn/configs/system_libs:safwk",
+    "//build/gn/configs/system_libs:eventhandler",
+    "//build/gn/configs/system_libs:skia",
+    "//build/gn/configs/system_libs:image",
+    "//build/gn/configs/system_libs:mmi",
   ]
 }

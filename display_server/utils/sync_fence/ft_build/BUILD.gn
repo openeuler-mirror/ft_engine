@@ -12,7 +12,7 @@
 # limitations under the License.
 
 import("//build/gn/fangtian.gni")
-import("//display_server/ft_configs/ds_config.gni")
+import("//display_server/ft_build/ds_config.gni")
 
 config("sync_fence_config") {
   visibility = [ ":sync_fence" ]
@@ -45,16 +45,15 @@ ft_shared_library("sync_fence") {
     "../src/sync_fence_tracker.cpp",
   ]
 
-  configs = [
-    ":sync_fence_config",
-    "//build/gn/configs/system_libs:c_utils_config",
-    "//build/gn/configs/system_libs:hilog_config",
-    "//build/gn/configs/system_libs:eventhandler_config",
-    "//build/gn/configs/system_libs:hitrace_meter_config",
-    "//build/gn/configs/system_libs:ipc_core_config",
-  ]
+  configs = [ ":sync_fence_config" ]
 
   public_configs = [ 
     ":sync_fence_public_config",
+  ]
+
+  deps = [
+    "//build/gn/configs/system_libs:eventhandler",
+    "//build/gn/configs/system_libs:hitrace_meter",
+    "//build/gn/configs/system_libs:ipc_core",
   ]
 }

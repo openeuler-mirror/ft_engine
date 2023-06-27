@@ -58,9 +58,12 @@ std::shared_ptr<Allocator> AllocatorController::GetAllocator(uint64_t usage)
     // * DRM: Dumb Buffer for CPU Rendering (when usage include `CPU_WRITE`)
     // * GBM: Smart Buffer for GPU Rendering (other case)
     if (usage & HBM_USE_MEM_DMA) {
-        if (usage & HBM_USE_CPU_WRITE) {
+        if ((usage & HBM_USE_CPU_WRITE) && (usage & HBM_USE_MEM_FB)) {
             LOG_DEBUG("[Gralloc::AllocatorController::GetAllocator] Choose Dumb Allocator.");
             return dumbAllocator_;
+        } else if (usage & HBM_USE_CPU_WRITE) {
+            LOG_ERROR("[Gralloc::AllocatorController::GetAllocator] DRM Backend not support CPU_WRITE flag without FB flag.");
+            return nullptr;
         } else {
 #ifdef DRM_BACKEND_USE_GBM
             LOG_DEBUG("[Gralloc::AllocatorController::GetAllocator] Choose GBM Allocator.");
@@ -73,7 +76,8 @@ std::shared_ptr<Allocator> AllocatorController::GetAllocator(uint64_t usage)
     }
 
     // If user need CPU buffer for CPU Rendering, we will provide shared memory.
-    if (!(usage & HBM_USE_MEM_DMA) && (usage & HBM_USE_CPU_WRITE)) {
+    if (!(usage & HBM_USE_MEM_FB) && (usage & HBM_USE_CPU_WRITE)) {
+        LOG_DEBUG("[Gralloc::AllocatorController::GetAllocator] Choose Shm Allocator.");
         return shmAllocator_;
     }
 

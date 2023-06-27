@@ -20,23 +20,13 @@ config("gralloc_client_public_config") {
   ]
 }
 
-declare_args() {
-  drivers_peripheral_display_hdi_gralloc_client =
-      ":libhdi_display_gralloc_client"
-}
-
 group("hdi_gralloc_client") {
-  deps = [ drivers_peripheral_display_hdi_gralloc_client ]
+  public_deps = [ ":libhdi_display_gralloc_client" ]
   public_configs = [ ":gralloc_client_public_config" ]
 }
 
 ft_shared_library("libhdi_display_gralloc_client") {
-  configs = [
-    ":gralloc_client_public_config",
-    "//build/gn/configs/system_libs:hilog_config",
-    "//build/gn/configs/system_libs:ipc_core_config",
-    "//build/gn/configs/system_libs:c_utils_config",
-  ]
+  configs = [ ":gralloc_client_public_config" ]
 
   sources = [
     "allocator_adapter.cpp",
@@ -49,6 +39,9 @@ ft_shared_library("libhdi_display_gralloc_client") {
   ]
 
   deps = [
-    "//display_server/utils/buffer_handle/ft_build:buffer_handle"
+    "//display_server/utils/buffer_handle/ft_build:buffer_handle",
+
+    "//build/gn/configs/system_libs:hilog",
+    "//build/gn/configs/system_libs:ipc_core",
   ]
 }
