@@ -167,6 +167,7 @@ SurfaceError LayerContext::FillHDILayer()
     prevBuffer_ = buffer;
     prevFence_ = acquireSyncFence;
 
+    ret = cSurface_->ReleaseBuffer(buffer, acquireFence);
     return ret;
 }
 

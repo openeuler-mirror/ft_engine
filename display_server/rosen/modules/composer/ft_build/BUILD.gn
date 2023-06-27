@@ -12,7 +12,7 @@
 # limitations under the License.
 
 import("//build/gn/fangtian.gni")
-import("//display_server/ft_configs/ds_config.gni")
+import("//display_server/ft_build/ds_config.gni")
 
 config("composer_config") {
   visibility = [ ":*" ]
@@ -54,32 +54,25 @@ ft_shared_library("libcomposer") {
     "$display_server_root/utils/log",
   ]
 
-  configs = [
-    ":composer_config",
-    "//build/gn/configs/system_libs:hilog_config",
-    "//build/gn/configs/system_libs:ipc_core_config",
-    "//build/gn/configs/system_libs:c_utils_config",
-  ]
+  defines = gpu_defines
 
-  defines = []
-  defines += gpu_defines
+  configs = [ ":composer_config" ]
 
-  public_configs = [
-    ":composer_public_config",
-  ]
+  public_configs = [ ":composer_public_config" ]
 
   deps = [
-    "$display_server_root/frameworks/surface/ft_build:surface",
-    "$display_server_root/rosen/modules/render_frame_trace/ft_build:render_frame_trace",
-    "$display_server_root/rosen/modules/render_service_base/ft_build:librender_service_base",
+    "//build/gn/configs/system_libs:hilog",
+    "//build/gn/configs/system_libs:ipc_core",
   ]
 
   public_deps = [
     "../vsync/ft_build:libvsync",
+
     "$display_server_root/utils/buffer_handle/ft_build:buffer_handle",
     "$display_server_root/utils/scoped_bytrace/ft_build:scoped_bytrace",
     "$display_server_root/utils/sync_fence/ft_build:sync_fence",
-    "$display_server_root/drivers/hal/drm_backend/display_device:display_device",
-    "$display_server_root/drivers/hal/drm_backend/display_gralloc:display_gralloc",
+    "$display_server_root/drivers/hal/drm_backend:drm_backend",
+    "$display_server_root/frameworks/surface/ft_build:surface",
+    "$display_server_root/rosen/modules/render_frame_trace/ft_build:render_frame_trace",
   ]
 }

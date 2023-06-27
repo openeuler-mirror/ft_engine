@@ -12,7 +12,7 @@
 # limitations under the License.
 
 import("//build/gn/fangtian.gni")
-import("//display_server/ft_configs/ds_config.gni")
+import("//display_server/ft_build/ds_config.gni")
 
 config("platform_config") {
   include_dirs = [
@@ -25,13 +25,6 @@ config("platform_config") {
 ft_source_set("rosen_fangtian_sources") {
   configs = [
     ":platform_config",
-    "//build/gn/configs/system_libs:hilog_config",
-    "//build/gn/configs/system_libs:c_utils_config",
-    "//build/gn/configs/system_libs:ipc_core_config",
-    "//build/gn/configs/system_libs:hitrace_meter_config",
-    "//build/gn/configs/system_libs:eventhandler_config",
-    "//build/gn/configs/system_libs:skia_config",
-    "//build/gn/configs/system_libs:samgr_config",
   ]
 
   cflags_cc = [
@@ -79,7 +72,7 @@ ft_source_set("rosen_fangtian_sources") {
     "$display_server_root/utils/log",
     "$display_server_root/interfaces/inner_api/composer",
   ]
-  if (enable_gpu) {
+  if (ds_enable_gpu) {
     defines += [
       "GR_TEST_UTILS=1",
     ]
@@ -104,12 +97,20 @@ ft_source_set("rosen_fangtian_sources") {
     libs = [ "crypto", "EGL", "GLESv2" ]
   }
 
-
   deps = [
+    "//build/gn/configs/system_libs:hilog",
+    "//build/gn/configs/system_libs:ipc_core",
+    "//build/gn/configs/system_libs:hitrace_meter",
+    "//build/gn/configs/system_libs:eventhandler",
+    "//build/gn/configs/system_libs:skia",
+    "//build/gn/configs/system_libs:samgr",
+  ]
+
+  public_deps = [
+    "$display_server_root/utils/buffer_handle/ft_build:buffer_handle",
     "$display_server_root/frameworks/surface/ft_build:surface",
     "$rosen_root/modules/composer/vsync/ft_build:libvsync",
     "$display_server_root/utils/sync_fence/ft_build:sync_fence",
-    "$display_server_root/utils/buffer_handle/ft_build:buffer_handle",
     "$display_server_root/utils/sandbox/ft_build:sandbox_utils",
   ]
 }

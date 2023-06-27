@@ -81,6 +81,15 @@ bool RSRenderService::Init()
         RS_LOGE("RSRenderService wait SAMGR error, return value [%d].", status);
     }
 
+#ifdef RS_MAIN_EXECUTABLE
+    auto samgr = SystemAbilityManagerClient::GetInstance().GetSystemAbilityManager();
+    if (samgr == nullptr) {
+        RS_LOGE("RSRenderService GetSystemAbilityManager fail.");
+        return false;
+    }
+    samgr->AddSystemAbility(RENDER_SERVICE, this);
+#endif // RS_MAIN_EXECUTABLE
+
     return true;
 }
 

@@ -12,9 +12,9 @@
 # limitations under the License.
 
 import("//build/gn/fangtian.gni")
-import("//display_server/ft_configs/ds_config.gni")
+import("//display_server/ft_build/ds_config.gni")
 
-config("window_animation_config") {
+config("window_animation_public_config") {
   cflags = [ "-Wno-c++11-narrowing" ]
 
   include_dirs = [
@@ -33,16 +33,16 @@ ft_shared_library("window_animation") {
     "../src/rs_window_animation_target.cpp",
   ]
 
-  public_configs = [ ":window_animation_config" ]
+  public_configs = [ ":window_animation_public_config" ]
 
   cflags_cc = [ "-std=c++17" ]
 
   public_deps = [ "$display_server_root/rosen/modules/render_service_client/ft_build:librender_service_client" ]
 
-  configs = [
-    "//build/gn/configs/system_libs:hilog_config",
-    "//build/gn/configs/system_libs:ipc_core_config",
-    "//build/gn/configs/system_libs:c_utils_config",
-    "//build/gn/configs/system_libs:skia_config",
+  deps = [
+    "//build/gn/configs/system_libs:c_utils",
+    "//build/gn/configs/system_libs:hilog",
+    "//build/gn/configs/system_libs:ipc_core",
+    "//build/gn/configs/system_libs:skia",
   ]
 }
