@@ -12,6 +12,6 @@
 # limitations under the License
 
 declare_args() {
-  display_server_path = "//display_server"
+  display_server_root = "//display_server"
   window_manager_path = "//window_manager"
 }

@@ -10,13 +10,13 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
+import("//config.gni")
 
 declare_args() {
     graphic_standard_feature_ace_enable_gpu = false
     graphic_standard_feature_rs_enable_eglimage = false
     graphic_standard_feature_rs_enable_uni_render = false
     graphic_standard_feature_enable_afbc = false
-    rs_main_executable = false
 }
 
 if (graphic_standard_feature_ace_enable_gpu) {
@@ -49,5 +49,4 @@ if (graphic_standard_feature_enable_afbc) {
   gpu_defines += [ "RS_ENABLE_AFBC" ]
 }
 
-display_server_root = "//display_server"
 rosen_root = "//display_server/rosen"
