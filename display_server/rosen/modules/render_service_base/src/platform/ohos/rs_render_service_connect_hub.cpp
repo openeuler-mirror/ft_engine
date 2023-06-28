@@ -139,7 +139,7 @@ bool RSRenderServiceConnectHub::Connect()
         std::lock_guard<std::mutex> lock(mutex_);
         renderService_ = renderService;
         conn_ = conn;
-    
+
         if (onConnectCallback_) {
             onConnectCallback_(conn_);
         }
