@@ -255,14 +255,16 @@ bool BaseAdapter::InitDMSProxy()
             return false;
         }
 
-        dmsDeath_ = new(std::nothrow) DMSDeathRecipient(*this);
-        if (dmsDeath_ == nullptr) {
-            WLOGFE("Failed to create death Recipient ptr DMSDeathRecipient");
-            return false;
-        }
-        if (remoteObject->IsProxyObject() && !remoteObject->AddDeathRecipient(dmsDeath_)) {
-            WLOGFE("Failed to add death recipient");
-            return false;
+        if (remoteObject->IsProxyObject()) {
+            dmsDeath_ = new(std::nothrow) DMSDeathRecipient(*this);
+            if (dmsDeath_ == nullptr) {
+                WLOGFE("Failed to create death Recipient ptr DMSDeathRecipient");
+                return false;
+            }
+            if (!remoteObject->AddDeathRecipient(dmsDeath_)) {
+                WLOGFE("Failed to add death recipient");
+                return false;
+            }
         }
         isProxyValid_ = true;
     }
