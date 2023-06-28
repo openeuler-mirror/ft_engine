@@ -642,8 +642,9 @@ bool ConvertBufferColorGamut(std::vector<uint8_t>& dstBuf, const sptr<OHOS::Surf
 
 SkImageInfo GenerateSkImageInfo(const sptr<OHOS::SurfaceBuffer>& buffer)
 {
-    SkColorType colorType = (buffer->GetFormat() == PIXEL_FMT_BGRA_8888) ?
-        kRGBA_8888_SkColorType : kBGRA_8888_SkColorType;
+    // Since FB currently uses the BGRA color format, we need to reverse the color format.
+    SkColorType colorType = (buffer->GetFormat() == PIXEL_FMT_RGBA_8888) ?
+        kBGRA_8888_SkColorType : kRGBA_8888_SkColorType;
     return SkImageInfo::Make(buffer->GetWidth(), buffer->GetHeight(),
         colorType, kPremul_SkAlphaType);
 }
