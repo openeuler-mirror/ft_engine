@@ -187,14 +187,16 @@ bool WindowAdapter::InitWMSProxy()
             return false;
         }
 
-        wmsDeath_ = new WMSDeathRecipient();
-        if (!wmsDeath_) {
-            WLOGFE("Failed to create death Recipient ptr WMSDeathRecipient");
-            return false;
-        }
-        if (remoteObject->IsProxyObject() && !remoteObject->AddDeathRecipient(wmsDeath_)) {
-            WLOGFE("Failed to add death recipient");
-            return false;
+        if (remoteObject->IsProxyObject()) {
+            wmsDeath_ = new WMSDeathRecipient();
+            if (!wmsDeath_) {
+                WLOGFE("Failed to create death Recipient ptr WMSDeathRecipient");
+                return false;
+            }
+            if (!remoteObject->AddDeathRecipient(wmsDeath_)) {
+                WLOGFE("Failed to add death recipient");
+                return false;
+            }
         }
         isProxyValid_ = true;
     }
