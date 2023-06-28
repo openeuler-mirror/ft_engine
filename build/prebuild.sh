@@ -70,20 +70,13 @@ python3 ${PROJECT_DIR}/build/builder.py check --install-packages $*
 
 # install prebuild library
 if [ ! -d ${PROJECT_DIR}/prebuilts/libs ]; then
-git clone https://gitee.com/yanansong/ft_engine_prebuild.git ${PROJECT_DIR}/prebuilts/libs
+git clone https://gitee.com/yanansong/ft_engine_prebuild.git -b rpms ${PROJECT_DIR}/prebuilts/libs
 fi
 
 ARCHNAME=`uname -m`
-cd ${PROJECT_DIR}/prebuilts/libs/library/${ARCHNAME}
-# copy prebuild library to /usr/local/lib64
-sudo cp -fr *.so /usr/local/lib64
-# copy prebuild binarys to /usr/local/bin
-sudo cp -f hilog /usr/local/bin
-sudo cp -f hilogd /usr/local/bin
-if [ ARCHNAME = "x86_64" ]; then
-    sudo cp -f sa_main /usr/local/bin
-    sudo cp -f samgr /usr/local/bin
-fi
+
+cd ${PROJECT_DIR}/prebuilts/libs/rpms/${ARCHNAME}
+sudo ./installRPM
 
 cd ${PROJECT_DIR}
 rm -fr ${PROJECT_DIR}/prebuilts/libs
@@ -107,6 +100,7 @@ cd ${PROJECT_DIR}/prebuilts/rpm/ft_surface_wrapper/
 if [ ! -d ${PROJECT_DIR}/prebuilts/rpm/ft_surface_wrapper/build ]; then
     mkdir build
 fi
+
 cd build
 cmake ..
 make -j6
@@ -121,6 +115,10 @@ fi
 cd ${PROJECT_DIR}/prebuilts/rpm/binary
 ./install.sh
 cd ${PROJECT_DIR}
+
+# copy FT sa file to /usr/local/share/ft/
+sudo mkdir -p /usr/local/share/ft
+sudo cp -fr ${PROJECT_DIR}/etc/ft.xml /usr/local/share/ft/
 
 # copy config files to /usr/local/share/ft/window_manager
 sudo mkdir -p /usr/local/share/ft/window_manager

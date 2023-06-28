@@ -87,7 +87,9 @@ class FtBuilder:
                                 choices=['DEBUG', 'INFO', 'WARNING', 'ERROR', 'FATAL', 'CRITICAL'],
                                 default='NOTSET',
                                 help='Set log level of builder.')
-
+        build_parser.add_argument('-i', '--install',
+                                action='store_true',
+                                help='Install all library to /usr/lib64.')
         # Subcommand: format
         format_parser = subparsers.add_parser('format', help='Format C/C++ & GN files')
         format_parser.add_argument('--code-path',
