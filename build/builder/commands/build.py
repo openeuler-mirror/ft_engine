@@ -49,15 +49,26 @@ class Builder:
         return checker.check_system_env(self.project_dir)
 
     def post_build(self) -> bool:
+        # Copy compile_commands.json to project root dir
         if self.args.export_compile_commands is True:
             # return exec_sys_command(['ln', '-sf', os.path.join(self.build_output_dir, 'compile_commands.json'), self.project_dir])[0]
             exec_sys_command(['rm', '-f', os.path.join(self.project_dir, 'compile_commands.json')])
-            return exec_sys_command(['cp', os.path.join(self.build_output_dir, 'compile_commands.json'), self.project_dir])[0]
-        if self.args.install is True:
-            librarys = os.listdir(os.path.join(self.build_output_dir, 'common/common/'))
-            for lib in librarys:
-                if '.so' in lib:
-                    exec_sys_command(['sudo', 'cp', '-rf', os.path.join(self.build_output_dir, 'common/common/', lib), "/usr/lib64/"])[0]
+            if (exec_sys_command(['cp', os.path.join(self.build_output_dir, 'compile_commands.json'), self.project_dir])[0] == False):
+                return False
+
+        # Install librarys and binarys into specify dir
+        if self.args.install:
+            logger.info(f"Installing to {self.args.install}.")
+            common_output_dir = os.path.join(self.build_output_dir, 'common/common/')
+            files = [entry for entry in os.listdir(common_output_dir) if os.path.isfile(os.path.join(common_output_dir, entry))]
+            for file in files:
+                if file.endswith('.a') or file.endswith('.so'):
+                    # install librarys
+                    exec_sys_command(['sudo', 'cp', '-f', os.path.join(self.build_output_dir, 'common/common/', file), os.path.join(self.args.install, 'lib64')])
+                elif os.access(os.path.join(common_output_dir, file), os.X_OK):
+                    # install binarys
+                    exec_sys_command(['sudo', 'cp', '-f', os.path.join(self.build_output_dir, 'common/common/', file), os.path.join(self.args.install, 'bin')])
+
         return True
 
     def launch_gn(self) -> bool:

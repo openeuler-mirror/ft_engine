@@ -129,7 +129,7 @@ public:
                 std::cout << "Failed to create canvas!" << std::endl;
                 return;
             }
-            canvas->clear(SK_ColorWHITE);
+            canvas->clear(SK_ColorCYAN);
             SkPaint paint;
             paint.setAntiAlias(true);
             paint.setStyle(SkPaint::kFill_Style);

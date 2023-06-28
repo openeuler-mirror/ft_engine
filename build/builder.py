@@ -88,8 +88,11 @@ class FtBuilder:
                                 default='NOTSET',
                                 help='Set log level of builder.')
         build_parser.add_argument('-i', '--install',
-                                action='store_true',
-                                help='Install all library to /usr/lib64.')
+                                type=str,
+                                default='',
+                                nargs='?',
+                                const='/usr',
+                                help='Install all librarys & binarys to specify dir(default is /usr).')
         # Subcommand: format
         format_parser = subparsers.add_parser('format', help='Format C/C++ & GN files')
         format_parser.add_argument('--code-path',
@@ -126,6 +129,7 @@ class FtBuilder:
                                 action='store_true',
                                 help='Add musl k-v to toml file.')
 
+        # Subcommand: generate
         package_prepare_parser = package_subparsers.add_parser('generate', help='Setup rpm tree & Generate spec file & Build the RPM package.')
         package_prepare_parser.add_argument('--target-dir',
                                 type=str,
