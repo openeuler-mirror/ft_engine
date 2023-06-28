@@ -12,14 +12,15 @@
 # limitations under the License.
 
 import("//build/gn/fangtian.gni")
+import("//display_server/ft_build/ds_config.gni")
 
 ft_executable("render_service_client_rs_demo") {
   sources = [ "../render_service_client_rs_demo.cpp" ]
 
   include_dirs = [
-    "//display_server/rosen/modules/render_service_base/src",
-    "//display_server/rosen/include",
-    "//display_server/drivers/interfaces",
+    "$display_server_root/rosen/modules/render_service_base/src",
+    "$display_server_root/rosen/include",
+    "$display_server_root/drivers/interfaces",
   ]
 
   deps = [
@@ -30,4 +31,31 @@ ft_executable("render_service_client_rs_demo") {
     "//build/gn/configs/system_libs:skia",
     "//build/gn/configs/system_libs:image",
   ]
+}
+
+ft_executable("render_service_client_gravity_demo") {
+  sources = [ "../render_service_client_gravity_demo.cpp" ]
+
+  cflags = [ "-Wno-c++11-narrowing" ]
+
+  include_dirs = [
+    "$window_manager_path/interfaces/innerkits",
+    "//display_server/rosen/modules/2d_graphics/src",
+  ]
+
+  deps = [
+    "$rosen_root/modules/render_service_base/ft_build:librender_service_base",
+    "$rosen_root/modules/render_service_client/ft_build:librender_service_client",
+    "$rosen_root/modules/animation/window_animation/ft_build:window_animation",
+    "$display_server_root/utils/buffer_handle/ft_build:buffer_handle",
+    "$window_manager_path/wm/ft_build:libwm",
+    "$window_manager_path/utils/ft_build:libwmutil",
+    "$window_manager_path/wmserver/ft_build:libwms",
+    "$window_manager_path/dmserver/ft_build:libdms",
+    "$window_manager_path/dm/ft_build:libdm",
+    "//build/gn/configs/system_libs:skia",
+    "//build/gn/configs/system_libs:c_utils",
+    "//build/gn/configs/system_libs:ipc_core",
+  ]
+  libs = [ "EGL", "GLESv2" ]
 }
