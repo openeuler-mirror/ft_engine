@@ -17,19 +17,8 @@ import("//display_server/ft_build/ds_config.gni")
 # On the openEuler platform, display_server and window_manager are in the same process
 # Use sa_main.bin instead of render_service.bin
 
-config("render_service_config") {
-  if (rs_main_executable) {
-    defines += [ "RS_MAIN_EXECUTABLE" ]
-  }
-}
-
 group("render_service_group") {
   deps = [ ":librender_service" ]
-
-  if (rs_main_executable) {
-    print("[GN INFO] Enable RS exec building.")
-    deps += [ ":render_service" ]
-  }
 }
 
 ft_shared_library("librender_service") {
@@ -72,6 +61,10 @@ ft_shared_library("librender_service") {
     "../core/transaction/rs_render_service_stub.cpp",
   ]
 
+  if (rs_enable_eglimage) {
+    sources += [ "../core/pipeline/rs_egl_image_manager.cpp" ]
+  }
+
   include_dirs = [
     "../core",
     "$display_server_root/frameworks/surface/include",
@@ -83,6 +76,7 @@ ft_shared_library("librender_service") {
     "$display_server_root/utils/log",
     "$display_server_root/rosen/modules/render_service_base/src/platform/fangtian/include",
     "$display_server_root/utils/socketpair/export",
+    "$rosen_root/modules/2d_graphics/src",
   ]
 
   deps = [
@@ -102,23 +96,5 @@ ft_shared_library("librender_service") {
     "//build/gn/configs/system_libs:image",
   ]
 
-  public_configs = [ ":render_service_config" ]
-
-  libs = ["png"]
-}
-
-if (rs_main_executable) {
-  ft_executable("render_service") {
-    sources = [ "../core/main.cpp" ]
-
-    include_dirs = [ "../core" ]
-
-    deps = [
-      ":librender_service",
-      "//display_server/rosen/modules/composer/ft_build:libcomposer",
-      "//display_server/rosen/modules/render_service_base/ft_build:librender_service_base",
-    ]
-
-    configs = [ ":render_service_config" ]
-  }
+  libs = ["png", "EGL", "GLESv2" ]
 }
