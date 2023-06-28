@@ -282,7 +282,7 @@ public:
         isGPU_ = false;
 #endif
 
-        DisplayId id = DmsMock::GetInstance().GetDefaultDisplayId();
+        id = DmsMock::GetInstance().GetDefaultDisplayId();
         std::cout << "RS default screen id is " << id << ".\n";
         auto activeModeInfo = DmsMock::GetInstance().GetDisplayActiveMode(id);
         if (activeModeInfo) {
@@ -334,6 +334,7 @@ public:
 
         RSDisplayNodeConfig config;
         RSDisplayNode::SharedPtr displayNode = RSDisplayNode::Create(config);
+        displayNode->SetScreenId(id);
         displayNode->SetBounds(0, 0, screenWidth_, screenheight_);
         displayNode->AddChild(surfaceNode1, -1);
         displayNode->AddChild(surfaceNode2, -1);
@@ -373,6 +374,7 @@ private:
     int screenWidth_ = 0;
     int screenheight_ = 0;
     int screenRefreshRate_ = 0;
+    DisplayId id;
 }; // class RSDemoTestCase
 } // namespace OHOS::Rosen
 

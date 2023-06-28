@@ -33,6 +33,7 @@ group("ft_test") {
     "//display_server/frameworks/surface/test/ft_build:test",
     "//display_server/rosen/samples/composer/ft_build:hello_composer",
     "//display_server/rosen/modules/render_service_client/test/ft_build:render_service_client_rs_demo",
+    "//display_server/rosen/modules/render_service_client/test/ft_build:render_service_client_gravity_demo",
 
     "//display_server/drivers/hal/test:gpu_backend_test",
   ]

@@ -57,7 +57,7 @@ class Builder:
             librarys = os.listdir(os.path.join(self.build_output_dir, 'common/common/'))
             for lib in librarys:
                 if '.so' in lib:
-                    exec_sys_command(['cp', '-rf', os.path.join(self.build_output_dir, 'common/common/', lib), "/usr/lib64/"])[0]
+                    exec_sys_command(['sudo', 'cp', '-rf', os.path.join(self.build_output_dir, 'common/common/', lib), "/usr/lib64/"])[0]
         return True
 
     def launch_gn(self) -> bool:
