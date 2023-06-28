@@ -78,15 +78,16 @@ WindowManagerService::WindowManagerService() : SystemAbility(WINDOW_MANAGER_SERV
         WLOGFE("Add watchdog thread failed");
     }
     handler_->PostTask([]() { MemoryGuard cacheGuard; }, AppExecFwk::EventQueue::Priority::IMMEDIATE);
-    // init RSUIDirector, it will handle animation callback
-    rsUiDirector_ = RSUIDirector::Create();
-    rsUiDirector_->SetUITaskRunner([this](const std::function<void()>& task) { PostAsyncTask(task); });
-    rsUiDirector_->Init(false);
 }
 
 void WindowManagerService::OnStart()
 {
     WLOGFI("start");
+    // init RSUIDirector, it will handle animation callback
+    rsUiDirector_ = RSUIDirector::Create();
+    rsUiDirector_->SetUITaskRunner([this](const std::function<void()>& task) { PostAsyncTask(task); });
+    rsUiDirector_->Init(false);
+
     if (!Init()) {
         WLOGFE("Init failed");
         return;
