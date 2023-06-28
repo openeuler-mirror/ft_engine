@@ -106,7 +106,7 @@ bool RSRenderServiceConnectHub::Connect()
             continue;
         }
         auto remoteObject = samgr->GetSystemAbility(RENDER_SERVICE);
-        if (remoteObject == nullptr || !remoteObject->IsProxyObject()) {
+        if (remoteObject == nullptr) {
             continue;
         }
         renderService = iface_cast<RSRenderServiceProxy>(remoteObject);
@@ -120,9 +120,11 @@ bool RSRenderServiceConnectHub::Connect()
         return false;
     }
 
-    deathRecipient_ = new RenderServiceDeathRecipient(this);
-    if (!renderService->AsObject()->AddDeathRecipient(deathRecipient_)) {
-        ROSEN_LOGW("RSRenderServiceConnectHub::Connect, failed to AddDeathRecipient of render service.");
+    if (renderService->AsObject()->IsProxyObject()) {
+        deathRecipient_ = new RenderServiceDeathRecipient(this);
+        if (!renderService->AsObject()->AddDeathRecipient(deathRecipient_)) {
+            ROSEN_LOGW("RSRenderServiceConnectHub::Connect, failed to AddDeathRecipient of render service.");
+        }
     }
 
     if (token_ == nullptr) {
@@ -139,7 +141,7 @@ bool RSRenderServiceConnectHub::Connect()
         std::lock_guard<std::mutex> lock(mutex_);
         renderService_ = renderService;
         conn_ = conn;
-    
+
         if (onConnectCallback_) {
             onConnectCallback_(conn_);
         }
