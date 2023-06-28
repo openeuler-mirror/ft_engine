@@ -21,8 +21,8 @@ config("libdms_private_config") {
     "$window_manager_path/dm/include",
     "$window_manager_path/interfaces/innerkits/dm",
     "$window_manager_path/ft_adapter",
-    "$display_server_path/utils/buffer_handle/export",
-    "$display_server_path/rosen/modules/composer/vsync/include",
+    "$display_server_root/utils/buffer_handle/export",
+    "$display_server_root/rosen/modules/composer/vsync/include",
     "/usr/include/libxml2",
   ]
 }
@@ -62,9 +62,9 @@ ft_shared_library("libdms") {
   libs = [ "xml2" ]
 
   deps = [
-    "$display_server_path/frameworks/surface/ft_build:surface",
-    "$display_server_path/rosen/modules/render_service_base/ft_build:librender_service_base",
-    "$display_server_path/rosen/modules/render_service_client/ft_build:librender_service_client",
+    "$display_server_root/frameworks/surface/ft_build:surface",
+    "$display_server_root/rosen/modules/render_service_base/ft_build:librender_service_base",
+    "$display_server_root/rosen/modules/render_service_client/ft_build:librender_service_client",
     "$window_manager_path/utils/ft_build:libwmutil",
 
     "//build/gn/configs/system_libs:hitrace_meter",
