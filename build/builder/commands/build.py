@@ -62,8 +62,8 @@ class Builder:
             common_output_dir = os.path.join(self.build_output_dir, 'common/common/')
             files = [entry for entry in os.listdir(common_output_dir) if os.path.isfile(os.path.join(common_output_dir, entry))]
             for file in files:
-                if file.endswith('.a') or file.endswith('.so'):
-                    # install librarys
+                if file.endswith('.so'):
+                    # install dynamic librarys
                     exec_sys_command(['sudo', 'cp', '-f', os.path.join(self.build_output_dir, 'common/common/', file), os.path.join(self.args.install, 'lib64')])
                 elif os.access(os.path.join(common_output_dir, file), os.X_OK):
                     # install binarys
