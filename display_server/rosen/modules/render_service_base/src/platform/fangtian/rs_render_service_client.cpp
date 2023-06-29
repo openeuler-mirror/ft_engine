@@ -120,6 +120,13 @@ std::shared_ptr<RSSurface> RSRenderServiceClient::CreateNodeAndSurface(const RSS
         return nullptr;
     }
     sptr<Surface> surface = renderService->CreateNodeAndSurface(config);
+
+    if (surface->IsConsumer()) {
+        sptr<IBufferProducer> producer = surface->GetProducer();
+        sptr<Surface> producerSurface = Surface::CreateSurfaceAsProducer(producer);
+        return CreateRSSurface(producerSurface);
+    }
+
     return CreateRSSurface(surface);
 }
 
