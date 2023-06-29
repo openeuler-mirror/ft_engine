@@ -83,8 +83,8 @@ void RSSurfaceFrameOhosRaster::CreateSurface()
         return;
     }
     
-    SkColorType colorType = (buffer_->GetFormat() == PIXEL_FMT_RGBA_8888) ?
-        kRGBA_8888_SkColorType : kBGRA_8888_SkColorType;
+    SkColorType colorType = (buffer_->GetFormat() == PIXEL_FMT_BGRA_8888) ?
+        kBGRA_8888_SkColorType : kRGBA_8888_SkColorType;
     SkImageInfo info =
         SkImageInfo::Make(buffer_->GetWidth(), buffer_->GetHeight(), colorType, kPremul_SkAlphaType);
     skSurface_ = SkSurface::MakeRasterDirect(info, addr, buffer_->GetStride());
