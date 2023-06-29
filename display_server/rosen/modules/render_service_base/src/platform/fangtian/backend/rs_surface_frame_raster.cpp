@@ -82,9 +82,11 @@ void RSSurfaceFrameOhosRaster::CreateSurface()
         ROSEN_LOGW("buffer addr is invalid");
         return;
     }
-    // To adapt to the DRM-Backend, we need to match the format of Surface with DRM-Backend AddFb format.
+    
+    SkColorType colorType = (buffer_->GetFormat() == PIXEL_FMT_RGBA_8888) ?
+        kRGBA_8888_SkColorType : kBGRA_8888_SkColorType;
     SkImageInfo info =
-        SkImageInfo::Make(buffer_->GetWidth(), buffer_->GetHeight(), kBGRA_8888_SkColorType, kPremul_SkAlphaType);
+        SkImageInfo::Make(buffer_->GetWidth(), buffer_->GetHeight(), colorType, kPremul_SkAlphaType);
     skSurface_ = SkSurface::MakeRasterDirect(info, addr, buffer_->GetStride());
 }
 
