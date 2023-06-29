@@ -82,8 +82,11 @@ void RSSurfaceFrameOhosRaster::CreateSurface()
         ROSEN_LOGW("buffer addr is invalid");
         return;
     }
+    
+    SkColorType colorType = (buffer_->GetFormat() == PIXEL_FMT_BGRA_8888) ?
+        kBGRA_8888_SkColorType : kRGBA_8888_SkColorType;
     SkImageInfo info =
-        SkImageInfo::Make(buffer_->GetWidth(), buffer_->GetHeight(), kRGBA_8888_SkColorType, kPremul_SkAlphaType);
+        SkImageInfo::Make(buffer_->GetWidth(), buffer_->GetHeight(), colorType, kPremul_SkAlphaType);
     skSurface_ = SkSurface::MakeRasterDirect(info, addr, buffer_->GetStride());
 }
 

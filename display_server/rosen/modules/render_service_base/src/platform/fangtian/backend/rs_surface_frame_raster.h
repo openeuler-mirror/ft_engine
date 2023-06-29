@@ -49,7 +49,9 @@ private:
         .width = 0x100,
         .height = 0x100,
         .strideAlignment = 0x8,
-        .format = PIXEL_FMT_RGBA_8888,
+        // To adapt to the DRM-Backend, we need to match the format of Surface with DRM-Backend FB format (XRGB_8888).
+        // TODO: Get the format of DRM-Backend FB with HDI interface.
+        .format = PIXEL_FMT_BGRA_8888,
         .usage = BUFFER_USAGE_CPU_READ | BUFFER_USAGE_CPU_WRITE | BUFFER_USAGE_MEM_DMA | BUFFER_USAGE_MEM_FB,
         .timeout = 0,
     };
