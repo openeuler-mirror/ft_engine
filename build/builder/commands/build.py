@@ -60,14 +60,16 @@ class Builder:
         if self.args.install:
             logger.info(f"Installing to {self.args.install}.")
             common_output_dir = os.path.join(self.build_output_dir, 'common/common/')
-            files = [entry for entry in os.listdir(common_output_dir) if os.path.isfile(os.path.join(common_output_dir, entry))]
-            for file in files:
-                if file.endswith('.so'):
+            output_files = [entry for entry in os.listdir(common_output_dir) if os.path.isfile(os.path.join(common_output_dir, entry))]
+            for output_file in output_files:
+                if output_file.endswith('.so'):
                     # install dynamic librarys
-                    exec_sys_command(['sudo', 'cp', '-f', os.path.join(self.build_output_dir, 'common/common/', file), os.path.join(self.args.install, 'lib64')])
-                elif os.access(os.path.join(common_output_dir, file), os.X_OK):
+                    rst = exec_sys_command(['sudo', 'cp', '-f', os.path.join(self.build_output_dir, 'common/common/', output_file), os.path.join(self.args.install, 'lib64')])
+                    if rst[0] == False : return False
+                elif os.access(os.path.join(common_output_dir, output_file), os.X_OK):
                     # install binarys
-                    exec_sys_command(['sudo', 'cp', '-f', os.path.join(self.build_output_dir, 'common/common/', file), os.path.join(self.args.install, 'bin')])
+                    rst = exec_sys_command(['sudo', 'cp', '-f', os.path.join(self.build_output_dir, 'common/common/', output_file), os.path.join(self.args.install, 'bin')])
+                    if rst[0] == False : return False
 
         return True
 
