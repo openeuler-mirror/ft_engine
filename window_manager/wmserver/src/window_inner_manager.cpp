@@ -57,7 +57,7 @@ bool WindowInnerManager::Init()
         return false;
     }
 
-    PointerDraw::GetInstance().Init();
+    FangTian::PointerDraw::GetInstance().Init();
 
     WLOGFI("init window inner manager service success.");
     return true;
@@ -312,7 +312,7 @@ void WindowInnerManager::ConsumePointerEvent(const std::shared_ptr<MMI::PointerE
         MMI::PointerEvent::PointerItem pointerItem;
         int32_t pointId = pointerEvent->GetPointerId();
         if (pointerEvent->GetPointerItem(pointId, pointerItem)) {
-            PointerDraw::GetInstance().AsyncMove(pointerItem.GetDisplayX(), pointerItem.GetDisplayY());
+            FangTian::PointerDraw::GetInstance().AsyncMove(pointerItem.GetDisplayX(), pointerItem.GetDisplayY());
         }
     }
 
