@@ -54,21 +54,11 @@ WMError PointerDraw::Init()
 
 void PointerDraw::AsyncMove(int32_t x, int32_t y)
 {
-    int32_t posx = x;
-    if (posx < 0) {
-        posx = 0;
-    }
-    if (posx > displayWidth_) {
-        posx = displayWidth_;
-    }
+    int32_t posx = (x >= 0) ? x : 0;
+    posx = (posx <= displayWidth_) ? posx : displayWidth_;
 
-    int32_t posy = y;
-    if (posy < 0) {
-        posy = 0;
-    }
-    if (posy > displayHeight_) {
-        posy = displayHeight_;
-    }
+    int32_t posy = (y >= 0) ? y : 0;
+    posy = (posy <= displayHeight_) ? posy : displayHeight_;
 
     PostAsyncTask([this, posx, posy]() {
         MoveTo(posx, posy);
