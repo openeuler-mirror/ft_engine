@@ -20,8 +20,10 @@
 #include "ui/rs_surface_extractor.h"
 #include "transaction/rs_transaction.h"
 
-namespace OHOS {
-namespace Rosen {
+using namespace OHOS;
+using namespace OHOS::Rosen;
+
+namespace FangTian {
 namespace {
     constexpr HiviewDFX::HiLogLabel LABEL = {LOG_CORE, HILOG_DOMAIN_WINDOW, "PointerDraw"};
     constexpr int32_t ICON_WIDTH = 30;
@@ -76,7 +78,7 @@ WMError PointerDraw::InitDisplayInfo()
     displayHeight_ = displayInfo->GetHeight();
     displayId_ = DisplayManagerServiceInner::GetInstance().GetDefaultDisplayId();
 
-    if (displayWidth_ <=0 || displayHeight_ <= 0) {
+    if (displayWidth_ <= 0 || displayHeight_ <= 0) {
         WLOGFE("Invalid display info");
         return WMError::WM_ERROR_INVALID_PARAM;
     }
@@ -93,7 +95,7 @@ WMError PointerDraw::InitLayerNode()
         return WMError::WM_ERROR_NULLPTR;
     }
 
-    surfaceNode_->SetBounds(displayWidth_ / 2, displayHeight_ / 2, ICON_WIDTH, ICON_HEIGHT);
+    surfaceNode_->SetBounds(0, 0, ICON_WIDTH, ICON_HEIGHT);
     rsSurface_ = RSSurfaceExtractor::ExtractRSSurface(surfaceNode_);
     if (rsSurface_ == nullptr) {
         WLOGFE("ExtractRSSurface fail");
@@ -111,7 +113,6 @@ WMError PointerDraw::InitLayerNode()
     SkPaint paint;
     paint.setAntiAlias(true);
     paint.setStyle(SkPaint::kFill_Style);
-    paint.setStrokeWidth(20);
     paint.setStrokeJoin(SkPaint::kRound_Join);
     paint.setColor(SK_ColorBLUE);
     canvas->drawRect(SkRect::MakeXYWH(0, 0, ICON_WIDTH, ICON_HEIGHT), paint);
@@ -160,5 +161,4 @@ void PointerDraw::PostAsyncTask(Task task)
         }
     }
 }
-} // Rosen
-} // OHOS
+} // FangTian

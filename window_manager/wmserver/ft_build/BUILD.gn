@@ -25,7 +25,7 @@ config("libwms_config") {
     "$window_manager_path/interfaces/innerkits/wm",
     "$window_manager_path/interfaces/innerkits/dm",
     "$window_manager_path/ft_adapter",
-    "$window_manager_path/pointer_draw",
+    "pointer_draw",
     "$window_manager_path/wm/include",
     "$window_manager_path/utils/include",
     "$window_manager_path/dm/include",
@@ -41,7 +41,6 @@ ft_shared_library("libwms") {
   defines = ft_defines
 
   sources = [
-    "$window_manager_path/pointer_draw/pointer_draw.cpp",
     "$window_manager_path/wm/src/zidl/window_manager_agent_proxy.cpp",
     "$window_manager_path/wm/src/zidl/window_proxy.cpp",
     "$window_manager_path/wmserver/src/accessibility_connection.cpp",
@@ -78,6 +77,7 @@ ft_shared_library("libwms") {
     "$window_manager_path/wmserver/src/window_zorder_policy.cpp",
     "$window_manager_path/wmserver/src/zidl/ressched_report.cpp",
     "$window_manager_path/wmserver/src/zidl/window_manager_stub.cpp",
+    "pointer_draw/pointer_draw.cpp",
   ]
 
   configs = [

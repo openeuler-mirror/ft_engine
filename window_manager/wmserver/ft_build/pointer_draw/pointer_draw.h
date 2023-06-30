@@ -22,12 +22,11 @@
 #include "ui/rs_surface_node.h"
 #include "event_handler.h"
 
-namespace OHOS {
-namespace Rosen {
+namespace FangTian {
 class PointerDraw {
 WM_DECLARE_SINGLE_INSTANCE_BASE(PointerDraw);
 public:
-    WMError Init();
+    OHOS::WMError Init();
     void AsyncMove(int32_t x, int32_t y);
 
 private:
@@ -35,21 +34,20 @@ private:
     virtual ~PointerDraw() = default;
     using Task = std::function<void()>;
 
-    WMError InitDisplayInfo();
-    WMError InitLayerNode();
-    WMError InitDisplayNode();
-    WMError MoveTo(int32_t x, int32_t y);
+    OHOS::WMError InitDisplayInfo();
+    OHOS::WMError InitLayerNode();
+    OHOS::WMError InitDisplayNode();
+    OHOS::WMError MoveTo(int32_t x, int32_t y);
     void PostAsyncTask(Task task);
 
     int32_t displayWidth_ = 0;
     int32_t displayHeight_ = 0;
     uint64_t displayId_ = 0;
-    RSDisplayNode::SharedPtr displayNode_ = nullptr;
-    RSSurfaceNode::SharedPtr surfaceNode_ = nullptr;
-    std::shared_ptr<RSSurface> rsSurface_ = nullptr;
-    std::shared_ptr<AppExecFwk::EventRunner> runner_ = nullptr;
-    std::shared_ptr<AppExecFwk::EventHandler> handler_ = nullptr;
+    OHOS::Rosen::RSDisplayNode::SharedPtr displayNode_ = nullptr;
+    OHOS::Rosen::RSSurfaceNode::SharedPtr surfaceNode_ = nullptr;
+    std::shared_ptr<OHOS::Rosen::RSSurface> rsSurface_ = nullptr;
+    std::shared_ptr<OHOS::AppExecFwk::EventRunner> runner_ = nullptr;
+    std::shared_ptr<OHOS::AppExecFwk::EventHandler> handler_ = nullptr;
 };
-} // namespace Rosen
-} // namespace OHOS
+} // namespace FangTian
 #endif // POINTER_DRAW_H
