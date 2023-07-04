@@ -36,6 +36,15 @@ if [[ "${PROJECT_DIR}x" == "x" ]]; then
   exit 1
 fi
 
+# builder third_party
+cd ${PROJECT_DIR}/third_party/ft_flutter
+./build.sh
+
+cd ${PROJECT_DIR}/third_party/ft_multimedia
+./build.sh
+
+cd ${PROJECT_DIR}
+
 # Exec builder
 python3 ${PROJECT_DIR}/build/builder.py --project-dir ${PROJECT_DIR} build $*
 

@@ -34,4 +34,7 @@ package_deps = [
     # DRM Backend
     "libdrm-devel",
     "systemd-devel",
+    "libpng-devel",
+    "libexif-devel",
+    "cjson-devel",
 ]
