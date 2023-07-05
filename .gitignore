@@ -4,3 +4,4 @@ prebuilts/build-tools
 prebuilts/rpm
 compile_commands.json
 .vscode
+third_party
