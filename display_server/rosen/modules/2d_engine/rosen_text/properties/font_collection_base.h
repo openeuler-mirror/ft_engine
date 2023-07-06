@@ -26,9 +26,9 @@ public:
     FontCollectionBase() {}
     virtual ~FontCollectionBase() {}
 
-    virtual std::shared_ptr<FontCollectionTxtBase> GetFontCollection();
-    virtual void RegisterTestFonts();
-    virtual void LoadFontFromList(const uint8_t* font_data, int length, std::string family_name);
+    virtual std::shared_ptr<FontCollectionTxtBase> GetFontCollection() = 0;
+    virtual void RegisterTestFonts() = 0;
+    virtual void LoadFontFromList(const uint8_t* font_data, int length, std::string family_name) = 0;
     FontCollectionBase(const FontCollectionBase&) = delete;
     FontCollectionBase& operator=(const FontCollectionBase&) = delete;
 };
