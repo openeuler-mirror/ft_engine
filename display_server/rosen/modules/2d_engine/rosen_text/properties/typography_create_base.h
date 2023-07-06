@@ -32,11 +32,11 @@ public:
     TypographyCreateBase() {};
     TypographyCreateBase(const TypographyStyle& style, std::shared_ptr<FontCollection> font_collection);
     virtual ~TypographyCreateBase() {};
-    virtual void PushStyle(const TextStyle& style);
-    virtual void Pop();
-    virtual void AddText(const std::u16string& text);
-    virtual void AddPlaceholder(PlaceholderRun& span);
-    virtual std::unique_ptr<Typography> Build();
+    virtual void PushStyle(const TextStyle& style) = 0;
+    virtual void Pop() = 0;
+    virtual void AddText(const std::u16string& text) = 0;
+    virtual void AddPlaceholder(PlaceholderRun& span) = 0;
+    virtual std::unique_ptr<Typography> Build() = 0;
     TypographyCreateBase(const TypographyCreateBase&) = delete;
     TypographyCreateBase& operator=(const TypographyCreateBase&) = delete;
 };

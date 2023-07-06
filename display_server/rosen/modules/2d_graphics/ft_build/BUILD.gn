@@ -1,0 +1,252 @@
+# Copyright (c) 2022 Huawei Device Co., Ltd.. All rights reserved.
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+import("//build/gn/fangtian.gni")
+import("//ace_engine/ft_build/ace_config.gni")
+import("//third_party/ft_engine/display_server/ft_build/ds_config.gni")
+import(
+    "//third_party/ft_engine/display_server/rosen/modules/2d_engine/rosen_text/ft_build/config.gni")
+
+drawing_src_dir = "$rosen_root/modules/2d_graphics/src/drawing"
+src_dir = "$rosen_root/modules/2d_graphics/src"
+
+template("graphics2d_source_set") {
+  forward_variables_from(invoker, "*")
+
+  ft_source_set(target_name) {
+    defines += invoker.defines
+    cflags_cc += invoker.cflags_cc
+    sources = [
+      "$drawing_src_dir/c/drawing_bitmap.cpp",
+      "$drawing_src_dir/c/drawing_brush.cpp",
+      "$drawing_src_dir/c/drawing_canvas.cpp",
+      "$drawing_src_dir/c/drawing_color.cpp",
+      "$drawing_src_dir/c/drawing_font_collection.cpp",
+      "$drawing_src_dir/c/drawing_path.cpp",
+      "$drawing_src_dir/c/drawing_pen.cpp",
+      "$drawing_src_dir/c/drawing_text_typography.cpp",
+      "$drawing_src_dir/draw/brush.cpp",
+      "$drawing_src_dir/draw/color.cpp",
+      "$drawing_src_dir/draw/core_canvas.cpp",
+      "$drawing_src_dir/draw/path.cpp",
+      "$drawing_src_dir/draw/pen.cpp",
+      "$drawing_src_dir/effect/color_filter.cpp",
+      "$drawing_src_dir/effect/color_space.cpp",
+      "$drawing_src_dir/effect/filter.cpp",
+      "$drawing_src_dir/effect/image_filter.cpp",
+      "$drawing_src_dir/effect/mask_filter.cpp",
+      "$drawing_src_dir/effect/path_effect.cpp",
+      "$drawing_src_dir/effect/shader_effect.cpp",
+      "$drawing_src_dir/engine_adapter/impl_factory.cpp",
+      "$drawing_src_dir/engine_adapter/skia_adapter/skia_bitmap.cpp",
+      "$drawing_src_dir/engine_adapter/skia_adapter/skia_camera.cpp",
+      "$drawing_src_dir/engine_adapter/skia_adapter/skia_canvas.cpp",
+      "$drawing_src_dir/engine_adapter/skia_adapter/skia_color_filter.cpp",
+      "$drawing_src_dir/engine_adapter/skia_adapter/skia_color_space.cpp",
+      "$drawing_src_dir/engine_adapter/skia_adapter/skia_image.cpp",
+      "$drawing_src_dir/engine_adapter/skia_adapter/skia_image_filter.cpp",
+      "$drawing_src_dir/engine_adapter/skia_adapter/skia_impl_factory.cpp",
+      "$drawing_src_dir/engine_adapter/skia_adapter/skia_mask_filter.cpp",
+      "$drawing_src_dir/engine_adapter/skia_adapter/skia_matrix.cpp",
+      "$drawing_src_dir/engine_adapter/skia_adapter/skia_paint.cpp",
+      "$drawing_src_dir/engine_adapter/skia_adapter/skia_path.cpp",
+      "$drawing_src_dir/engine_adapter/skia_adapter/skia_path_effect.cpp",
+      "$drawing_src_dir/engine_adapter/skia_adapter/skia_picture.cpp",
+      "$drawing_src_dir/engine_adapter/skia_adapter/skia_shader_effect.cpp",
+      "$drawing_src_dir/image/bitmap.cpp",
+      "$drawing_src_dir/image/image.cpp",
+      "$drawing_src_dir/image/picture.cpp",
+      "$drawing_src_dir/text/text.cpp",
+      "$drawing_src_dir/utils/camera3d.cpp",
+      "$drawing_src_dir/utils/matrix.cpp",
+    ]
+
+    sources += [
+      "$rosen_text_root/properties/font_collection_txt.cpp",
+      "$rosen_text_root/properties/placeholder_run.cpp",
+      "$rosen_text_root/properties/rosen_converter_txt.cpp",
+      "$rosen_text_root/properties/text_style.cpp",
+      "$rosen_text_root/properties/typography_create_txt.cpp",
+      "$rosen_text_root/properties/typography_style.cpp",
+      "$rosen_text_root/properties/typography_txt.cpp",
+      "$rosen_text_root/ui/font_collection.cpp",
+      "$rosen_text_root/ui/typography.cpp",
+      "$rosen_text_root/ui/typography_create.cpp",
+    ]
+
+    include_dirs = [
+      "../include",
+      "$src_dir",
+      "$drawing_src_dir",
+      "$drawing_src_dir/engine_adapter",
+      "$rosen_2d_engine_root",
+      "//foundation/arkui/ace_engine/frameworks",
+      "//third_party/bounds_checking_function/include",
+    ]
+
+    defines += [ "USE_ACE_SKIA" ]
+
+    if (platform == "ohos") {
+      external_deps = [
+        "hilog_native:libhilog",
+        "multimedia_image_framework:image_native",
+      ]
+      deps = [
+        "$ace_flutter_engine_root:flutter_engine_fml_$platform",
+        "//foundation/graphic/graphic_2d/rosen/build/flutter/icu:rosen_libicu_$platform",
+        "//foundation/graphic/graphic_2d/rosen/build/flutter/libtxt:thirdparty_lib_txt_rosen_$platform",
+        "//third_party/bounds_checking_function:libsec_static",
+      ]
+      include_dirs += [
+        "$flutter_root/engine",
+        "$flutter_root/engine/flutter/third_party/txt/src",
+      ]
+      defines += [ "SUPPORT_OHOS_PIXMAP" ]
+    } else {
+      cflags = [ "-Wno-c++17-extensions" ]
+
+      if (enable_ng_build) {
+        deps = [
+          "$ace_flutter_engine_root_new/third_party/icu:ace_libicu_dev_$platform",
+          "$ace_flutter_engine_root_new/third_party/libtxt:thirdparty_lib_txt_dev_$platform",
+          "$ace_flutter_engine_root_new/third_party/skia:ace_skia_dev_$platform",
+        ]
+        include_dirs += [
+          "$flutter_root_new/engine",
+          "$flutter_root_new/engine/flutter/third_party/txt/src",
+        ]
+        defines += [ "USE_CANVASKIT0310_SKIA" ]
+      } else {
+        deps = [
+          "$ace_flutter_engine_root:flutter_engine_fml_$platform",
+          "$ace_flutter_engine_root/icu:ace_libicu_$platform",
+          "$ace_flutter_engine_root/libtxt:thirdparty_lib_txt_$platform",
+          "$ace_flutter_engine_root/skia:ace_skia_$platform",
+        ]
+        include_dirs += [
+          "$flutter_root/engine",
+          "$flutter_root/engine/flutter/third_party/txt/src",
+        ]
+      }
+
+      if (!is_cross_platform_build) {
+        # deps += [ "//base/hiviewdfx/hilog/frameworks/libhilog:libhilog_source_$platform" ]
+      }
+    }
+    deps += [
+      "//build/gn/configs/system_libs:c_utils",
+    ]
+    part_name = "graphic_standard"
+    subsystem_name = "graphic"
+  }
+}
+
+foreach(item, ace_platforms) {
+  graphics2d_source_set("2d_graphics_source_" + item.name) {
+    platform = item.name
+    defines = []
+
+    if (defined(item.config)) {
+      config = item.config
+    } else {
+      config = {
+      }
+    }
+
+    if (defined(config.defines)) {
+      defines += config.defines
+    }
+
+    if (defined(config.cflags_cc)) {
+      cflags_cc = config.cflags_cc
+    } else {
+      cflags_cc = []
+    }
+  }
+}
+
+if (!is_cross_platform_build) {
+  ## Build 2d_graphics.so
+  ft_shared_library("2d_graphics") {
+    # version_script = "2d_graphics.versionscript"
+    # symlink_target_name = [ "libnative_drawing.so" ]
+    #deps = [ ":2d_graphics_source_ohos" ]
+    #part_name = "graphic_standard"
+    #subsystem_name = "graphic"
+  }
+}
+
+## Build 2d_graphics.so
+# ft_shared_library("2d_graphics_canvaskit0310") {
+#   sources = [
+#     "$drawing_src_dir/draw/brush.cpp",
+#     "$drawing_src_dir/draw/color.cpp",
+#     "$drawing_src_dir/draw/core_canvas.cpp",
+#     "$drawing_src_dir/draw/path.cpp",
+#     "$drawing_src_dir/draw/pen.cpp",
+#     "$drawing_src_dir/effect/color_filter.cpp",
+#     "$drawing_src_dir/effect/color_space.cpp",
+#     "$drawing_src_dir/effect/filter.cpp",
+#     "$drawing_src_dir/effect/image_filter.cpp",
+#     "$drawing_src_dir/effect/mask_filter.cpp",
+#     "$drawing_src_dir/effect/path_effect.cpp",
+#     "$drawing_src_dir/effect/shader_effect.cpp",
+#     "$drawing_src_dir/engine_adapter/impl_factory.cpp",
+#     "$drawing_src_dir/engine_adapter/skia_adapter/skia_bitmap.cpp",
+#     "$drawing_src_dir/engine_adapter/skia_adapter/skia_camera.cpp",
+#     "$drawing_src_dir/engine_adapter/skia_adapter/skia_canvas.cpp",
+#     "$drawing_src_dir/engine_adapter/skia_adapter/skia_color_filter.cpp",
+#     "$drawing_src_dir/engine_adapter/skia_adapter/skia_color_space.cpp",
+#     "$drawing_src_dir/engine_adapter/skia_adapter/skia_image.cpp",
+#     "$drawing_src_dir/engine_adapter/skia_adapter/skia_image_filter.cpp",
+#     "$drawing_src_dir/engine_adapter/skia_adapter/skia_impl_factory.cpp",
+#     "$drawing_src_dir/engine_adapter/skia_adapter/skia_mask_filter.cpp",
+#     "$drawing_src_dir/engine_adapter/skia_adapter/skia_matrix.cpp",
+#     "$drawing_src_dir/engine_adapter/skia_adapter/skia_paint.cpp",
+#     "$drawing_src_dir/engine_adapter/skia_adapter/skia_path.cpp",
+#     "$drawing_src_dir/engine_adapter/skia_adapter/skia_path_effect.cpp",
+#     "$drawing_src_dir/engine_adapter/skia_adapter/skia_picture.cpp",
+#     "$drawing_src_dir/engine_adapter/skia_adapter/skia_shader_effect.cpp",
+#     "$drawing_src_dir/image/bitmap.cpp",
+#     "$drawing_src_dir/image/image.cpp",
+#     "$drawing_src_dir/image/picture.cpp",
+#     "$drawing_src_dir/text/text.cpp",
+#     "$drawing_src_dir/utils/camera3d.cpp",
+#     "$drawing_src_dir/utils/matrix.cpp",
+#   ]
+# 
+#   defines = [ "USE_CANVASKIT0310_SKIA" ]
+# 
+#   include_dirs = [
+#     "include",
+#     "$src_dir",
+#     "$drawing_src_dir",
+#     "$drawing_src_dir/engine_adapter",
+#   ]
+# 
+#   if (!is_cross_platform_build) {
+#     deps = [
+#       "//foundation/graphic/graphic_2d:libsurface",
+#       # "//third_party/skia_canvaskit0310:skia",
+#     ]
+#   }
+# 
+#   external_deps = [
+#     "hilog_native:libhilog",
+#     "multimedia_image_framework:image_native",
+#   ]
+# 
+#   part_name = "graphic_standard"
+#   subsystem_name = "graphic"
+# }
+## Build 2d_graphics.so

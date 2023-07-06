@@ -48,5 +48,3 @@ if (graphic_standard_feature_rs_enable_uni_render) {
 if (graphic_standard_feature_enable_afbc) {
   gpu_defines += [ "RS_ENABLE_AFBC" ]
 }
-
-rosen_root = "//display_server/rosen"

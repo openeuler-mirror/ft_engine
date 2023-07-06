@@ -30,29 +30,29 @@ class TypographyBase {
 public:
     TypographyBase() {};
     virtual ~TypographyBase() {};
-    virtual void Init(std::shared_ptr<TypographyCreateBase> typographyCreateBases);
-    virtual double GetMaxWidth();
-    virtual double GetHeight();
-    virtual double GetLongestLine();
-    virtual double GetMinIntrinsicWidth();
-    virtual double GetMaxIntrinsicWidth();
-    virtual double GetAlphabeticBaseline();
-    virtual double GetIdeographicBaseline();
-    virtual bool DidExceedMaxLines();
-    virtual void Layout(double width);
-    virtual void Paint(Canvas* canvas, double x, double y);
+    virtual void Init(std::shared_ptr<TypographyCreateBase> typographyCreateBases) = 0;
+    virtual double GetMaxWidth() = 0;
+    virtual double GetHeight() = 0;
+    virtual double GetLongestLine() = 0;
+    virtual double GetMinIntrinsicWidth() = 0;
+    virtual double GetMaxIntrinsicWidth() = 0;
+    virtual double GetAlphabeticBaseline() = 0;
+    virtual double GetIdeographicBaseline() = 0;
+    virtual bool DidExceedMaxLines() = 0;
+    virtual void Layout(double width) = 0;
+    virtual void Paint(Canvas* canvas, double x, double y) = 0;
     virtual std::vector<TypographyProperties::TextBox> GetRectsForRange(
         size_t start,
         size_t end,
         TypographyProperties::RectHeightStyle heightStyle,
-        TypographyProperties::RectWidthStyle widthStyle);
-    virtual std::vector<TypographyProperties::TextBox> GetRectsForPlaceholders();
+        TypographyProperties::RectWidthStyle widthStyle) = 0;
+    virtual std::vector<TypographyProperties::TextBox> GetRectsForPlaceholders() = 0;
     virtual TypographyProperties::PositionAndAffinity GetGlyphPositionAtCoordinate(double dx,
-        double dy);
+        double dy) = 0;
 
     virtual TypographyProperties::PositionAndAffinity GetGlyphPositionAtCoordinateWithCluster(double dx,
-        double dy);
-    virtual TypographyProperties::Range<size_t> GetWordBoundary(size_t offset);
+        double dy) = 0;
+    virtual TypographyProperties::Range<size_t> GetWordBoundary(size_t offset) = 0;
 };
 } // namespace rosen
 #endif // ROSEN_TEXT_UI_TEXT_TYPOGRAPHY_H_
