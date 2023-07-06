@@ -119,7 +119,7 @@ if [ ! -d ${PROJECT_DIR}/third_party/ft_flutter ]; then
 git clone https://gitee.com/openeuler/ft_flutter.git ${PROJECT_DIR}/third_party/ft_flutter
 cd ${PROJECT_DIR}/third_party/ft_flutter
 ./project_build/prebuild.sh
-./build.sh
+./build.sh -i
 fi
 
 if [ ! -d ${PROJECT_DIR}/third_party/ft_multimedia ]; then
