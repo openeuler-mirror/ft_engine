@@ -25,8 +25,7 @@ config("render_service_base_public_config") {
 }
 
 ft_source_set("render_service_base_src") {
-  defines = ["__FANGTIAN__"]
-  defines += [ "MODULE_RSB" ]
+  defines = [ "MODULE_RSB" ]
 
   sources = [
     #animation

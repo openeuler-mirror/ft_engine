@@ -18,7 +18,9 @@
 
 #include <map>
 #include <unordered_set>
-
+#ifdef _FANGTIAN
+#include<semaphore.h>
+#endif
 #include <singleton.h>
 #include <system_ability.h>
 #include "screen_manager/rs_screen_manager.h"
@@ -73,6 +75,9 @@ private:
 
     sptr<VSyncDistributor> rsVSyncDistributor_;
     sptr<VSyncDistributor> appVSyncDistributor_;
+#ifdef _FANGTIAN
+    sem_t initThreadFinish;
+#endif
 };
 } // Rosen
 } // OHOS
