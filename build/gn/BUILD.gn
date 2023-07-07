@@ -25,6 +25,12 @@ group("ft_window_manager") {
   ]
 }
 
+group("samples") {
+  deps = [
+    "//samples:clock",
+  ]
+}
+
 group("ft_test") {
   testonly = true
 
