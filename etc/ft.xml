@@ -17,8 +17,9 @@
     <process>FT</process>
     <loadlibs>
         <libpath>/usr/lib64/librender_service.so</libpath>
-        <libpath>/usr/lib64/libwms.so</libpath>
+        <libpath>/usr/lib64/libmmi-server.so</libpath>
         <libpath>/usr/lib64/libdms.so</libpath>
+        <libpath>/usr/lib64/libwms.so</libpath>
     </loadlibs>
 
     <systemability>
@@ -30,8 +31,8 @@
     </systemability>
 
     <systemability>
-        <name>4606</name>
-        <libpath>/usr/lib64/libwms.so</libpath>
+        <name>3101</name>
+        <libpath>/usr/lib64/libmmi-server.so</libpath>
         <run-on-create>true</run-on-create>
         <distributed>false</distributed>
         <dump-level>1</dump-level>
@@ -40,6 +41,14 @@
     <systemability>
         <name>4607</name>
         <libpath>/usr/lib64/libdms.so</libpath>
+        <run-on-create>true</run-on-create>
+        <distributed>false</distributed>
+        <dump-level>1</dump-level>
+    </systemability>
+
+    <systemability>
+        <name>4606</name>
+        <libpath>/usr/lib64/libwms.so</libpath>
         <run-on-create>true</run-on-create>
         <distributed>false</distributed>
         <dump-level>1</dump-level>
