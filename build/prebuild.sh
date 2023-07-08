@@ -145,5 +145,12 @@ cd ${PROJECT_DIR}/third_party/ft_multimedia
 ./build.sh
 fi
 
+if [ ! -d ${PROJECT_DIR}/third_party/ft_mmi ]; then
+git clone https://gitee.com/openeuler/ft_mmi.git ${PROJECT_DIR}/third_party/ft_mmi
+cd ${PROJECT_DIR}/third_party/ft_mmi
+./build/prebuild.sh
+./build.sh
+fi
+
 cd ${PROJECT_DIR}
 echo -e "\033[32m[*] Pre-build Done. You need exec 'build.sh'.\033[0m"
