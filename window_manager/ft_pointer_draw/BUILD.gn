@@ -19,7 +19,6 @@ config("pointer_draw_config") {
 
   cflags = [
     "-Wno-c++11-narrowing",
-    "-DUSE_IMITATE_POINTER",
   ]
 
   include_dirs = [

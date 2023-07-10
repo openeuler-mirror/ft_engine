@@ -112,5 +112,6 @@ ft_source_set("rosen_fangtian_sources") {
     "$rosen_root/modules/composer/vsync/ft_build:libvsync",
     "$display_server_root/utils/sync_fence/ft_build:sync_fence",
     "$display_server_root/utils/sandbox/ft_build:sandbox_utils",
+    "//build/gn/configs/system_libs:image",
   ]
 }
