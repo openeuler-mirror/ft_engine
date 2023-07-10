@@ -17,7 +17,6 @@
 
 #include "ability_manager_client.h"
 #include "memory_guard.h"
-#include "pointer_draw.h"
 #include "window.h"
 #include "window_manager_hilog.h"
 
@@ -56,8 +55,6 @@ bool WindowInnerManager::Init()
         WLOGFE("Init window drag controller failed");
         return false;
     }
-
-    FangTian::PointerDraw::GetInstance().Init();
 
     WLOGFI("init window inner manager service success.");
     return true;
@@ -307,15 +304,6 @@ void WindowInnerManager::NotifyWindowRemovedOrDestroyed(uint32_t windowId)
 
 void WindowInnerManager::ConsumePointerEvent(const std::shared_ptr<MMI::PointerEvent>& pointerEvent)
 {
-    if (pointerEvent->GetPointerAction() == MMI::PointerEvent::POINTER_ACTION_MOVE &&
-        pointerEvent->GetSourceType() == MMI::PointerEvent::SOURCE_TYPE_MOUSE) {
-        MMI::PointerEvent::PointerItem pointerItem;
-        int32_t pointId = pointerEvent->GetPointerId();
-        if (pointerEvent->GetPointerItem(pointId, pointerItem)) {
-            FangTian::PointerDraw::GetInstance().AsyncMove(pointerItem.GetDisplayX(), pointerItem.GetDisplayY());
-        }
-    }
-
     uint32_t windowId = static_cast<uint32_t>(pointerEvent->GetAgentWindowId());
     if (moveDragController_->GetActiveWindowId() != windowId ||
         moveDragController_->GetActiveWindowId() == INVALID_WINDOW_ID) {

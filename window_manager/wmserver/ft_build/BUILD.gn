@@ -25,7 +25,6 @@ config("libwms_config") {
     "$window_manager_path/interfaces/innerkits/wm",
     "$window_manager_path/interfaces/innerkits/dm",
     "$window_manager_path/ft_adapter",
-    "pointer_draw",
     "$window_manager_path/wm/include",
     "$window_manager_path/utils/include",
     "$window_manager_path/dm/include",
@@ -77,7 +76,6 @@ ft_shared_library("libwms") {
     "$window_manager_path/wmserver/src/window_zorder_policy.cpp",
     "$window_manager_path/wmserver/src/zidl/ressched_report.cpp",
     "$window_manager_path/wmserver/src/zidl/window_manager_stub.cpp",
-    "pointer_draw/pointer_draw.cpp",
   ]
 
   configs = [
@@ -94,10 +92,11 @@ ft_shared_library("libwms") {
     "$window_manager_path/dmserver/ft_build:libdms",
     "$window_manager_path/utils/ft_build:libwmutil",
     "$window_manager_path/wm/ft_build:libwm",
+
+    "//build/gn/configs/system_libs:safwk",
     "//build/gn/configs/system_libs:eventhandler",
+    "//build/gn/configs/system_libs:skia",
     "//build/gn/configs/system_libs:image",
     "//build/gn/configs/system_libs:mmi",
-    "//build/gn/configs/system_libs:safwk",
-    "//build/gn/configs/system_libs:skia",
   ]
 }
