@@ -16,9 +16,9 @@ config("display_gralloc_public_config") {
   include_dirs = [
     "//display_server/drivers/hal/drm_backend/display_gralloc",
     "//display_server/drivers/hal/drm_backend/include",
-
     "//display_server/drivers/interfaces",
     "//display_server/drivers/base",
+    "${usr_inc}/ftsurface",
   ]
 }
 

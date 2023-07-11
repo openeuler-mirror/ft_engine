@@ -19,7 +19,6 @@
 #include <memory>
 
 #include "unique_fd.h"
-#include "buffer_handle.h"
 #include "display_type.h"
 #include "noncopyable_hal.h"
 

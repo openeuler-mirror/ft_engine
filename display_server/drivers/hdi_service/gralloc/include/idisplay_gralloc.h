@@ -18,7 +18,6 @@
 
 #include <vector>
 #include "display_type.h"
-#include "buffer_handle.h"
 
 namespace OHOS {
 namespace HDI {

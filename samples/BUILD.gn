@@ -24,7 +24,8 @@ ft_executable("clock") {
 
   cflags = [ "-Wno-c++11-narrowing" ]
   if (enable_gpu) {
-      defines = [ "ENABLE_GPU" ]
+    defines = [ "ENABLE_GPU" ]
+    libs = [ "EGL", "GLESv2" ]
   }
 
   include_dirs = [
@@ -46,5 +47,4 @@ ft_executable("clock") {
     "//build/gn/configs/system_libs:c_utils",
     "//build/gn/configs/system_libs:ipc_core",
   ]
-  libs = [ "EGL", "GLESv2" ]
 }
