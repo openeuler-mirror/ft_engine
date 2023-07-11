@@ -18,7 +18,6 @@
 #include <memory>
 #include <gbm.h>
 
-#include "buffer_handle.h"
 #include "display_type.h"
 #include "drm_common.h"
 

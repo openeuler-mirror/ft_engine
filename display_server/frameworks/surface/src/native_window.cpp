@@ -41,7 +41,7 @@ OHNativeWindow* CreateNativeWindowFromSurface(void* pSurface)
     nativeWindow->config.width = nativeWindow->surface->GetDefaultWidth();
     nativeWindow->config.height = nativeWindow->surface->GetDefaultHeight();
     nativeWindow->config.usage = BUFFER_USAGE_CPU_READ | BUFFER_USAGE_MEM_DMA;
-    nativeWindow->config.format = GRAPHIC_PIXEL_FMT_RGBA_8888;
+    nativeWindow->config.format = GRAPHIC_PIXEL_FMT_BGRA_8888; // TODO get from hal
     nativeWindow->config.strideAlignment = 8;   // default stride is 8
     nativeWindow->config.timeout = 3000;        // default timeout is 3000 ms
     nativeWindow->config.colorGamut = GraphicColorGamut::GRAPHIC_COLOR_GAMUT_SRGB;
