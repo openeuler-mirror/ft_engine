@@ -16,7 +16,6 @@
 #ifndef HDI_DISPLAY_GRALLOC_CLIENT_V1_0_H
 #define HDI_DISPLAY_GRALLOC_CLIENT_V1_0_H
 
-#include "buffer_handle.h"
 #include "display_type.h"
 #include "idisplay_gralloc.h"
 #include "allocator_adapter.h"

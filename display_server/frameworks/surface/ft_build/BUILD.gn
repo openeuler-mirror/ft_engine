@@ -33,6 +33,7 @@ config("surface_public_config") {
     "$display_server_root/interfaces/inner_api/common",
     "$display_server_root/utils/sandbox",
     "$display_server_root/utils/buffer_handle/export",
+    "${usr_inc}/ftsurface",
   ]
 
   defines = gpu_defines
