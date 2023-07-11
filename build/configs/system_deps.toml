@@ -37,4 +37,6 @@ package_deps = [
     "libpng-devel",
     "libexif-devel",
     "cjson-devel",
+    # GPU render
+    "openssl-devel",
 ]
