@@ -19,7 +19,6 @@
 #include "display_gralloc_private.h"
 #include "hi_gbm_format.h"
 #include "display_type.h"
-#include "buffer_handle.h"
 #include "log.h"
 #include "types.h"
 

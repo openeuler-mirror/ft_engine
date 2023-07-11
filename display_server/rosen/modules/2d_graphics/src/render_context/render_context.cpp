@@ -291,9 +291,10 @@ sk_sp<SkSurface> RenderContext::AcquireSurface(int width, int height)
 
     GrGLFramebufferInfo framebufferInfo;
     framebufferInfo.fFBOID = 0;
+
     framebufferInfo.fFormat = GL_RGBA8;
 
-    SkColorType colorType = kRGBA_8888_SkColorType; // TODO: check whether colorType is right
+    SkColorType colorType = kRGBA_8888_SkColorType;
 
     GrBackendRenderTarget backendRenderTarget(width, height, 0, 8, framebufferInfo);
     SkSurfaceProps surfaceProps = SkSurfaceProps::kLegacyFontHost_InitType;

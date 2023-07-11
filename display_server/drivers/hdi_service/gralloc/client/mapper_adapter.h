@@ -16,7 +16,6 @@
 #ifndef HDI_MAPPER_ADAPTER_V1_0_H
 #define HDI_MAPPER_ADAPTER_V1_0_H
 
-#include "buffer_handle.h"
 #include "display_gralloc.h"
 #include "display_type.h"
 

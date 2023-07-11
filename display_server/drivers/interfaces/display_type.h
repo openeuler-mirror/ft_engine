@@ -46,7 +46,7 @@
 #include <sys/types.h>
 #include <unistd.h>
 #include <stdint.h>
-#include "buffer_handle.h"
+#include "ftsurface/buffer_handle.h"
 
 #ifdef __cplusplus
 extern "C" {

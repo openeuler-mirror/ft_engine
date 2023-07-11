@@ -103,7 +103,7 @@ sk_sp<SkImage> RSBaseRenderEngine::CreateEglImageFromBuffer(
     }
     SkColorType colorType = (buffer->GetFormat() == PIXEL_FMT_BGRA_8888) ?
         kBGRA_8888_SkColorType : kRGBA_8888_SkColorType;
-    GrGLTextureInfo grExternalTextureInfo = { GL_TEXTURE_EXTERNAL_OES, eglTextureId, GL_RGBA8 };
+    GrGLTextureInfo grExternalTextureInfo = { GL_TEXTURE_EXTERNAL_OES, eglTextureId, GL_BGRA8_EXT}; // TODO get from hal
     GrBackendTexture backendTexture(buffer->GetSurfaceBufferWidth(), buffer->GetSurfaceBufferHeight(),
         GrMipMapped::kNo, grExternalTextureInfo);
     return SkImage::MakeFromTexture(renderContext_->GetGrContext(), backendTexture,

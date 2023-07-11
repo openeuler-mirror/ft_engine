@@ -94,22 +94,6 @@ fi
 cd ${FT_PREBUILD_DIR}/inc
 sudo cp -fr * /usr/local/include
 
-# install ft_surface_wrapper
-if [ ! -d ${FT_PREBUILD_DIR}/rpm/ft_surface_wrapper ]; then
-    git clone https://gitee.com/ShaoboFeng/ft_surface_wrapper.git ${FT_PREBUILD_DIR}/rpm/ft_surface_wrapper
-fi
-cd ${FT_PREBUILD_DIR}/rpm/ft_surface_wrapper/
-if [ ! -d ${FT_PREBUILD_DIR}/rpm/ft_surface_wrapper/build ]; then
-    mkdir build
-fi
-
-cd build
-cmake ..
-make -j6
-sudo make install
-rm -fr ${FT_PREBUILD_DIR}/rpm/ft_surface_wrapper
-cd ${PROJECT_DIR}
-
 # install mesa_fangtian
 if [ ! -d ${FT_PREBUILD_DIR}/rpm/binary ]; then
     git clone https://gitee.com/ShaoboFeng/rpm-fangtian.git ${FT_PREBUILD_DIR}/rpm/binary
