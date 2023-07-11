@@ -75,7 +75,7 @@ bool RSRenderService::Init()
     RSQosThread::GetInstance()->appVSyncDistributor_ = appVSyncDistributor_;
     RSQosThread::ThreadStart();
 
-#ifndef __FANGTIAN__
+#ifndef _FANGTIAN
     // Wait samgr ready for up to 5 second to ensure adding service to samgr.
     int status = WaitParameter("bootevent.samgr.ready", "true", 5);
     if (status != 0) {
@@ -92,15 +92,21 @@ void RSRenderService::Run()
     mainThread_->Start();
 }
 
+#ifdef _FANGTIAN
 void RSRenderService::OnStart()
 {
     RS_LOGI("RSRenderService::OnStart");
-    Init();
-
+    sem_init(&initThreadFinish, 0, 0);
     std::thread rsThread([this]() {
+        Init();
+        sem_post(&initThreadFinish);
         Run();
     });
     rsThread.detach();
+
+    if(0 != sem_wait(&initThreadFinish)) {
+        RS_LOGE("wait start rs failed");
+    }
 
     if (!Publish(this)) {
         RS_LOGE("Publish failed");
@@ -116,6 +122,7 @@ void RSRenderService::OnAddSystemAbility(int32_t systemAbilityId, const std::str
 {
     RS_LOGI("systemAbilityId: %{public}d, start", systemAbilityId);
 }
+#endif //_FANGTIAN
 
 sptr<RSIRenderServiceConnection> RSRenderService::CreateConnection(const sptr<RSIConnectionToken>& token)
 {
