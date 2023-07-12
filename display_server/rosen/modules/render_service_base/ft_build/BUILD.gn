@@ -159,7 +159,6 @@ ft_source_set("render_service_base_src") {
   ]
   deps = [
     "../src/platform/fangtian:rosen_fangtian_sources",
-    "mock:mock_image_native",
   ]
 
   if (enable_export_macro) {
@@ -189,6 +188,7 @@ ft_source_set("render_service_base_src") {
     "//build/gn/configs/system_libs:hitrace_meter",
     "//build/gn/configs/system_libs:eventhandler",
     "//build/gn/configs/system_libs:skia",
+    "//build/gn/configs/system_libs:image",
   ]
 
   public_deps = [
