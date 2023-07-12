@@ -11,31 +11,16 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-title = "Fangtian System Dependencies"
+import("//build/gn/fangtian.gni")
+import("//config.gni")
 
-[dependencies]
-supported_os = ["openeuler"]
+ft_executable("wms_window_subwindow_test") {
+  sources = [ "window_subwindow_test.cpp" ]
 
-[dependencies.openeuler]
-supported_version = ["22.03"]
+  libs = [ "gtest" ]
 
-[openeuler."22.03"]
-package_deps = [
-    "clang",
-    "compiler-rt",
-    "llvm-devel",
-    "python3",
-    "tar",
-    "cmake",
-    "make",
-    "gtest-devel",
-    "ninja-build",
-    "libxml2-devel",
-    "libpng-devel",
-    "libicu",
-    # DRM Backend
-    "libdrm-devel",
-    "systemd-devel",
-    "libexif-devel",
-    "cjson-devel",
-]
+  deps = [
+    "$window_manager_path/wm/ft_build:libwm",
+    "//build/gn/configs/system_libs:image",
+  ]
+}
