@@ -120,6 +120,7 @@ ft_source_set("render_service_client_src") {
     "//build/gn/configs/system_libs:ipc_core",
     "//build/gn/configs/system_libs:skia",
     "//build/gn/configs/system_libs:hitrace_meter",
+    "//build/gn/configs/system_libs:image",
   ]
 
   public_configs = [ ":render_service_client_public_config" ]
