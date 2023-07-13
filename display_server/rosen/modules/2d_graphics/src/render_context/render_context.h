@@ -20,6 +20,8 @@
 #include "common/rs_rect.h"
 #include "EGL/egl.h"
 #include "EGL/eglext.h"
+#include "GLES2/gl2.h"
+#include "GLES2/gl2ext.h"
 #include "GLES3/gl32.h"
 #include "include/core/SkCanvas.h"
 #include "include/core/SkColorSpace.h"
@@ -34,6 +36,8 @@
 #endif
 
 #define GLES_VERSION 2
+#define GET_MAX_EGL_CONFIG 5
+
 namespace OHOS {
 namespace Rosen {
 class RenderContext {
@@ -111,7 +115,7 @@ private:
     EGLContext eglContext_ = EGL_NO_CONTEXT;
     EGLSurface eglSurface_ = EGL_NO_SURFACE;
     EGLSurface pbufferSurface_= EGL_NO_SURFACE;
-    EGLConfig config_;
+    EGLConfig config_ = nullptr;
 #ifndef ROSEN_CROSS_PLATFORM
     ColorGamut colorSpace_ = ColorGamut::COLOR_GAMUT_SRGB;
 #endif
