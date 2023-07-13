@@ -24,3 +24,25 @@ ft_executable("wms_window_subwindow_test") {
     "//build/gn/configs/system_libs:image",
   ]
 }
+
+ft_executable("wms_window_move_test") {
+  sources = [ "window_move_test.cpp" ]
+
+  libs = [ "gtest" ]
+
+  deps = [
+    "$window_manager_path/wm/ft_build:libwm",
+    "//build/gn/configs/system_libs:image",
+  ]
+}
+
+ft_executable("wms_window_scale_test") {
+  sources = [ "window_scale_test.cpp" ]
+
+  libs = [ "gtest" ]
+
+  deps = [
+    "$window_manager_path/wm/ft_build:libwm",
+    "//build/gn/configs/system_libs:image",
+  ]
+}
