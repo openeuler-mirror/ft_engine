@@ -16,7 +16,7 @@ import("//config.gni")
 
 
 declare_args() {
-  enable_gpu = false
+  enable_gpu = true
 }
 
 ft_executable("clock") {
