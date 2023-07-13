@@ -34,23 +34,25 @@ void WindowScaleTest::TearDown()
 {
 }
 
-static sptr<Window> CreateMainWindow()
+static sptr<Window> CreateWindow(WindowMode mode)
 {
     sptr<WindowOption> mainOption(new WindowOption());
-    mainOption->SetWindowRect({0, 0, 100, 100});
     mainOption->SetWindowType(WindowType::WINDOW_TYPE_APP_MAIN_WINDOW);
-    mainOption->SetWindowMode(WindowMode::WINDOW_MODE_FLOATING);
-    return Window::Create("main_window", mainOption);
+    mainOption->SetWindowMode(mode);
+    if (mode != WindowMode::WINDOW_MODE_FULLSCREEN) {
+        mainOption->SetWindowRect({0, 0, 600, 600});
+    }
+    return Window::Create("window", mainOption);
 }
 
 /**
- * @tc.name: Resize
- * @tc.desc: Window Resize
+ * @tc.name: Resize01
+ * @tc.desc: Floating Window
  * @tc.type: FUNC
  */
-TEST_F(WindowScaleTest, Resize)
+TEST_F(WindowScaleTest, Resize01)
 {
-    sptr<Window> window = CreateMainWindow();
+    sptr<Window> window = CreateWindow(WindowMode::WINDOW_MODE_FLOATING);
     ASSERT_EQ(WMError::WM_OK, window->Show());
 
     ASSERT_EQ(WMError::WM_OK, window->Resize(300, 300));
@@ -68,13 +70,103 @@ TEST_F(WindowScaleTest, Resize)
 }
 
 /**
+ * @tc.name: Resize02
+ * @tc.desc: Fullscreen Window
+ * @tc.type: FUNC
+ */
+TEST_F(WindowScaleTest, Resize02)
+{
+    sptr<Window> window = CreateWindow(WindowMode::WINDOW_MODE_FULLSCREEN);
+    ASSERT_EQ(WMError::WM_OK, window->Show());
+
+    ASSERT_NE(WMError::WM_OK, window->Resize(300, 300));
+
+    ASSERT_EQ(WMError::WM_OK, window->Hide());
+    sleep(1);
+
+    window->Destroy();
+}
+
+/**
+ * @tc.name: Resize03
+ * @tc.desc: Undefined Window
+ * @tc.type: FUNC
+ */
+TEST_F(WindowScaleTest, Resize03)
+{
+    sptr<Window> window = CreateWindow(WindowMode::WINDOW_MODE_UNDEFINED);
+    ASSERT_EQ(WMError::WM_OK, window->Show());
+
+    ASSERT_NE(WMError::WM_OK, window->Resize(300, 300));
+
+    ASSERT_EQ(WMError::WM_OK, window->Hide());
+    sleep(1);
+
+    window->Destroy();
+}
+
+/**
+ * @tc.name: Resize04
+ * @tc.desc: Pip Window
+ * @tc.type: FUNC
+ */
+TEST_F(WindowScaleTest, Resize04)
+{
+    sptr<Window> window = CreateWindow(WindowMode::WINDOW_MODE_PIP);
+    ASSERT_EQ(WMError::WM_OK, window->Show());
+
+    ASSERT_NE(WMError::WM_OK, window->Resize(300, 300));
+
+    ASSERT_EQ(WMError::WM_OK, window->Hide());
+    sleep(1);
+
+    window->Destroy();
+}
+
+/**
+ * @tc.name: Resize05
+ * @tc.desc: Split Primary Window
+ * @tc.type: FUNC
+ */
+TEST_F(WindowScaleTest, Resize05)
+{
+    sptr<Window> window = CreateWindow(WindowMode::WINDOW_MODE_SPLIT_PRIMARY);
+    ASSERT_EQ(WMError::WM_OK, window->Show());
+
+    ASSERT_NE(WMError::WM_OK, window->Resize(300, 300));
+
+    ASSERT_EQ(WMError::WM_OK, window->Hide());
+    sleep(1);
+
+    window->Destroy();
+}
+
+/**
+ * @tc.name: Resize06
+ * @tc.desc: Split Secondary Window
+ * @tc.type: FUNC
+ */
+TEST_F(WindowScaleTest, Resize06)
+{
+    sptr<Window> window = CreateWindow(WindowMode::WINDOW_MODE_SPLIT_SECONDARY);
+    ASSERT_EQ(WMError::WM_OK, window->Show());
+
+    ASSERT_NE(WMError::WM_OK, window->Resize(300, 300));
+
+    ASSERT_EQ(WMError::WM_OK, window->Hide());
+    sleep(1);
+
+    window->Destroy();
+}
+
+/**
  * @tc.name: Transform
- * @tc.desc: Window Transform
+ * @tc.desc: Transform
  * @tc.type: FUNC
  */
 TEST_F(WindowScaleTest, Transform)
 {
-    sptr<Window> window = CreateMainWindow();
+    sptr<Window> window = CreateWindow(WindowMode::WINDOW_MODE_FLOATING);
     ASSERT_EQ(WMError::WM_OK, window->Show());
 
     Transform trans;
