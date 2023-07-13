@@ -17,6 +17,12 @@ import("//display_server/ft_build/ds_config.gni")
 ft_executable("render_service_client_rs_demo") {
   sources = [ "../render_service_client_rs_demo.cpp" ]
 
+  defines = []
+  if (ds_enable_gpu) {
+    defines += [ "ACE_ENABLE_GPU" ]
+  }
+  defines += gpu_defines
+
   include_dirs = [
     "$display_server_root/rosen/modules/render_service_base/src",
     "$display_server_root/rosen/include",
@@ -35,6 +41,12 @@ ft_executable("render_service_client_rs_demo") {
 
 ft_executable("render_service_client_gravity_demo") {
   sources = [ "../render_service_client_gravity_demo.cpp" ]
+
+  defines = []
+  if (ds_enable_gpu) {
+    defines += [ "ACE_ENABLE_GPU" ]
+  }
+  defines += gpu_defines
 
   cflags = [ "-Wno-c++11-narrowing" ]
 
