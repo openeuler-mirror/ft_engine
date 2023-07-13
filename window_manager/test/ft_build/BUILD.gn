@@ -21,6 +21,9 @@ ft_executable("wms_window_subwindow_test") {
 
   deps = [
     "$window_manager_path/wm/ft_build:libwm",
+    "$window_manager_path/utils/ft_build:libwmutil",
+    "$window_manager_path/dm/ft_build:libdm",
+    "$display_server_root/rosen/modules/render_service_client/ft_build:librender_service_client",
     "//build/gn/configs/system_libs:image",
   ]
 }
@@ -32,6 +35,9 @@ ft_executable("wms_window_move_test") {
 
   deps = [
     "$window_manager_path/wm/ft_build:libwm",
+    "$window_manager_path/utils/ft_build:libwmutil",
+    "$window_manager_path/dm/ft_build:libdm",
+    "$display_server_root/rosen/modules/render_service_client/ft_build:librender_service_client",
     "//build/gn/configs/system_libs:image",
   ]
 }
@@ -43,6 +49,9 @@ ft_executable("wms_window_scale_test") {
 
   deps = [
     "$window_manager_path/wm/ft_build:libwm",
+    "$window_manager_path/utils/ft_build:libwmutil",
+    "$window_manager_path/dm/ft_build:libdm",
+    "$display_server_root/rosen/modules/render_service_client/ft_build:librender_service_client",
     "//build/gn/configs/system_libs:image",
   ]
 }
