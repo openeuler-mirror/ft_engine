@@ -20,6 +20,7 @@
 
 #include "ui/rs_surface_extractor.h"
 #include "transaction/rs_transaction.h"
+#include "transaction/rs_interfaces.h"
 #include "image_source.h"
 
 using namespace OHOS;
@@ -199,6 +200,13 @@ WMError PointerDrawingManager::InitDisplayNode()
         WLOGFE("RSDisplayNode::Create fail");
         return WMError::WM_ERROR_NULLPTR;
     }
+
+    displayId_ = Rosen::RSInterfaces::GetInstance().GetDefaultScreenId();
+    auto activeModeInfo = Rosen::RSInterfaces::GetInstance().GetScreenActiveMode(displayId_);
+    displayWidth_ = activeModeInfo.GetScreenWidth();
+    displayHeight_ = activeModeInfo.GetScreenHeight();
+    WLOGFD("Screen info: ScreenId=%{public}d, Width=%{public}d, Height=%{public}d",
+        displayId_, displayWidth_, displayHeight_);
 
     displayNode_->SetScreenId(displayId_);
     displayNode_->SetBounds(0, 0, displayWidth_, displayHeight_);
