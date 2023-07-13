@@ -89,6 +89,7 @@ void RSPhysicalScreenProcessor::Redraw(const sptr<Surface>& surface, const std::
         RS_LOGE("RsDebug RSPhysicalScreenProcessor::Redraw：canvas is nullptr.");
         return;
     }
+    canvas->clear(SK_ColorTRANSPARENT);
     canvas->concat(screenTransformMatrix_);
     renderEngine_->DrawLayers(*canvas, layers, forceCPU, mirrorAdaptiveCoefficient_);
     renderFrame->Flush();
