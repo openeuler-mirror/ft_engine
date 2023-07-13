@@ -17,9 +17,6 @@
 
 #include <sstream>
 #include <string>
-
-#include "EGL/egl.h"
-#include "EGL/eglext.h"
 #include "rs_trace.h"
 #include "window.h"
 
@@ -166,11 +163,26 @@ void RenderContext::InitializeEglContext()
     EGLint count;
     EGLint config_attribs[] = { EGL_SURFACE_TYPE, EGL_WINDOW_BIT, EGL_RED_SIZE, 8, EGL_GREEN_SIZE, 8, EGL_BLUE_SIZE, 8,
         EGL_ALPHA_SIZE, 8, EGL_RENDERABLE_TYPE, EGL_OPENGL_ES2_BIT, EGL_NONE };
+    EGLConfig configs[GET_MAX_EGL_CONFIG];
 
-    ret = eglChooseConfig(eglDisplay_, config_attribs, &config_, 1, &count);
+    ret = eglChooseConfig(eglDisplay_, config_attribs, configs, GET_MAX_EGL_CONFIG, &count);
     if (!(ret && static_cast<unsigned int>(count) >= 1)) {
         LOGE("Failed to eglChooseConfig");
         return;
+    }
+
+    EGLint value;
+    for (int i = 0; i< count; i++) {
+        if (eglGetConfigAttrib(eglDisplay_, configs[i], EGL_NATIVE_VISUAL_ID, &value)) {
+            if (value == PIXEL_FMT_BGRA_8888) { // get from hal
+                config_ = configs[i];
+                break;
+            }
+        }
+    }
+    if (config_ == nullptr) {
+        LOGE("Failed to get egl config, default set first config\n");
+	config_ = configs[0];
     }
 
     static const EGLint context_attribs[] = { EGL_CONTEXT_CLIENT_VERSION, EGL_CONTEXT_CLIENT_VERSION_NUM, EGL_NONE };
@@ -291,7 +303,6 @@ sk_sp<SkSurface> RenderContext::AcquireSurface(int width, int height)
 
     GrGLFramebufferInfo framebufferInfo;
     framebufferInfo.fFBOID = 0;
-
     framebufferInfo.fFormat = GL_RGBA8;
 
     SkColorType colorType = kRGBA_8888_SkColorType;
