@@ -13,17 +13,13 @@
 
 import("//build/gn/fangtian.gni")
 import("//config.gni")
-
-
-declare_args() {
-  enable_gpu = true
-}
+import("//display_server/ft_build/ds_config.gni")
 
 ft_executable("clock") {
   sources = [ "clock.cpp" ]
 
   cflags = [ "-Wno-c++11-narrowing" ]
-  if (enable_gpu) {
+  if (ds_enable_gpu) {
     defines = [ "ENABLE_GPU" ]
     libs = [ "EGL", "GLESv2" ]
   }
