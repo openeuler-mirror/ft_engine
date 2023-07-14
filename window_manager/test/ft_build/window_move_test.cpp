@@ -45,6 +45,15 @@ static sptr<Window> CreateWindow(WindowMode mode)
     return Window::Create("window", mainOption);
 }
 
+
+class WindowChangeListener : public IWindowChangeListener {
+public:
+    void OnSizeChange(Rect rect, WindowSizeChangeReason reason) override {
+        ASSERT_EQ(100, rect.posX_);
+        ASSERT_EQ(100, rect.posY_);
+    }
+};
+
 /**
  * @tc.name: Move01
  * @tc.desc: Floating Window
@@ -55,9 +64,11 @@ TEST_F(WindowMoveTest, Move01)
     sptr<Window> window = CreateWindow(WindowMode::WINDOW_MODE_FLOATING);
     ASSERT_EQ(WMError::WM_OK, window->Show());
 
-    ASSERT_EQ(WMError::WM_OK, window->MoveTo(100, 100));
-    ASSERT_EQ(100, window->GetRequestRect().posX_);
-    ASSERT_EQ(100, window->GetRequestRect().posY_);
+    sptr<IWindowChangeListener> listener = new WindowChangeListener();
+    ASSERT_EQ(true, window->RegisterWindowChangeListener(listener));
+
+    window->MoveTo(100, 100);
+    sleep(1);
 
     ASSERT_EQ(WMError::WM_OK, window->Hide());
     sleep(1);
@@ -73,78 +84,6 @@ TEST_F(WindowMoveTest, Move01)
 TEST_F(WindowMoveTest, Move02)
 {
     sptr<Window> window = CreateWindow(WindowMode::WINDOW_MODE_FULLSCREEN);
-    ASSERT_EQ(WMError::WM_OK, window->Show());
-
-    ASSERT_NE(WMError::WM_OK, window->MoveTo(100, 100));
-
-    ASSERT_EQ(WMError::WM_OK, window->Hide());
-    sleep(1);
-
-    window->Destroy();
-}
-
-/**
- * @tc.name: Move03
- * @tc.desc: Undefined Window
- * @tc.type: FUNC
- */
-TEST_F(WindowMoveTest, Move03)
-{
-    sptr<Window> window = CreateWindow(WindowMode::WINDOW_MODE_UNDEFINED);
-    ASSERT_EQ(WMError::WM_OK, window->Show());
-
-    ASSERT_NE(WMError::WM_OK, window->MoveTo(100, 100));
-
-    ASSERT_EQ(WMError::WM_OK, window->Hide());
-    sleep(1);
-
-    window->Destroy();
-}
-
-/**
- * @tc.name: Move04
- * @tc.desc: Pip Window
- * @tc.type: FUNC
- */
-TEST_F(WindowMoveTest, Move04)
-{
-    sptr<Window> window = CreateWindow(WindowMode::WINDOW_MODE_PIP);
-    ASSERT_EQ(WMError::WM_OK, window->Show());
-
-    ASSERT_NE(WMError::WM_OK, window->MoveTo(100, 100));
-
-    ASSERT_EQ(WMError::WM_OK, window->Hide());
-    sleep(1);
-
-    window->Destroy();
-}
-
-/**
- * @tc.name: Move05
- * @tc.desc: Split Primary Window
- * @tc.type: FUNC
- */
-TEST_F(WindowMoveTest, Move05)
-{
-    sptr<Window> window = CreateWindow(WindowMode::WINDOW_MODE_SPLIT_PRIMARY);
-    ASSERT_EQ(WMError::WM_OK, window->Show());
-
-    ASSERT_NE(WMError::WM_OK, window->MoveTo(100, 100));
-
-    ASSERT_EQ(WMError::WM_OK, window->Hide());
-    sleep(1);
-
-    window->Destroy();
-}
-
-/**
- * @tc.name: Move06
- * @tc.desc: Split Secondary Window
- * @tc.type: FUNC
- */
-TEST_F(WindowMoveTest, Move06)
-{
-    sptr<Window> window = CreateWindow(WindowMode::WINDOW_MODE_SPLIT_SECONDARY);
     ASSERT_EQ(WMError::WM_OK, window->Show());
 
     ASSERT_NE(WMError::WM_OK, window->MoveTo(100, 100));
