@@ -130,7 +130,7 @@ pid_t NativeWindowBufferTest::ChildProcessMain()
     struct NativeWindowBuffer *nativeWindowBuffer = nullptr;
 
     int code = SET_USAGE;
-    uint64_t usage = BUFFER_USAGE_CPU_READ | BUFFER_USAGE_CPU_WRITE | BUFFER_USAGE_MEM_DMA;
+    uint64_t usage = BUFFER_USAGE_CPU_READ | BUFFER_USAGE_CPU_WRITE;
     OH_NativeWindow_NativeWindowHandleOpt(nativeWindow, code, usage);
 
     code = SET_BUFFER_GEOMETRY;
@@ -213,7 +213,7 @@ void NativeWindowBufferTest::DoTest()
 
     int64_t data = 0;
     write(pipeFd[1], &data, sizeof(data));
-    usleep(1000); // sleep 1000000 microseconds (equals 1 second)
+    usleep(1000); // sleep 1000 microseconds (equals 1 milliseconds)
     read(pipeFd[0], &data, sizeof(data));
     assert(data == OHOS::GSERROR_OK);
 
