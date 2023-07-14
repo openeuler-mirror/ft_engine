@@ -24,7 +24,6 @@ ft_static_library("buffer_handle") {
     "${sys_inc}/c_utils",
     "${sys_inc}/ipc_core",
     "${sys_inc}/hilog",
-    "//drivers/peripheral/base",
     "${usr_inc}/ftsurface",
   ]
   public_configs = [ ":buffer_handle_public" ]
