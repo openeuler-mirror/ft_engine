@@ -35,6 +35,7 @@ package_deps = [
     "libicu",
     # DRM Backend
     "libdrm-devel",
+    "systemd-pam",
     "systemd-devel",
     "libexif-devel",
     "cjson-devel",
