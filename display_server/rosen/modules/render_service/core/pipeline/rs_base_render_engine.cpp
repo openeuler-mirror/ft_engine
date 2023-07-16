@@ -25,6 +25,15 @@
 #include "platform/ohos/backend/rs_surface_ohos_raster.h"
 #include "render/rs_skia_filter.h"
 
+#ifdef SHOW_FPS
+#include "SkFont.h"
+#include <string>
+
+#define MAX_QUEUE_SIZE 60 // Ensure that the queue's length does not exceed 60.
+#define MAX_FPS 240 // In general, the refresh rate will not exceed 240 Hz.
+#define BUFFER_SIZE 16 // 16 characters are sufficient to display all the information.
+#endif
+
 namespace OHOS {
 namespace Rosen {
 RSBaseRenderEngine::RSBaseRenderEngine()
@@ -33,6 +42,40 @@ RSBaseRenderEngine::RSBaseRenderEngine()
 
 RSBaseRenderEngine::~RSBaseRenderEngine() noexcept
 {
+}
+
+void RSBaseRenderEngine::PostProcessOutput(RSPaintFilterCanvas& canvas, [[maybe_unused]] bool forceCPU,
+    [[maybe_unused]] float mirrorAdaptiveCoefficient)
+{
+#ifdef SHOW_FPS
+    static std::queue<uint64_t> timestampQueue;
+    static double fps;
+
+    timestampQueue.push(std::chrono::duration_cast<std::chrono::nanoseconds>(std::chrono::steady_clock::now().time_since_epoch()).count());
+    while ((timestampQueue.back() - timestampQueue.front()) > 1e9 // 1s = 1e9ns
+            || (timestampQueue.back() - timestampQueue.front()) < 0
+            || timestampQueue.size() > MAX_QUEUE_SIZE) {
+        timestampQueue.pop();
+    }
+    // turn nanoseconds to seconds
+    long double tmp = (timestampQueue.back() - timestampQueue.front()) / 1e9L;
+    fps = tmp ? (timestampQueue.size() - 1) / tmp : 0;
+    SkPaint paint;
+    paint.setAntiAlias(true);
+    paint.setStyle(SkPaint::kFill_Style);
+    paint.setStrokeJoin(SkPaint::kRound_Join);
+    paint.setARGB(0xaa, 0xff, 0xff, 0xff); // set the font color to white with some transparency.
+    char fpsMsg[BUFFER_SIZE] = { 0 };
+    if (fps > MAX_FPS || fps < 0) {
+        sprintf(fpsMsg, "FPS ERROR");
+    } else {
+        sprintf(fpsMsg, "%.1f", fps);
+    }
+    SkFont font;
+    const float fontSize = 16;
+    font.setSize(fontSize);
+    canvas.drawString(fpsMsg, 1.0f, fontSize, font, paint);
+#endif
 }
 
 void RSBaseRenderEngine::Init()
