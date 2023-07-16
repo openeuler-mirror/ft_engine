@@ -106,6 +106,7 @@ void RSUniRenderProcessor::Redraw(const sptr<Surface>& surface, const std::vecto
         return;
     }
     renderEngine_->DrawLayers(*canvas, layers, forceCPU);
+    renderEngine_->PostProcessOutput(*canvas, forceCPU);
     renderFrame->Flush();
     RS_LOGD("RsDebug RSUniRenderProcessor::Redraw flush frame buffer end");
 }

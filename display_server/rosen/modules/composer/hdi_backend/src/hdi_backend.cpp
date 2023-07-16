@@ -164,6 +164,7 @@ void HdiBackend::Repaint(std::vector<OutputPtr> &outputs)
         }
 
         output->UpdatePrevLayerInfo();
+        // FIXME: why the first timestamp is soooo big?
         int64_t timestamp = lastPresentFence_->SyncFileReadTimestamp();
         bool startSample = false;
         if (timestamp != SyncFence::FENCE_PENDING_TIMESTAMP) {
