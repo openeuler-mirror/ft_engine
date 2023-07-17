@@ -13,6 +13,7 @@
 
 import("//build/gn/fangtian.gni")
 import("//config.gni")
+import("//display_server/ft_build/ds_config.gni")
 
 config("pointer_draw_config") {
   visibility = [ ":*" ]
@@ -21,8 +22,14 @@ config("pointer_draw_config") {
     "-Wno-c++11-narrowing",
   ]
 
+  if (ds_enable_gpu) {
+    defines = [ "ENABLE_GPU" ]
+    libs = [ "EGL", "GLESv2" ]
+  }
+
   include_dirs = [
     "$window_manager_path/interfaces/innerkits/dm",
+    "$display_server_root/rosen/modules/2d_graphics/src",
   ]
 }
 

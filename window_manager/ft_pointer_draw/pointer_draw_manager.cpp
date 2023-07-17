@@ -151,6 +151,17 @@ WMError PointerDrawingManager::InitLayerNode(int32_t x, int32_t y)
         return WMError::WM_ERROR_NULLPTR;
     }
 
+#ifdef ENABLE_GPU
+    renderContext_ = std::make_unique<Rosen::RenderContext>();
+    if (renderContext_ != nullptr) {
+        WLOGFD("create renderContext success");
+        renderContext_->InitializeEglContext();
+        rsSurface_->SetRenderContext(renderContext_.get());
+    } else {
+        WLOGFE("create renderContext fail");
+    }
+#endif
+
     auto framePtr = rsSurface_->RequestFrame(ICON_WIDTH, ICON_HEIGHT);
     if (framePtr == nullptr) {
         WLOGFE("RequestFrame fail");
