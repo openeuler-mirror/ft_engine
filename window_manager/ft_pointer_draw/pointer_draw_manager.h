@@ -23,6 +23,9 @@
 #include "ui/rs_surface_node.h"
 #include "pixel_map.h"
 #include "event_handler.h"
+#ifdef ENABLE_GPU
+#include "render_context/render_context.h"
+#endif
 
 static constexpr unsigned int HILOG_DOMAIN_WINDOW = 0xD004200;
 
@@ -160,5 +163,8 @@ private:
     std::shared_ptr<OHOS::Rosen::RSSurface> rsSurface_ = nullptr;
     std::shared_ptr<OHOS::AppExecFwk::EventRunner> runner_ = nullptr;
     std::shared_ptr<OHOS::AppExecFwk::EventHandler> handler_ = nullptr;
+#ifdef ENABLE_GPU
+    std::unique_ptr<OHOS::Rosen::RenderContext> renderContext_ = nullptr;
+#endif
 };
 #endif // POINTER_DRAW_H
