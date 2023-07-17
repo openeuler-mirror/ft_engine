@@ -25,9 +25,9 @@ config("fence_config") {
 
 ft_shared_library("libfence") {
   sources = [ "../src/fence.cpp" ]
-  configs = [
-    ":fence_config",
-    "//build/gn/configs/system_libs:hilog_config",
-    "//build/gn/configs/system_libs:c_utils_config"
+  configs = [ ":fence_config" ]
+  deps = [
+    "//build/gn/configs/system_libs:hilog",
+    "//build/gn/configs/system_libs:c_utils"
   ]
 }
