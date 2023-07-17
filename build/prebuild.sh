@@ -105,6 +105,7 @@ cd ${PROJECT_DIR}
 # copy FT sa file to /usr/local/share/ft/
 sudo mkdir -p /usr/local/share/ft
 sudo cp -fr ${PROJECT_DIR}/etc/ft.xml /usr/local/share/ft/
+sudo cp -fr ${PROJECT_DIR}/etc/icon   /usr/local/share/ft/
 
 # copy config files to /usr/local/share/ft/window_manager
 sudo mkdir -p /usr/local/share/ft/window_manager
