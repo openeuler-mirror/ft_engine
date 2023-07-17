@@ -12,12 +12,12 @@
 # limitations under the License.
 
 import("//build/gn/fangtian.gni")
-import("ds_config.gni")
 
-group("libsurface") {
-  public_deps = [ "../frameworks/surface/ft_build:surface" ]
+config("test_header_public_config") {
+  include_dirs = [ "export" ]
 }
 
-group("libfence") {
-  public_deps = [ "../frameworks/fence/ft_build:libfence" ]
+group("test_header") {
+  public_configs = [ ":test_header_public_config" ]
+  public_deps = [ "//build/gn/configs/system_libs:hilog" ]
 }

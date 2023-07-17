@@ -1,0 +1,105 @@
+# Copyright (c) 2023 Huawei Technologies Co., Ltd.
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+import("//build/gn/fangtian.gni")
+
+group("unittest") {
+  testonly = true
+
+  deps = [
+    ":vsync_connection_test",
+    ":vsync_controller_test",
+    ":vsync_distributor_test",
+    ":vsync_generator_test",
+    ":vsync_receiver_test",
+    ":vsync_sampler_test",
+  ]
+}
+
+config("vsync_test_common_public_config") {
+  include_dirs = [
+    "//display_server/interfaces/inner_api/common",
+    "//display_server/rosen/modules/composer/vsync/include",
+  ]
+
+  cflags = [
+    "-Wall",
+    "-Werror",
+    "-g3",
+  ]
+}
+
+ft_static_library("vsync_test_common") {
+  visibility = [ ":*" ]
+  testonly = true
+
+  public_configs = [ ":vsync_test_common_public_config" ]
+
+  public_deps = [
+    "//build/gn/configs/system_libs:gtest",
+    # "//display_server/rosen/modules/composer/native_vsync/ft_build:libnative_vsync",
+    "//display_server/rosen/modules/composer/vsync/ft_build:libvsync",
+    "//display_server/utils/ft_build:socketpair",
+  ]
+}
+
+ft_executable("vsync_connection_test") {
+  testonly = true
+
+  sources = [ "vsync_connection_test.cpp" ]
+
+  deps = [ ":vsync_test_common" ]
+}
+
+ft_executable("vsync_controller_test") {
+  testonly = true
+
+  sources = [ "vsync_controller_test.cpp" ]
+
+  deps = [ ":vsync_test_common" ]
+}
+
+ft_executable("vsync_distributor_test") {
+  testonly = true
+
+  sources = [ "vsync_distributor_test.cpp" ]
+
+  deps = [ ":vsync_test_common" ]
+}
+
+ft_executable("vsync_generator_test") {
+  testonly = true
+
+  sources = [ "vsync_generator_test.cpp" ]
+
+  deps = [ ":vsync_test_common" ]
+}
+
+ft_executable("vsync_receiver_test") {
+  testonly = true
+
+  sources = [ "vsync_receiver_test.cpp" ]
+
+  deps = [ 
+    ":vsync_test_common",
+    "//build/gn/configs/system_libs:ipc_core"
+  ]
+}
+
+ft_executable("vsync_sampler_test") {
+  testonly = true
+
+  sources = [ "vsync_sampler_test.cpp" ]
+
+  deps = [ ":vsync_test_common" ]
+}

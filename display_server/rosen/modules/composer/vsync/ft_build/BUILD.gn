@@ -19,8 +19,6 @@ config("vsync_config") {
   include_dirs = [
     "$display_server_root/utils/log",
     "$display_server_root/interfaces/inner_api/common",
-    "$rosen_root/modules/composer/vsync/include",
-    "$display_server_root/interfaces/inner_api/composer",
     "$rosen_root/include/common",
     "$display_server_root/utils/sandbox",
     "$display_server_root/utils/socketpair/export",
@@ -36,6 +34,7 @@ config("vsync_config") {
 config("vsync_public_config") {
   include_dirs = [
     "$rosen_root/modules/composer/vsync/include",
+    "$display_server_root/interfaces/inner_api/composer",
   ]
 }
 
@@ -57,12 +56,12 @@ ft_shared_library("libvsync") {
   ]
 
   deps = [
-    "//build/gn/configs/system_libs:eventhandler",
     "//build/gn/configs/system_libs:ipc_core",
     "//build/gn/configs/system_libs:hilog",
   ]
 
   public_deps = [
+    "//build/gn/configs/system_libs:eventhandler",
     "//display_server/utils/sandbox/ft_build:sandbox_utils",
     "//display_server/utils/socketpair/ft_build:socketpair",
     "//display_server/utils/scoped_bytrace/ft_build:scoped_bytrace",

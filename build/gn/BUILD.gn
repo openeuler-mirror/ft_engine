@@ -36,13 +36,20 @@ group("ft_test") {
   testonly = true
 
   deps = [
+    # DRM Backend
     "//display_server/drivers/hal/test:drm_backend_test",
-    "//display_server/frameworks/surface/test/ft_build:test",
+    "//display_server/drivers/hal/test:gpu_backend_test",
+    # Composer
+    "//display_server/rosen/modules/composer/hdi_backend/test/ft_build:unittest",
+    "//display_server/rosen/modules/composer/vsync/test/ft_build:unittest",
     "//display_server/rosen/samples/composer/ft_build:hello_composer",
+    # Surface
+    "//display_server/frameworks/surface/test/ft_build:unittest",
+    "//display_server/frameworks/surface/test/ft_build:sample",
+    # RS
     "//display_server/rosen/modules/render_service_client/test/ft_build:render_service_client_rs_demo",
     "//display_server/rosen/modules/render_service_client/test/ft_build:render_service_client_gravity_demo",
 
-    "//display_server/drivers/hal/test:gpu_backend_test",
     "//window_manager/test/ft_build:wm_test",
   ]
 }

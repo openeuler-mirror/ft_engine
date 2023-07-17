@@ -36,7 +36,7 @@ ft_shared_library("socketpair") {
 
   public_configs = [ ":socketpair_public_config" ]
 
-  deps = [ 
+  public_deps = [ 
     "//display_server/utils/scoped_bytrace/ft_build:scoped_bytrace",
     
     "//build/gn/configs/system_libs:hilog",
