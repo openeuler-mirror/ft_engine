@@ -18,6 +18,11 @@ group("libsurface") {
   public_deps = [ "../frameworks/surface/ft_build:surface" ]
 }
 
+# TODO: enable native_image
+# group("libnative_image") {
+#   public_deps = [ "../frameworks/surfaceimage/ft_build:libnative_image" ]
+# }
+
 group("libfence") {
   public_deps = [ "../frameworks/fence/ft_build:libfence" ]
 }
