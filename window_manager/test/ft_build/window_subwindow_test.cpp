@@ -18,8 +18,9 @@
 #include "window_option.h"
 #include "wm_common.h"
 
-namespace OHOS {
-namespace Rosen {
+using namespace OHOS;
+using namespace OHOS::Rosen;
+
 class WindowSubWindowTest : public testing::Test {
 public:
     virtual void SetUp() override;
@@ -209,11 +210,4 @@ TEST_F(WindowSubWindowTest, SubWindow05)
     ASSERT_EQ(WMError::WM_OK, window->Hide());
     sleep(1);
     window->Destroy();
-}
-} // namespace Rosen
-} // namespace OHOS
-
-int main(int argc, char *argv[]) {
-    testing::InitGoogleTest(&argc, argv);
-    return RUN_ALL_TESTS();
 }
