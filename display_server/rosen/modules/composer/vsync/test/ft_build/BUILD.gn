@@ -23,6 +23,7 @@ group("unittest") {
     ":vsync_generator_test",
     ":vsync_receiver_test",
     ":vsync_sampler_test",
+    ":native_vsync_test",
   ]
 }
 
@@ -47,7 +48,7 @@ ft_static_library("vsync_test_common") {
 
   public_deps = [
     "//build/gn/configs/system_libs:gtest",
-    # "//display_server/rosen/modules/composer/native_vsync/ft_build:libnative_vsync",
+    "//display_server/rosen/modules/composer/native_vsync/ft_build:libnative_vsync",
     "//display_server/rosen/modules/composer/vsync/ft_build:libvsync",
     "//display_server/utils/ft_build:socketpair",
   ]
@@ -100,6 +101,14 @@ ft_executable("vsync_sampler_test") {
   testonly = true
 
   sources = [ "vsync_sampler_test.cpp" ]
+
+  deps = [ ":vsync_test_common" ]
+}
+
+ft_executable("native_vsync_test") {
+  testonly = true
+
+  sources = [ "native_vsync_test.cpp" ]
 
   deps = [ ":vsync_test_common" ]
 }
