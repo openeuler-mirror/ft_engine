@@ -18,21 +18,14 @@
 #include "window_option.h"
 #include "wm_common.h"
 
-namespace OHOS {
-namespace Rosen {
+using namespace OHOS;
+using namespace OHOS::Rosen;
+
 class WindowScaleTest : public testing::Test {
 public:
-    virtual void SetUp() override;
-    virtual void TearDown() override;
+    virtual void SetUp() override {}
+    virtual void TearDown() override {}
 };
-
-void WindowScaleTest::SetUp()
-{
-}
-
-void WindowScaleTest::TearDown()
-{
-}
 
 static sptr<Window> CreateWindow(WindowMode mode)
 {
@@ -45,7 +38,7 @@ static sptr<Window> CreateWindow(WindowMode mode)
     return Window::Create("window", mainOption);
 }
 
-class WindowChangeListener : public IWindowChangeListener {
+class WindowScaleTestListener : public IWindowChangeListener {
 public:
     void OnSizeChange(Rect rect, WindowSizeChangeReason reason) override {
         // real Rect depends on hardware platform, thus can not use ASSERT_EQ
@@ -64,7 +57,7 @@ TEST_F(WindowScaleTest, Resize01)
     sptr<Window> window = CreateWindow(WindowMode::WINDOW_MODE_FLOATING);
     ASSERT_EQ(WMError::WM_OK, window->Show());
 
-    sptr<IWindowChangeListener> listener = new WindowChangeListener();
+    sptr<IWindowChangeListener> listener = new WindowScaleTestListener();
     ASSERT_EQ(true, window->RegisterWindowChangeListener(listener));
 
     ASSERT_EQ(WMError::WM_OK, window->Resize(300, 300));
@@ -92,11 +85,4 @@ TEST_F(WindowScaleTest, Resize02)
     sleep(1);
 
     window->Destroy();
-}
-} // namespace Rosen
-} // namespace OHOS
-
-int main(int argc, char *argv[]) {
-    testing::InitGoogleTest(&argc, argv);
-    return RUN_ALL_TESTS();
 }
