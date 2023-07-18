@@ -25,6 +25,7 @@ ft_executable("wm_test") {
   libs = [ "gtest" ]
 
   deps = [
+    "$display_server_root/rosen/modules/render_service_client/ft_build:librender_service_client",
     "$window_manager_path/dm/ft_build:libdm",
     "$window_manager_path/utils/ft_build:libwmutil",
     "$window_manager_path/wm/ft_build:libwm",
