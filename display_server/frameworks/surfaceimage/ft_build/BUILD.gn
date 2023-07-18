@@ -1,0 +1,62 @@
+# Copyright (c) 2023 Huawei Technologies Co., Ltd.
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+import("//build/gn/fangtian.gni")
+import("//display_server/ft_build/ds_config.gni")
+
+config("native_image_config") {
+  visibility = [ ":*" ]
+
+  cflags = [
+    "-Wall",
+    "-Werror",
+    "-g3",
+  ]
+}
+
+config("libnative_image_public_config") {
+  include_dirs = [
+    "//foundation/communication/ipc/interfaces/innerkits/ipc_core/include",
+    "//display_server/frameworks/surface/include",
+    "//display_server/utils/sandbox",
+    "../include",
+  ]
+}
+
+ft_shared_library("libnative_image") {
+  sources = []
+  if (ds_enable_gpu) {
+    sources += [
+      "../src/native_image.cpp",
+      "../src/surface_image.cpp",
+    ]
+  }
+
+  configs = [ ":native_image_config" ]
+
+  public_configs = [ ":libnative_image_public_config" ]
+
+  deps = [
+    "//display_server/frameworks/surface/ft_build:surface",
+    "//display_server/utils/ft_build:sync_fence",
+  ]
+
+  libs = libgl
+
+  output_extension = "so"
+
+  public_deps = [
+    "//build/gn/configs/system_libs:c_utils",
+    "//build/gn/configs/system_libs:hilog",
+  ]
+}
