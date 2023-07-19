@@ -22,6 +22,8 @@
 #include "transaction/rs_transaction.h"
 #include "transaction/rs_interfaces.h"
 #include "image_source.h"
+#include "display_manager_service_inner.h"
+
 
 using namespace OHOS;
 
@@ -32,6 +34,7 @@ namespace {
     constexpr int32_t FILE_SIZE_MAX = 0X5000;
     constexpr int32_t ICON_WIDTH = 40;
     constexpr int32_t ICON_HEIGHT = 40;
+    constexpr float PTR_SURFACE_NODE_Z_ORDER = 99999;
 }
 
 std::shared_ptr<IPointerDrawingManager> IPointerDrawingManager::GetInstance()
@@ -65,11 +68,7 @@ void PointerDrawingManager::DrawPointer(int32_t displayId, int32_t physicalX, in
             WLOGFE("InitLayerNode fail");
             return;
         }
-
-        if (InitDisplayNode() != WMError::WM_OK) {
-            WLOGFE("InitDisplayNode fail");
-            return;
-        }
+        Rosen::DisplayManagerServiceInner::GetInstance().UpdateRSTree(0, 0, surfaceNode_, true, false);
         isDrawing_ = true;
         return;
     }
@@ -113,13 +112,7 @@ void PointerDrawingManager::SetPointerLocation(int32_t pid, int32_t x, int32_t y
 
 void PointerDrawingManager::UpdateDisplayInfo(const ScreenDisplayInfo& displayInfo)
 {
-    displayWidth_ = displayInfo.width;
-    displayHeight_ = displayInfo.height;
-    displayId_ = displayInfo.id;
-
-    if (displayWidth_ <= 0 || displayHeight_ <= 0) {
-        WLOGFE("Invalid ScreenDisplayInfo");
-    }
+    (void) displayInfo;
 }
 
 WMError PointerDrawingManager::MoveTo(int32_t x, int32_t y)
@@ -128,7 +121,6 @@ WMError PointerDrawingManager::MoveTo(int32_t x, int32_t y)
         WLOGFE("surfaceNode_ is nullptr");
         return WMError::WM_ERROR_NULLPTR;
     }
-
     surfaceNode_->SetBounds(x, y, ICON_WIDTH, ICON_HEIGHT);
     Rosen::RSTransaction::FlushImplicitTransaction();
 
@@ -145,6 +137,7 @@ WMError PointerDrawingManager::InitLayerNode(int32_t x, int32_t y)
     }
 
     surfaceNode_->SetBounds(x, y, ICON_WIDTH, ICON_HEIGHT);
+    surfaceNode_->SetPositionZ(PTR_SURFACE_NODE_Z_ORDER);
     rsSurface_ = Rosen::RSSurfaceExtractor::ExtractRSSurface(surfaceNode_);
     if (rsSurface_ == nullptr) {
         WLOGFE("ExtractRSSurface fail");
@@ -199,30 +192,6 @@ WMError PointerDrawingManager::InitLayerNode(int32_t x, int32_t y)
 #endif
     framePtr->SetDamageRegion(0, 0, ICON_WIDTH, ICON_HEIGHT);
     rsSurface_->FlushFrame(framePtr);
-
-    return WMError::WM_OK;
-}
-
-WMError PointerDrawingManager::InitDisplayNode()
-{
-    Rosen::RSDisplayNodeConfig config;
-    displayNode_ = Rosen::RSDisplayNode::Create(config);
-    if (displayNode_ == nullptr) {
-        WLOGFE("RSDisplayNode::Create fail");
-        return WMError::WM_ERROR_NULLPTR;
-    }
-
-    displayId_ = Rosen::RSInterfaces::GetInstance().GetDefaultScreenId();
-    auto activeModeInfo = Rosen::RSInterfaces::GetInstance().GetScreenActiveMode(displayId_);
-    displayWidth_ = activeModeInfo.GetScreenWidth();
-    displayHeight_ = activeModeInfo.GetScreenHeight();
-    WLOGFD("Screen info: ScreenId=%{public}d, Width=%{public}d, Height=%{public}d",
-        displayId_, displayWidth_, displayHeight_);
-
-    displayNode_->SetScreenId(displayId_);
-    displayNode_->SetBounds(0, 0, displayWidth_, displayHeight_);
-    displayNode_->AddChild(surfaceNode_, -1);
-    Rosen::RSTransaction::FlushImplicitTransaction();
 
     return WMError::WM_OK;
 }
