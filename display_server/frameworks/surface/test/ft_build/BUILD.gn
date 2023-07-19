@@ -12,8 +12,9 @@
 # limitations under the License.
 
 import("//build/gn/fangtian.gni")
+import("//display_server/ft_build/ds_config.gni")
 
-group("test") {
+group("systemtest") {
   testonly = true
 
   deps = [
@@ -21,10 +22,34 @@ group("test") {
   ]
 }
 
+group("unittest") {
+  testonly = true
+
+  deps = [
+    ":buffer_client_producer_remote_test",
+    ":buffer_manager_test",
+    ":buffer_queue_consumer_test",
+    ":buffer_queue_producer_remote_test",
+    ":buffer_queue_producer_test",
+    ":buffer_queue_test",
+    ":buffer_shared_test",
+    ":consumer_surface_test",
+    ":producer_surface_test",
+    ":surface_buffer_impl_test",
+    ":surface_utils_test",
+    ":native_window_test",
+    # TODO: enable native_image
+    # ":native_image_test",
+    # ":native_buffer_test",
+  ]
+}
+
+
+
 ft_executable("native_window_buffer_test_oe") {
   testonly = true
 
-  sources = [ "../systemtest/native_window_buffer_test_oe.cpp" ]
+  sources = [ "native_window_buffer_test_oe.cpp" ]
 
   cflags = [
     "-Wall",
@@ -43,3 +68,161 @@ ft_executable("native_window_buffer_test_oe") {
     "//build/gn/configs/system_libs:samgr",
   ]
 }
+
+config("surface_test_common_public_config") {
+  include_dirs = [
+    "//display_server/frameworks/surface/include",
+    "//display_server/utils/test_header/export",
+  ]
+
+  cflags = [
+    "-Wall",
+    "-Werror",
+    "-g3",
+    # "-Dprivate=public",
+    # "-Dprotected=public",
+  ]
+
+  defines = gpu_defines
+}
+
+ft_static_library("surface_test_common") {
+  visibility = [ ":*" ]
+  testonly = true
+
+  public_configs = [ ":surface_test_common_public_config" ]
+
+  public_deps = [
+    "//build/gn/configs/system_libs:hilog",
+    "//build/gn/configs/system_libs:ipc_core",
+    "//build/gn/configs/system_libs:c_utils",
+    "//build/gn/configs/system_libs:samgr",
+    "//build/gn/configs/system_libs:gtest",
+
+    "//display_server/ft_build:libsurface",
+    # TODO: enable native_image
+    # "//display_server/ft_build:libnative_image",
+    "//display_server/utils/ft_build:buffer_handle",
+    "//display_server/utils/ft_build:libgraphic_utils",
+    "//display_server/utils/ft_build:sync_fence",
+    "//display_server/utils/ft_build:test_header",
+  ]
+
+  libs = libgl
+}
+
+ft_executable("buffer_client_producer_remote_test") {
+  testonly = true
+
+  sources = [ "buffer_client_producer_remote_test.cpp" ]
+
+  deps = [ ":surface_test_common" ]
+}
+
+ft_executable("buffer_manager_test") {
+  testonly = true
+
+  sources = [ "buffer_manager_test.cpp" ]
+
+  deps = [ ":surface_test_common" ]
+}
+
+ft_executable("buffer_queue_consumer_test") {
+  testonly = true
+
+  sources = [ "buffer_queue_consumer_test.cpp" ]
+
+  deps = [ ":surface_test_common" ]
+}
+
+ft_executable("buffer_queue_producer_remote_test") {
+  testonly = true
+
+  sources = [ "buffer_queue_producer_remote_test.cpp" ]
+
+  deps = [ ":surface_test_common" ]
+}
+
+ft_executable("buffer_queue_producer_test") {
+  testonly = true
+
+  sources = [ "buffer_queue_producer_test.cpp" ]
+
+  deps = [ ":surface_test_common" ]
+}
+
+ft_executable("buffer_queue_test") {
+  testonly = true
+
+  sources = [ "buffer_queue_test.cpp" ]
+
+  deps = [ ":surface_test_common" ]
+}
+
+ft_executable("buffer_shared_test") {
+  testonly = true
+
+  sources = [ "buffer_shared_test.cpp" ]
+
+  deps = [ ":surface_test_common" ]
+}
+
+ft_executable("consumer_surface_test") {
+  testonly = true
+
+  sources = [ "consumer_surface_test.cpp" ]
+
+  deps = [ ":surface_test_common" ]
+}
+
+ft_executable("producer_surface_test") {
+  testonly = true
+
+  sources = [ "producer_surface_test.cpp" ]
+
+  deps = [ ":surface_test_common" ]
+}
+
+ft_executable("surface_buffer_impl_test") {
+  testonly = true
+
+  sources = [ "surface_buffer_impl_test.cpp" ]
+
+  deps = [ ":surface_test_common" ]
+}
+
+ft_executable("surface_utils_test") {
+  testonly = true
+
+  sources = [ "surface_utils_test.cpp" ]
+
+  deps = [ ":surface_test_common" ]
+}
+
+ft_executable("native_window_test") {
+  testonly = true
+
+  sources = [ "native_window_test.cpp" ]
+
+  deps = [ ":surface_test_common" ]
+}
+
+# TODO: enable native_image
+# ft_executable("native_image_test") {
+#   testonly = true
+
+#   sources = []
+#   if (ds_enable_gpu == true) {
+#     sources = [ "native_image_test.cpp" ]
+#   }
+
+#   deps = [ ":surface_test_common" ]
+# }
+
+# ft_executable("native_buffer_test") {
+#   testonly = true
+
+#   sources = [ "native_buffer_test.cpp" ]
+
+#   deps = [ ":surface_test_common" ]
+# }

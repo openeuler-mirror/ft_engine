@@ -25,9 +25,11 @@ if (graphic_standard_feature_ace_enable_gpu) {
     "RS_ENABLE_GL",
   ]
   ds_enable_gpu = true
+  libgl = [ "EGL", "GLESv2" ]
 } else {
   gpu_defines = [ "ACE_DISABLE_GL" ]
   ds_enable_gpu = false
+  libgl = []
 }
 
 if (graphic_standard_feature_rs_enable_eglimage) {
