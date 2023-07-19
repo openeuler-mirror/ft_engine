@@ -2,9 +2,9 @@
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
 # You may obtain a copy of the License at
-#
+# 
 #     http://www.apache.org/licenses/LICENSE-2.0
-#
+# 
 # Unless required by applicable law or agreed to in writing, software
 # distributed under the License is distributed on an "AS IS" BASIS,
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -13,8 +13,9 @@
 
 import("//build/gn/fangtian.gni")
 
-config("socketpair_config") {
-  visibility = [ ":socketpair" ]
+config("native_vsync_config") {
+  visibility = [ ":*" ]
+
   cflags = [
     "-Wall",
     "-Werror",
@@ -22,24 +23,29 @@ config("socketpair_config") {
   ]
 }
 
-config("socketpair_public_config") {
-  visibility = [ ":socketpair" ]
-  include_dirs = [
-    "../export",
-  ]
+config("native_vsync_public_config") {
+  include_dirs =
+      [ "//display_server/interfaces/inner_api/composer" ]
 }
 
-ft_shared_library("socketpair") {
-  sources = [ "../src/local_socketpair.cpp" ]
+ft_shared_library("libnative_vsync") {
+  sources = [ "../native_vsync.cpp" ]
 
-  configs = [ ":socketpair_config" ]
+  include_dirs = [
+    "//display_server/utils/log",
+    "//display_server/interfaces/inner_api/common",
+  ]
 
-  public_configs = [ ":socketpair_public_config" ]
+  configs = [ ":native_vsync_config" ]
 
-  public_deps = [ 
-    "//display_server/utils/scoped_bytrace/ft_build:scoped_bytrace",
-    
+  public_configs = [ ":native_vsync_public_config" ]
+
+  output_extension = "so"
+
+  public_deps = [
+    "//display_server/rosen/modules/render_service_client/ft_build:librender_service_client",
+
+    "//build/gn/configs/system_libs:c_utils",
     "//build/gn/configs/system_libs:hilog",
-    "//build/gn/configs/system_libs:ipc_core",
   ]
 }

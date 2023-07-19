@@ -15,13 +15,14 @@ import("//build/gn/fangtian.gni")
 import("ds_config.gni")
 
 group("libsurface") {
-  public_deps = [ "frameworks/surface:surface" ]
+  public_deps = [ "../frameworks/surface/ft_build:surface" ]
 }
+
+# TODO: enable native_image
+# group("libnative_image") {
+#   public_deps = [ "../frameworks/surfaceimage/ft_build:libnative_image" ]
+# }
 
 group("libfence") {
-  public_deps = [ "frameworks/fence:libfence" ]
-}
-
-group("libgl") {
-  public_deps = libgl
+  public_deps = [ "../frameworks/fence/ft_build:libfence" ]
 }
