@@ -31,8 +31,6 @@ config("rs_client_test_common_public_config") {
     "-Wall",
     "-Werror",
     "-g3",
-    # "-Dprivate=public",
-    # "-Dprotected=public",
   ]
 }
 
@@ -61,4 +59,3 @@ ft_executable("RSInterfacesTest") {
 
   deps = [ ":rs_client_test_common" ]
 }
-

@@ -45,7 +45,7 @@ group("ft_test") {
     "//display_server/rosen/samples/composer/ft_build:hello_composer",
     # Surface
     "//display_server/frameworks/surface/test/ft_build:unittest",
-    "//display_server/frameworks/surface/test/ft_build:sample",
+    "//display_server/frameworks/surface/test/ft_build:systemtest",
     # RS
     "//display_server/rosen/test/render_service/render_service_base/ft_build:unittest",
     "//display_server/rosen/test/render_service/render_service_client/ft_build:unittest",
