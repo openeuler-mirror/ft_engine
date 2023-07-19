@@ -28,18 +28,14 @@ ft_executable("RSRenderServiceBaseTransactionTest") {
   ]
 
   include_dirs = [
-    # "$ace_root",
     "//display_server/rosen/modules/render_service_base",
     "//display_server/interfaces/inner_api/common",
     "//display_server/rosen/modules/render_service_base/include",
     "//display_server/rosen/include",
     "//display_server/rosen/test/include",
-    # "//third_party/flutter/skia/src",
   ]
 
   configs = [
-    # ":transaction_test",
-    # "$ace_root:ace_test_config",
     "//display_server/rosen/modules/render_service_base/ft_build:render_service_base_public_config",
   ]
 
