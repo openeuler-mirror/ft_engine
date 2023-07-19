@@ -97,6 +97,11 @@ config("libz_config") {
   libs = [ "shared_libz" ]
 }
 
+config("gtest_config") {
+  visibility = [ ":*" ]
+  libs = [ "gtest", "gtest_main" ]
+}
+
 group("c_utils") {
   public_configs = [ ":c_utils_config" ]
 }
@@ -169,4 +174,8 @@ group("safwk") {
 
 group("libz") {
   public_configs = [ ":libz_config" ]
+}
+
+group("gtest") {
+  public_configs = [ ":gtest_config" ]
 }

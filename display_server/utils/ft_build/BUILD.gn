@@ -36,6 +36,10 @@ group("sandbox_utils") {
   public_deps = [ "${utils_dir}/sandbox/ft_build:sandbox_utils" ]
 }
 
+group("test_header") {
+  public_deps = [ "${utils_dir}/test_header/ft_build:test_header" ]
+}
+
 config("libgraphic_utils_public_config") {
   include_dirs =
       [ "//foundation/graphic/graphic_2d/interfaces/inner_api/common" ]
@@ -50,5 +54,6 @@ ft_shared_library("libgraphic_utils") {
     ":socketpair",
     ":sync_fence",
     ":sandbox_utils",
+    ":test_header",
   ]
 }

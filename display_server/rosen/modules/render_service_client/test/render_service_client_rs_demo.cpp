@@ -16,21 +16,26 @@
 #include <iostream>
 #include <surface.h>
 
+#include "include/core/SkCanvas.h"
+#include "include/core/SkImageInfo.h"
+// RS Base
 #include "command/rs_base_node_command.h"
 #include "command/rs_display_node_command.h"
 #include "command/rs_surface_node_command.h"
 #include "common/rs_common_def.h"
-#include "include/core/SkCanvas.h"
-#include "include/core/SkImageInfo.h"
 #include "pipeline/rs_render_result.h"
 #include "pipeline/rs_render_thread.h"
+// RS client
 #include "ui/rs_canvas_node.h"
 #include "ui/rs_surface_extractor.h"
 #include "ui/rs_ui_director.h"
-#include "transaction/rs_interfaces.h"
 #include "ui/rs_display_node.h"
 #include "ui/rs_surface_node.h"
+#include "transaction/rs_interfaces.h"
+// 2d_graphics
+#ifdef ACE_ENABLE_GPU
 #include "render_context/render_context.h"
+#endif
 
 using namespace OHOS;
 using namespace OHOS::Rosen;
@@ -282,18 +287,18 @@ public:
         isGPU_ = false;
 #endif
 
-        id = DmsMock::GetInstance().GetDefaultDisplayId();
-        std::cout << "RS default screen id is " << id << ".\n";
-        auto activeModeInfo = DmsMock::GetInstance().GetDisplayActiveMode(id);
+        id_ = DmsMock::GetInstance().GetDefaultDisplayId();
+        std::cout << "RS default screen id is " << id_ << ".\n";
+        auto activeModeInfo = DmsMock::GetInstance().GetDisplayActiveMode(id_);
         if (activeModeInfo) {
             screenWidth_ = activeModeInfo->GetScreenWidth();
             screenheight_ = activeModeInfo->GetScreenHeight();
             screenRefreshRate_ = static_cast<int>(activeModeInfo->GetScreenRefreshRate());
-            std::cout << "Display " << id << " active mode info:\n";
+            std::cout << "Display " << id_ << " active mode info:\n";
             std::cout << "Width: " << screenWidth_ << ", Height: " << screenheight_;
             std::cout << ", RefreshRate: " << screenRefreshRate_ << "Hz.\n";
         } else {
-            std::cout << "Display " << id << " has no active mode!\n";
+            std::cout << "Display " << id_ << " has no active mode!\n";
         }
         RenderContextInit();
         std::cout << "Render service Client rs Demo.cpp testInit end\n";
@@ -334,7 +339,7 @@ public:
 
         RSDisplayNodeConfig config;
         RSDisplayNode::SharedPtr displayNode = RSDisplayNode::Create(config);
-        displayNode->SetScreenId(id);
+        displayNode->SetScreenId(id_);
         displayNode->SetBounds(0, 0, screenWidth_, screenheight_);
         displayNode->AddChild(surfaceNode1, -1);
         displayNode->AddChild(surfaceNode2, -1);
@@ -374,7 +379,7 @@ private:
     int screenWidth_ = 0;
     int screenheight_ = 0;
     int screenRefreshRate_ = 0;
-    DisplayId id;
+    DisplayId id_;
 }; // class RSDemoTestCase
 } // namespace OHOS::Rosen
 

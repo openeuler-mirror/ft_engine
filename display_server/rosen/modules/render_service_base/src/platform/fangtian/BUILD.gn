@@ -94,7 +94,8 @@ ft_source_set("rosen_fangtian_sources") {
       "$rosen_root/modules/2d_graphics/src",
       "$rosen_root/modules/render_service_client/core",
     ]
-    libs = [ "crypto", "EGL", "GLESv2" ]
+    libs = [ "crypto" ]
+    libs += libgl
   }
 
   deps = [

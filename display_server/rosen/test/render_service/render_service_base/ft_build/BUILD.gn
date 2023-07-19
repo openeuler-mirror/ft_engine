@@ -1,0 +1,50 @@
+# Copyright (c) 2022 Huawei Device Co., Ltd.
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+import("//build/gn/fangtian.gni")
+import("//display_server/ft_build/ds_config.gni")
+
+group("unittest") {
+  testonly = true
+
+  deps = [ 
+    ":RSRenderServiceBaseTransactionTest"
+  ]
+}
+
+ft_executable("RSRenderServiceBaseTransactionTest") {
+  sources = [
+    "transaction/rs_transaction_proxy_test.cpp",
+  ]
+
+  include_dirs = [
+    "//display_server/rosen/modules/render_service_base",
+    "//display_server/interfaces/inner_api/common",
+    "//display_server/rosen/modules/render_service_base/include",
+    "//display_server/rosen/include",
+    "//display_server/rosen/test/include",
+  ]
+
+  configs = [
+    "//display_server/rosen/modules/render_service_base/ft_build:render_service_base_public_config",
+  ]
+
+  deps = [
+    "//display_server/rosen/modules/render_service_base/ft_build:render_service_base_src",
+
+    "//build/gn/configs/system_libs:skia",
+    "//build/gn/configs/system_libs:gtest",
+    "//build/gn/configs/system_libs:c_utils",
+    "//build/gn/configs/system_libs:ipc_core",
+  ]
+}

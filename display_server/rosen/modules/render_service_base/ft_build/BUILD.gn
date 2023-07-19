@@ -157,7 +157,7 @@ ft_source_set("render_service_base_src") {
   public_configs = [
     ":render_service_base_public_config",
   ]
-  deps = [
+  public_deps = [
     "../src/platform/fangtian:rosen_fangtian_sources",
   ]
 
@@ -182,7 +182,7 @@ ft_source_set("render_service_base_src") {
     "$display_server_root/interfaces/inner_api/common",
   ]
 
-  deps += [
+  deps = [
     "//build/gn/configs/system_libs:c_utils",
     "//build/gn/configs/system_libs:ipc_core",
     "//build/gn/configs/system_libs:hitrace_meter",
@@ -191,7 +191,7 @@ ft_source_set("render_service_base_src") {
     "//build/gn/configs/system_libs:image",
   ]
 
-  public_deps = [
+  public_deps += [
     "$display_server_root/utils/sandbox/ft_build:sandbox_utils",
     "$display_server_root/utils/sync_fence/ft_build:sync_fence",
   ]

@@ -97,5 +97,6 @@ ft_shared_library("librender_service") {
     "//build/gn/configs/system_libs:image",
   ]
 
-  libs = ["png", "EGL", "GLESv2" ]
+  libs = ["png" ]
+  libs += libgl
 }

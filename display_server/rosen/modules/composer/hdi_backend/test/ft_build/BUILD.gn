@@ -1,0 +1,94 @@
+# Copyright (c) 2023 Huawei Technologies Co., Ltd.
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+import("//build/gn/fangtian.gni")
+
+group("unittest") {
+  testonly = true
+
+  deps = [
+    ":hdibackend_test",
+    ":hdidevice_test",
+    ":hdiframebuffersurface_test",
+    ":hdilayerinfo_test",
+    ":hdioutput_test",
+  ]
+}
+
+config("hdibackend_test_common_public_config") {
+  include_dirs = [
+    "//display_server/rosen/modules/composer/hdi_backend/include",
+    "//display_server/rosen/modules/composer/hdi_backend/test",
+    "//display_server/interfaces/inner_api/surface",
+  ]
+
+  cflags = [
+    "-Wall",
+    "-Werror",
+    "-g3",
+  ]
+}
+
+ft_static_library("hdibackend_test_common") {
+  visibility = [ ":*" ]
+  testonly = true
+
+  public_configs = [ ":hdibackend_test_common_public_config" ]
+
+  public_deps = [
+    "//display_server/ft_build:libsurface",
+    "//display_server/rosen/modules/composer/ft_build:libcomposer",
+    "//build/gn/configs/system_libs:gtest",
+    "//build/gn/configs/system_libs:ipc_core",
+  ]
+}
+
+ft_executable("hdibackend_test") {
+  testonly = true
+
+  sources = [ "hdibackend_test.cpp" ]
+
+  deps = [ ":hdibackend_test_common" ]
+}
+
+ft_executable("hdidevice_test") {
+  testonly = true
+
+  sources = [ "hdidevice_test.cpp" ]
+
+  deps = [ ":hdibackend_test_common" ]
+}
+
+ft_executable("hdiframebuffersurface_test") {
+  testonly = true
+
+  sources = [ "hdiframebuffersurface_test.cpp" ]
+
+  deps = [ ":hdibackend_test_common" ]
+}
+
+ft_executable("hdilayerinfo_test") {
+  testonly = true
+
+  sources = [ "hdilayerinfo_test.cpp" ]
+
+  deps = [ ":hdibackend_test_common" ]
+}
+
+ft_executable("hdioutput_test") {
+  testonly = true
+
+  sources = [ "hdioutput_test.cpp" ]
+
+  deps = [ ":hdibackend_test_common" ]
+}

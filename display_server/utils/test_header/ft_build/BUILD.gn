@@ -13,33 +13,11 @@
 
 import("//build/gn/fangtian.gni")
 
-config("socketpair_config") {
-  visibility = [ ":socketpair" ]
-  cflags = [
-    "-Wall",
-    "-Werror",
-    "-g3",
-  ]
+config("test_header_public_config") {
+  include_dirs = [ "export" ]
 }
 
-config("socketpair_public_config") {
-  visibility = [ ":socketpair" ]
-  include_dirs = [
-    "../export",
-  ]
-}
-
-ft_shared_library("socketpair") {
-  sources = [ "../src/local_socketpair.cpp" ]
-
-  configs = [ ":socketpair_config" ]
-
-  public_configs = [ ":socketpair_public_config" ]
-
-  public_deps = [ 
-    "//display_server/utils/scoped_bytrace/ft_build:scoped_bytrace",
-    
-    "//build/gn/configs/system_libs:hilog",
-    "//build/gn/configs/system_libs:ipc_core",
-  ]
+group("test_header") {
+  public_configs = [ ":test_header_public_config" ]
+  public_deps = [ "//build/gn/configs/system_libs:hilog" ]
 }
