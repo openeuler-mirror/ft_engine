@@ -26,6 +26,10 @@
 #include "ui/rs_surface_node.h"
 #include "wm/window.h"
 
+#ifdef ENABLE_MMI
+#include "input_manager.h"
+#endif
+
 using namespace OHOS::Rosen;
 enum HandType {
     HOUR_HAND,
@@ -47,6 +51,93 @@ constexpr int MIN_IN_ONE_HOUR = 60;
 constexpr int DAIL_NUM_RADIUS = 165; // 表盘文字环绕半径
 constexpr int HOUR_PROPORTION = 60 / HOUR_FORMAT; // 圆周分为60份，1小时表示占5小格
 
+#ifdef ENABLE_MMI
+constexpr int INVALID_COORDINATE = -1;
+class ClockDemoEventConsumer : public OHOS::MMI::IInputEventConsumer
+{
+public:
+    ClockDemoEventConsumer(OHOS::sptr<OHOS::Rosen::Window> window);
+    void OnInputEvent(std::shared_ptr<OHOS::MMI::KeyEvent> keyEvent) const override;
+    void OnInputEvent(std::shared_ptr<OHOS::MMI::AxisEvent> axisEvent) const override;
+    void OnInputEvent(std::shared_ptr<OHOS::MMI::PointerEvent> pointerEvent) const override;
+
+private:
+    void HandleMovePointerEvent(std::shared_ptr<OHOS::MMI::PointerEvent> pointerEvent) const;
+    OHOS::sptr<OHOS::Rosen::Window> window_ = nullptr;
+    mutable bool enableMove = false;
+    mutable int lastWindowX = INVALID_COORDINATE;
+    mutable int lastWindowY = INVALID_COORDINATE;
+    mutable int lastPointerX = INVALID_COORDINATE;
+    mutable int lastPointerY = INVALID_COORDINATE;
+};
+
+ClockDemoEventConsumer::ClockDemoEventConsumer(OHOS::sptr<OHOS::Rosen::Window> window)
+{
+    window_ = window;
+}
+
+void ClockDemoEventConsumer::HandleMovePointerEvent(std::shared_ptr<OHOS::MMI::PointerEvent> pointerEvent) const
+{
+    if ((window_ == nullptr) || (pointerEvent->GetSourceType() != OHOS::MMI::PointerEvent::SOURCE_TYPE_MOUSE)) {
+        return;
+    }
+
+    OHOS::MMI::PointerEvent::PointerItem pointerItem;
+    int32_t pointId = pointerEvent->GetPointerId();
+    if (!pointerEvent->GetPointerItem(pointId, pointerItem)) {
+        return;
+    }
+
+    // 计算鼠标移动距离
+    int diffX = (lastPointerX != INVALID_COORDINATE ? pointerItem.GetDisplayX() - lastPointerX : 0);
+    int diffY = (lastPointerY != INVALID_COORDINATE ? pointerItem.GetDisplayY() - lastPointerY : 0);
+
+    // 窗口的新位置 = 当前位置 + 鼠标移动距离
+    if (lastWindowX == INVALID_COORDINATE && lastWindowY == INVALID_COORDINATE) {
+        lastWindowX = window_->GetRect().posX_;
+        lastWindowY = window_->GetRect().posY_;
+    }
+    int newX = lastWindowX + diffX;
+    int newY = lastWindowY + diffY;
+
+    //移动窗口，并记录当前鼠标位置
+    if (enableMove && lastPointerX != INVALID_COORDINATE && lastPointerY != INVALID_COORDINATE) {
+        window_->MoveTo(newX, newY);
+        lastWindowX = newX;
+        lastWindowY = newY;
+    }
+    lastPointerX = pointerItem.GetDisplayX();
+    lastPointerY = pointerItem.GetDisplayY();
+}
+
+void ClockDemoEventConsumer::OnInputEvent(std::shared_ptr<OHOS::MMI::KeyEvent> keyEvent) const
+{
+    keyEvent->MarkProcessed();
+}
+
+void ClockDemoEventConsumer::OnInputEvent(std::shared_ptr<OHOS::MMI::AxisEvent> axisEvent) const
+{
+    axisEvent->MarkProcessed();
+}
+
+void ClockDemoEventConsumer::OnInputEvent(std::shared_ptr<OHOS::MMI::PointerEvent> pointerEvent) const
+{
+    switch (pointerEvent->GetPointerAction()) {
+        case OHOS::MMI::PointerEvent::POINTER_ACTION_BUTTON_DOWN:
+            enableMove = true;  // 鼠标按键按下，使能移动窗口
+            break;
+        case OHOS::MMI::PointerEvent::POINTER_ACTION_BUTTON_UP:
+            enableMove = false; // 鼠标按键抬起，静止移动窗口
+            break;
+        case OHOS::MMI::PointerEvent::POINTER_ACTION_MOVE:
+            HandleMovePointerEvent(pointerEvent);
+            break;
+        default:
+            break;
+    }
+    pointerEvent->MarkProcessed();
+}
+#endif // ENABLE_MMI
 
 // we can make this demo and run it on the device,
 // to show a clock demo
@@ -63,12 +154,20 @@ public:
         option->SetWindowType(WindowType::APP_MAIN_WINDOW_BASE);
         option->SetWindowMode(WindowMode::WINDOW_MODE_FLOATING);
         option->SetWindowName("clock");
+        option->SetMainHandlerAvailable(false);
         window_ = OHOS::Rosen::Window::Create(option->GetWindowName(), option);
         if (window_ != nullptr) {
             surfaceNode_ = window_->GetSurfaceNode();
             surfaceNode_->SetBounds(0, 0, windowWidth, windowHeight); // surface bounds is window rect.
             RSTransaction::FlushImplicitTransaction();
             window_->Show();
+#ifdef ENABLE_MMI
+            auto listener = std::make_shared<ClockDemoEventConsumer>(window_);
+            const std::string thread = "clockEventThread";
+            auto runner = OHOS::AppExecFwk::EventRunner::Create(thread);
+            auto eventHandler = std::make_shared<OHOS::AppExecFwk::EventHandler>(runner);
+            OHOS::MMI::InputManager::GetInstance()->SetWindowInputEventConsumer(listener, eventHandler);
+#endif // ENABLE_MMI
         } else {
             std::cout << "Failed to create window!" << std::endl;
         }

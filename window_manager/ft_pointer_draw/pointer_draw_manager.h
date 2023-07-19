@@ -146,7 +146,6 @@ private:
     };
 
     OHOS::WMError InitLayerNode(int32_t x, int32_t y);
-    OHOS::WMError InitDisplayNode();
     OHOS::WMError InitIconPixel();
     OHOS::WMError CheckPixelFile(const std::string &filePath);
     OHOS::WMError MoveTo(int32_t x, int32_t y);
@@ -154,11 +153,8 @@ private:
     SkColorType PixelFormatConvert(const OHOS::Media::PixelFormat& pixelFormat);
 
     bool isDrawing_ = false;
-    int32_t displayWidth_ = 0;
-    int32_t displayHeight_ = 0;
     int32_t displayId_ = 0;
     std::map<MOUSE_ICON, IconStyle> mouseIcons_;
-    OHOS::Rosen::RSDisplayNode::SharedPtr displayNode_ = nullptr;
     OHOS::Rosen::RSSurfaceNode::SharedPtr surfaceNode_ = nullptr;
     std::shared_ptr<OHOS::Rosen::RSSurface> rsSurface_ = nullptr;
     std::shared_ptr<OHOS::AppExecFwk::EventRunner> runner_ = nullptr;
