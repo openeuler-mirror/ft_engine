@@ -28,8 +28,11 @@ config("pointer_draw_config") {
   }
 
   include_dirs = [
+    "$window_manager_path/dm/include",
+    "$window_manager_path/interfaces/innerkits",
     "$window_manager_path/interfaces/innerkits/dm",
     "$display_server_root/rosen/modules/2d_graphics/src",
+    "$display_server_root/rosen/modules/2d_graphics/include",
   ]
 }
 
@@ -47,6 +50,8 @@ ft_shared_library("libpointerdraw") {
     "$display_server_root/rosen/modules/render_service_base/ft_build:librender_service_base",
     "$display_server_root/rosen/modules/render_service_client/ft_build:librender_service_client",
     "$window_manager_path/dmserver/ft_build:libdms",
+    "$window_manager_path/wm/ft_build:libwm",
+    "$window_manager_path/utils/ft_build:libwmutil",
     "//build/gn/configs/system_libs:eventhandler",
     "//build/gn/configs/system_libs:image",
     "//build/gn/configs/system_libs:safwk",
