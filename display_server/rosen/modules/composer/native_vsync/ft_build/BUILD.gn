@@ -42,11 +42,9 @@ ft_shared_library("libnative_vsync") {
 
   output_extension = "so"
 
-  deps = [
-    "//display_server/rosen/modules/render_service_client/ft_build:librender_service_client",
-  ]
-
   public_deps = [
+    "//display_server/rosen/modules/render_service_client/ft_build:librender_service_client",
+
     "//build/gn/configs/system_libs:c_utils",
     "//build/gn/configs/system_libs:hilog",
   ]
