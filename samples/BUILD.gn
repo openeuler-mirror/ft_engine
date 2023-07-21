@@ -19,8 +19,10 @@ ft_executable("clock") {
   sources = [ "clock.cpp" ]
 
   cflags = [ "-Wno-c++11-narrowing" ]
+
+  defines = [ "ENABLE_MMI" ]
   if (ds_enable_gpu) {
-    defines = [ "ENABLE_GPU" ]
+    defines += [ "ENABLE_GPU" ]
     libs = [ "EGL", "GLESv2" ]
   }
 
@@ -42,5 +44,30 @@ ft_executable("clock") {
     "//build/gn/configs/system_libs:skia",
     "//build/gn/configs/system_libs:c_utils",
     "//build/gn/configs/system_libs:ipc_core",
+    "//build/gn/configs/system_libs:eventhandler",
+    "//build/gn/configs/system_libs:mmi",
+  ]
+}
+
+ft_executable("desktop") {
+  sources = [ "desktop.cpp" ]
+
+  cflags = [ "-Wno-c++11-narrowing" ]
+  if (ds_enable_gpu) {
+    defines = [ "ENABLE_GPU" ]
+    libs = [ "EGL", "GLESv2" ]
+  }
+
+  include_dirs = [
+    "$window_manager_path/interfaces/innerkits",
+    "$display_server_root/rosen/modules/2d_graphics/src",
+  ]
+
+  deps = [
+    "$display_server_root/rosen/modules/render_service_client/ft_build:librender_service_client",
+    "$window_manager_path/dm/ft_build:libdm",
+    "$window_manager_path/wm/ft_build:libwm",
+    "$window_manager_path/utils/ft_build:libwmutil",
+    "//build/gn/configs/system_libs:image",
   ]
 }
