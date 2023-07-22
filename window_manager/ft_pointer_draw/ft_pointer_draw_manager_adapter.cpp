@@ -96,6 +96,24 @@ bool FTPtrDrawMgrDrawPointer(const uintptr_t instanceHdl, int32_t displayId, int
     return true;
 }
 
+bool FTPtrDrawMgrGetScreenSize(const uintptr_t instanceHdl, int32_t *width, int32_t *height)
+{
+    if (width == nullptr || height == nullptr) {
+        return false;
+    }
+    PointerDrawPtr instance = FindPointerDraw(instanceHdl);
+    if (instance == nullptr) {
+        return false;
+    }
+
+    int32_t w = -1;
+    int32_t h = -1;
+    instance->GetScreenSize(w, h);
+    *width = w;
+    *height= h;
+    return true;
+}
+
 #if defined(__cplusplus)
 }
 #endif // __cplusplus
