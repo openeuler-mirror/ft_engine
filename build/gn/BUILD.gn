@@ -23,6 +23,7 @@ group("ft_window_manager") {
   deps = [
     "//window_manager/wmserver/ft_build:libwms",
     "//window_manager/ft_pointer_draw:libpointerdraw",
+    "//window_manager/snapshot/ft_build:snapshot_display",
   ]
 }
 

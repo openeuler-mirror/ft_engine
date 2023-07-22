@@ -1,0 +1,61 @@
+# Copyright (c) 2021-2022 Huawei Device Co., Ltd.
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+import("//build/gn/fangtian.gni")
+import("//config.gni")
+
+## Build snapshot {{{
+config("snapshot_config") {
+    visibility = [ ":*" ]
+    include_dirs = ["$window_manager_path/snapshot/include"]
+}
+
+ft_executable("snapshot_display") {
+    sources = [ "$window_manager_path/snapshot/src/snapshot_display.cpp" ]
+
+    configs = [
+        ":snapshot_config",
+        "$window_manager_path/resources/config/build:coverage_flags",
+    ]
+
+    deps = [
+        ":libsnapshot_util",
+        "$window_manager_path/dm/ft_build:libdm",
+        "$window_manager_path/utils/ft_build:libwmutil",
+        "$window_manager_path/wm/ft_build:libwm",
+        "$display_server_root/rosen/modules/animation/window_animation/ft_build:window_animation",
+        "$display_server_root/rosen/modules/render_service_client/ft_build:librender_service_client",
+        "//build/gn/configs/system_libs:image",
+    ]
+
+}
+
+ft_shared_library("libsnapshot_util") {
+    sources = [ "$window_manager_path/snapshot/src/snapshot_utils.cpp" ]
+
+    configs = [
+        ":snapshot_config",
+        "$window_manager_path/resources/config/build:coverage_flags",
+    ]
+
+    deps = [
+        "$window_manager_path/dm/ft_build:libdm",
+        "$window_manager_path/utils/ft_build:libwmutil",
+        "$window_manager_path/wm/ft_build:libwm",
+        "$display_server_root/rosen/modules/animation/window_animation/ft_build:window_animation",
+        "$display_server_root/rosen/modules/render_service_client/ft_build:librender_service_client",
+        "//build/gn/configs/system_libs:image",
+    ]
+    libs = ["jpeg"]
+
+}
