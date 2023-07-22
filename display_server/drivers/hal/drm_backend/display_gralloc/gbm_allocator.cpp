@@ -76,11 +76,6 @@ int32_t GbmAllocator::AllocMem(const AllocInfo &info, BufferHandle **bufferPtr)
         return DISPLAY_PARAM_ERR;
     }
 
-    // TODO: support multi format.
-    // /* Get format info */
-    // LOG_DEBUG << "[Gralloc::GbmAllocator::AllocMem] Get format info";
-    // uint32_t gbmFmt = GbmFormat::ConvertPixelFormatToGbmFormat(info.format);
-
     /* Decide flag depending on buffer usage */
     uint32_t gbmFlag = 0;
     if (info.usage & HBM_USE_MEM_FB) {
@@ -291,14 +286,17 @@ bool GbmAllocator::DestroyGbmBo(int32_t handle)
 
 int32_t GbmAllocator::AllocMemWithUsage(const AllocInfo &info, BufferHandle **bufferPtr, uint32_t usage)
 {
+    /* Get format info */
+    LOG_DEBUG("[Gralloc::GbmAllocator::AllocMem] Get format info");
+    uint32_t gbmFmt = GbmFormat::ConvertPixelFormatToGbmFormat(info.format);
+
     /* CORE: gbm bo */
-    // TODO: create with modifiers
     LOG_DEBUG("[Gralloc::GbmAllocator::AllocMemWithUsage] create GBM buffer object.");
     struct gbm_bo *gbmBo = gbm_bo_create(
         gbmContext_,
         info.width,
         info.height,
-        GBM_FORMAT_XRGB8888, // Q: Why Must be GBM_FORMAT_XRGB8888?
+        gbmFmt,
         usage);
     if (gbmBo == nullptr) {
         LOG_ERROR("[Gralloc::GbmAllocator::AllocMemWithUsage] Failed to create GBM buffer object.");
