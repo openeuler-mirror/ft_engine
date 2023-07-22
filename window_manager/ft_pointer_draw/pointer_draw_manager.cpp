@@ -304,3 +304,12 @@ SkColorType PointerDrawingManager::PixelFormatConvert(const Media::PixelFormat& 
     }
     return colorType;
 }
+
+void PointerDrawingManager::GetScreenSize(int32_t &width, int32_t &height)
+{
+    int32_t displayId = Rosen::RSInterfaces::GetInstance().GetDefaultScreenId();
+    auto activeModeInfo = Rosen::RSInterfaces::GetInstance().GetScreenActiveMode(displayId);
+    width = activeModeInfo.GetScreenWidth();
+    height = activeModeInfo.GetScreenHeight();
+    WLOGFD("Screen size: Width=%{public}d, Height=%{public}d", width, height);
+}
