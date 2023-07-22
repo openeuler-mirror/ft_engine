@@ -52,6 +52,7 @@ constexpr int DAIL_NUM_RADIUS = 165; // 表盘文字环绕半径
 constexpr int HOUR_PROPORTION = 60 / HOUR_FORMAT; // 圆周分为60份，1小时表示占5小格
 
 #ifdef ENABLE_MMI
+#ifdef USE_MMI_LISTENER
 constexpr int INVALID_COORDINATE = -1;
 class ClockDemoEventConsumer : public OHOS::MMI::IInputEventConsumer
 {
@@ -137,6 +138,41 @@ void ClockDemoEventConsumer::OnInputEvent(std::shared_ptr<OHOS::MMI::PointerEven
     }
     pointerEvent->MarkProcessed();
 }
+#else // USE_MMI_LISTENER
+
+class ClockDemoEventConsumerWindow : public OHOS::Rosen::IInputEventConsumer
+{
+public:
+    ClockDemoEventConsumerWindow(OHOS::sptr<OHOS::Rosen::Window> window)
+    {
+        window_ = window;
+    }
+    bool OnInputEvent(const std::shared_ptr<OHOS::MMI::KeyEvent>& keyEvent) const override;
+    bool OnInputEvent(const std::shared_ptr<OHOS::MMI::AxisEvent>& axisEvent) const override;
+    bool OnInputEvent(const std::shared_ptr<OHOS::MMI::PointerEvent>& pointerEvent) const override;
+private:
+    OHOS::sptr<OHOS::Rosen::Window> window_ = nullptr;
+};
+
+bool ClockDemoEventConsumerWindow::OnInputEvent(const std::shared_ptr<OHOS::MMI::KeyEvent>& keyEvent) const
+{
+    keyEvent->MarkProcessed();
+    return true;
+}
+
+bool ClockDemoEventConsumerWindow::OnInputEvent(const std::shared_ptr<OHOS::MMI::AxisEvent>& axisEvent) const
+{
+    axisEvent->MarkProcessed();
+    return true;
+}
+
+bool ClockDemoEventConsumerWindow::OnInputEvent(const std::shared_ptr<OHOS::MMI::PointerEvent>& pointerEvent) const
+{
+    window_->StartMove();
+    pointerEvent->MarkProcessed();
+    return true;
+}
+#endif // USE_MMI_LISTENER
 #endif // ENABLE_MMI
 
 // we can make this demo and run it on the device,
@@ -162,11 +198,16 @@ public:
             RSTransaction::FlushImplicitTransaction();
             window_->Show();
 #ifdef ENABLE_MMI
+#ifdef USE_MMI_LISTENER
             auto listener = std::make_shared<ClockDemoEventConsumer>(window_);
             const std::string thread = "clockEventThread";
             auto runner = OHOS::AppExecFwk::EventRunner::Create(thread);
             auto eventHandler = std::make_shared<OHOS::AppExecFwk::EventHandler>(runner);
             OHOS::MMI::InputManager::GetInstance()->SetWindowInputEventConsumer(listener, eventHandler);
+#else  // USE_MMI_LISTENER: no mmi listener, use window input event listener
+            auto listener = std::make_shared<ClockDemoEventConsumerWindow>(window_);
+            window_->SetInputEventConsumer(listener);
+#endif // USE_MMI_LISTENER
 #endif // ENABLE_MMI
         } else {
             std::cout << "Failed to create window!" << std::endl;
