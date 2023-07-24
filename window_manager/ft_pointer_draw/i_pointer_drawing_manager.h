@@ -129,5 +129,6 @@ public:
     virtual void SetMouseDisplayState(bool state) {}
     virtual bool GetMouseDisplayState() const { return true; }
     virtual void SetPointerLocation(int32_t pid, int32_t x, int32_t y) {}
+    virtual void GetScreenSize(int32_t &width, int32_t &height) { }
 };
 #endif // I_POINTER_DRAWING_MANAGER_H
