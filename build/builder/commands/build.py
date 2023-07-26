@@ -71,6 +71,21 @@ class Builder:
                     rst = exec_sys_command(['sudo', 'cp', '-f', os.path.join(self.build_output_dir, 'common/common/', output_file), os.path.join(self.args.install, 'bin')])
                     if rst[0] == False : return False
 
+            # Install header files
+            install_header_files_dir = '/usr/include/ftengine/'
+            exec_sys_command(['sudo', 'mkdir', '-p', install_header_files_dir])
+            install_header_files = open(os.path.join(self.project_dir, "install_header_files.txt"))
+            headers = install_header_files.readlines()
+            for header in headers:
+                if header.strip().startswith("#"): continue
+                header = header.rstrip('').rstrip('\n')
+                lit = header.split()
+                if len(lit) == 2 :
+                    rst = exec_sys_command(['sudo', 'mkdir', '-p', install_header_files_dir + lit[1]])
+                    if rst[0] == False : return False
+                    rst = exec_sys_command(['sudo', 'cp', '-rf', lit[0], install_header_files_dir + lit[1]])
+                    if rst[0] == False : return False
+
         return True
 
     def launch_gn(self) -> bool:
