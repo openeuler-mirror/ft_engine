@@ -72,7 +72,7 @@ class Builder:
                     if rst[0] == False : return False
 
             # Install header files
-            install_header_files_dir = '/usr/include/ftengine/'
+            install_header_files_dir = '/usr/include/ft/'
             exec_sys_command(['sudo', 'mkdir', '-p', install_header_files_dir])
             install_header_files = open(os.path.join(self.project_dir, "install_header_files.txt"))
             headers = install_header_files.readlines()
