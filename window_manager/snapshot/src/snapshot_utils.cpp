@@ -71,7 +71,7 @@ void mission_error_exit(j_common_ptr cinfo)
     longjmp(err->environment, 1);
 }
 
-const char *VALID_SNAPSHOT_PATH = "/data";
+const char *VALID_SNAPSHOT_PATH = "/tmp";
 const char *DEFAULT_SNAPSHOT_PREFIX = "/snapshot";
 const char *VALID_SNAPSHOT_SUFFIX = ".jpeg";
 

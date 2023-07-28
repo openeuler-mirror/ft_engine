@@ -360,7 +360,7 @@ void RSRenderServiceConnection::TakeSurfaceCapture(NodeId id, sptr<RSISurfaceCap
         ROSEN_TRACE_BEGIN(HITRACE_TAG_GRAPHIC_AGP, "RSRenderService::TakeSurfaceCapture");
         RSSurfaceCaptureTask task(id, scaleX, scaleY);
         std::unique_ptr<Media::PixelMap> pixelmap = task.Run();
-        callback->OnSurfaceCapture(id, pixelmap.get());
+        callback->OnSurfaceCapture(id, pixelmap.release());
         ROSEN_TRACE_END(HITRACE_TAG_GRAPHIC_AGP);
     };
     mainThread_->PostTask(captureTask);
