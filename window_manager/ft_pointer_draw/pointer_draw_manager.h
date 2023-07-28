@@ -88,6 +88,8 @@ enum MOUSE_ICON {
     MIDDLE_BTN_SOUTH_EAST = 36,
     MIDDLE_BTN_SOUTH_WEST = 37,
     MIDDLE_BTN_NORTH_SOUTH_WEST_EAST = 38,
+
+    INVALID_MOUSE_ICON,
 };
 
 enum ICON_TYPE {
@@ -146,7 +148,8 @@ private:
         std::string iconPath;
     };
 
-    OHOS::WMError InitLayerNode(int32_t x, int32_t y);
+    OHOS::WMError InitSurfaceNode(int32_t x, int32_t y);
+    OHOS::WMError DrawPointerByStyle(int mouseStyle);
     OHOS::WMError InitIconPixel();
     OHOS::WMError CheckPixelFile(const std::string &filePath);
     OHOS::WMError MoveTo(int32_t x, int32_t y);
@@ -156,6 +159,7 @@ private:
     bool isDrawing_ = false;
     int32_t displayId_ = 0;
     std::map<MOUSE_ICON, IconStyle> mouseIcons_;
+    MOUSE_ICON lastMouseStyle_ = INVALID_MOUSE_ICON;
     OHOS::Rosen::RSSurfaceNode::SharedPtr surfaceNode_ = nullptr;
     std::shared_ptr<OHOS::Rosen::RSSurface> rsSurface_ = nullptr;
     std::shared_ptr<OHOS::AppExecFwk::EventRunner> runner_ = nullptr;
