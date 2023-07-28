@@ -19,11 +19,9 @@
 #include <refbase.h>
 #include <string>
 
-#ifdef ROSEN_OHOS
 #include "surface.h"
 #include "surface_delegate.h"
 #include "surface_type.h"
-#endif
 
 #include "platform/drawing/rs_surface.h"
 #include "transaction/rs_transaction_proxy.h"
