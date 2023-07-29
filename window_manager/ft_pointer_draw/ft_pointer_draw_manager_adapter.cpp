@@ -84,15 +84,14 @@ bool FTPtrDrawMgrUpdataDispInfo(const uintptr_t instanceHdl, int32_t displayId, 
     return true;
 }
 
-bool FTPtrDrawMgrDrawPointer(const uintptr_t instanceHdl, int32_t displayId, int32_t physicalX, int32_t physicalY)
+bool FTPtrDrawMgrDrawPointer(const uintptr_t instanceHdl, int32_t displayId, int32_t physicalX, int32_t physicalY, int32_t style)
 {
-    int32_t defaultStyle = 0;
     PointerDrawPtr instance = FindPointerDraw(instanceHdl);
     if (instance == nullptr) {
         return false;
     }
 
-    instance->DrawPointer(displayId, physicalX, physicalY, defaultStyle);
+    instance->DrawPointer(displayId, physicalX, physicalY, style);
     return true;
 }
 
