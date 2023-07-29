@@ -61,16 +61,21 @@ bool PointerDrawingManager::Init()
 void PointerDrawingManager::DrawPointer(int32_t displayId, int32_t physicalX, int32_t physicalY,
     int32_t mouseStyle)
 {
-    (void)mouseStyle;
-
     if (!isDrawing_) {
-        if (InitLayerNode(physicalX, physicalY) != WMError::WM_OK) {
-            WLOGFE("InitLayerNode fail");
+        if (InitSurfaceNode(physicalX, physicalY) != WMError::WM_OK) {
+            WLOGFE("init surface node fail");
             return;
         }
         Rosen::DisplayManagerServiceInner::GetInstance().UpdateRSTree(0, 0, surfaceNode_, true, false);
         isDrawing_ = true;
-        return;
+    }
+
+    if (lastMouseStyle_ != mouseStyle) {
+        if (DrawPointerByStyle(mouseStyle) != WMError::WM_OK) {
+            WLOGFE("draw pointer by style fail");
+            return;
+        }
+        lastMouseStyle_ = (MOUSE_ICON)mouseStyle;
     }
 
     if (handler_ == nullptr) {
@@ -127,8 +132,12 @@ WMError PointerDrawingManager::MoveTo(int32_t x, int32_t y)
     return WMError::WM_OK;
 }
 
-WMError PointerDrawingManager::InitLayerNode(int32_t x, int32_t y)
+WMError PointerDrawingManager::InitSurfaceNode(int32_t x, int32_t y)
 {
+    if (isDrawing_) {
+        return WMError::WM_OK;  // surface node is inited, just return
+    }
+
     Rosen::RSSurfaceNodeConfig config;
     surfaceNode_ = Rosen::RSSurfaceNode::Create(config);
     if (surfaceNode_ == nullptr) {
@@ -154,7 +163,14 @@ WMError PointerDrawingManager::InitLayerNode(int32_t x, int32_t y)
         WLOGFE("create renderContext fail");
     }
 #endif
+    return WMError::WM_OK;
+}
 
+WMError PointerDrawingManager::DrawPointerByStyle(int mouseStyle)
+{
+    if (rsSurface_ == nullptr) {
+        return WMError::WM_ERROR_NULLPTR;
+    }
     auto framePtr = rsSurface_->RequestFrame(ICON_WIDTH, ICON_HEIGHT);
     if (framePtr == nullptr) {
         WLOGFE("RequestFrame fail");
@@ -172,11 +188,13 @@ WMError PointerDrawingManager::InitLayerNode(int32_t x, int32_t y)
     paint.setColor(SK_ColorBLUE);
     canvas->drawRect(SkRect::MakeXYWH(0, 0, ICON_WIDTH, ICON_HEIGHT), paint);
 #else
-    if (mouseIcons_.size() == 0) {
-        WLOGFE("can not find icon pixel file");
-        return WMError::WM_ERROR_NULLPTR;
+    auto it = mouseIcons_.find(MOUSE_ICON(mouseStyle));
+    if (it == mouseIcons_.end()) {
+        WLOGFE("unsupport mouse style=%{public}d", mouseStyle);
+        return WMError::WM_ERROR_INVALID_PARAM;
     }
-    auto pixelmap = DecodeImageToPixelMap(mouseIcons_[DEFAULT].iconPath);
+
+    auto pixelmap = DecodeImageToPixelMap(mouseIcons_[MOUSE_ICON(mouseStyle)].iconPath);
     if (pixelmap == nullptr) {
         WLOGFE("DecodeImageToPixelMap fail");
         return WMError::WM_ERROR_NULLPTR;
@@ -192,7 +210,6 @@ WMError PointerDrawingManager::InitLayerNode(int32_t x, int32_t y)
 #endif
     framePtr->SetDamageRegion(0, 0, ICON_WIDTH, ICON_HEIGHT);
     rsSurface_->FlushFrame(framePtr);
-
     return WMError::WM_OK;
 }
 
@@ -201,7 +218,47 @@ WMError PointerDrawingManager::InitIconPixel()
 #ifndef USE_IMITATE_POINTER
     mouseIcons_ = {
         {DEFAULT, {ANGLE_NW, POINTER_PIXEL_PATH + "Default.png"}},
+        {EAST, {ANGLE_CENTER, POINTER_PIXEL_PATH + "East.png"}},
+        {WEST, {ANGLE_CENTER, POINTER_PIXEL_PATH + "West.png"}},
+        {SOUTH, {ANGLE_CENTER, POINTER_PIXEL_PATH + "South.png"}},
+        {NORTH, {ANGLE_CENTER, POINTER_PIXEL_PATH + "North.png"}},
+        {WEST_EAST, {ANGLE_CENTER, POINTER_PIXEL_PATH + "West_East.png"}},
+        {NORTH_SOUTH, {ANGLE_CENTER, POINTER_PIXEL_PATH + "North_South.png"}},
+        {NORTH_EAST, {ANGLE_CENTER, POINTER_PIXEL_PATH + "North_East.png"}},
+        {NORTH_WEST, {ANGLE_CENTER, POINTER_PIXEL_PATH + "North_West.png"}},
+        {SOUTH_EAST, {ANGLE_CENTER, POINTER_PIXEL_PATH + "South_East.png"}},
+        {SOUTH_WEST, {ANGLE_CENTER, POINTER_PIXEL_PATH + "South_West.png"}},
+        {NORTH_EAST_SOUTH_WEST, {ANGLE_CENTER, POINTER_PIXEL_PATH + "North_East_South_West.png"}},
+        {NORTH_WEST_SOUTH_EAST, {ANGLE_CENTER, POINTER_PIXEL_PATH + "North_West_South_East.png"}},
+        {CROSS, {ANGLE_CENTER, POINTER_PIXEL_PATH + "Cross.png"}},
+        {CURSOR_COPY, {ANGLE_NW, POINTER_PIXEL_PATH + "Copy.png"}},
+        {CURSOR_FORBID, {ANGLE_NW, POINTER_PIXEL_PATH + "Forbid.png"}},
+        {COLOR_SUCKER, {ANGLE_SW, POINTER_PIXEL_PATH + "Colorsucker.png"}},
+        {HAND_GRABBING, {ANGLE_CENTER, POINTER_PIXEL_PATH + "Hand_Grabbing.png"}},
+        {HAND_OPEN, {ANGLE_CENTER, POINTER_PIXEL_PATH + "Hand_Open.png"}},
+        {HAND_POINTING, {ANGLE_NW, POINTER_PIXEL_PATH + "Hand_Pointing.png"}},
+        {HELP, {ANGLE_NW, POINTER_PIXEL_PATH + "Help.png"}},
+        {CURSOR_MOVE, {ANGLE_CENTER, POINTER_PIXEL_PATH + "Move.png"}},
+        {RESIZE_LEFT_RIGHT, {ANGLE_CENTER, POINTER_PIXEL_PATH + "Resize_Left_Right.png"}},
+        {RESIZE_UP_DOWN, {ANGLE_CENTER, POINTER_PIXEL_PATH + "Resize_Up_Down.png"}},
+        {SCREENSHOT_CHOOSE, {ANGLE_CENTER, POINTER_PIXEL_PATH + "Screenshot_Cross.png"}},
+        {SCREENSHOT_CURSOR, {ANGLE_CENTER, POINTER_PIXEL_PATH + "Screenshot_Cursor.png"}},
+        {TEXT_CURSOR, {ANGLE_CENTER, POINTER_PIXEL_PATH + "Text_Cursor.png"}},
+        {ZOOM_IN, {ANGLE_CENTER, POINTER_PIXEL_PATH + "Zoom_In.png"}},
+        {ZOOM_OUT, {ANGLE_CENTER, POINTER_PIXEL_PATH + "Zoom_Out.png"}},
+        {MIDDLE_BTN_EAST, {ANGLE_CENTER, POINTER_PIXEL_PATH + "MID_Btn_East.png"}},
+        {MIDDLE_BTN_WEST, {ANGLE_CENTER, POINTER_PIXEL_PATH + "MID_Btn_West.png"}},
+        {MIDDLE_BTN_SOUTH, {ANGLE_CENTER, POINTER_PIXEL_PATH + "MID_Btn_South.png"}},
+        {MIDDLE_BTN_NORTH, {ANGLE_CENTER, POINTER_PIXEL_PATH + "MID_Btn_North.png"}},
+        {MIDDLE_BTN_NORTH_SOUTH, {ANGLE_CENTER, POINTER_PIXEL_PATH + "MID_Btn_North_South.png"}},
+        {MIDDLE_BTN_NORTH_EAST, {ANGLE_CENTER, POINTER_PIXEL_PATH + "MID_Btn_North_East.png"}},
+        {MIDDLE_BTN_NORTH_WEST, {ANGLE_CENTER, POINTER_PIXEL_PATH + "MID_Btn_North_West.png"}},
+        {MIDDLE_BTN_SOUTH_EAST, {ANGLE_CENTER, POINTER_PIXEL_PATH + "MID_Btn_South_East.png"}},
+        {MIDDLE_BTN_SOUTH_WEST, {ANGLE_CENTER, POINTER_PIXEL_PATH + "MID_Btn_South_West.png"}},
+        {MIDDLE_BTN_NORTH_SOUTH_WEST_EAST, {ANGLE_CENTER, POINTER_PIXEL_PATH +
+            "MID_Btn_North_South_West_East.png"}},
     };
+
     for (auto iter = mouseIcons_.begin(); iter != mouseIcons_.end();) {
         if (CheckPixelFile(iter->second.iconPath) != WMError::WM_OK) {
             iter = mouseIcons_.erase(iter);
