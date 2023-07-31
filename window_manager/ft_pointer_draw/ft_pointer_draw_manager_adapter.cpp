@@ -113,6 +113,16 @@ bool FTPtrDrawMgrGetScreenSize(const uintptr_t instanceHdl, int32_t *width, int3
     return true;
 }
 
+bool FTPtrDrawMgrSetPointerVisible(const uintptr_t instanceHdl, int32_t pid, bool visible)
+{
+    PointerDrawPtr instance = FindPointerDraw(instanceHdl);
+    if (instance == nullptr) {
+        return false;
+    }
+
+    return instance->SetPointerVisible(pid, visible);
+}
+
 #if defined(__cplusplus)
 }
 #endif // __cplusplus

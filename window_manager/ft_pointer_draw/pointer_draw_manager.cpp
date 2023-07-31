@@ -115,6 +115,30 @@ void PointerDrawingManager::SetPointerLocation(int32_t pid, int32_t x, int32_t y
     }
 }
 
+bool PointerDrawingManager::SetPointerVisible(int32_t pid, bool visible)
+{
+    (void)pid;
+    if (!surfaceNode_) {
+        return false;
+    }
+
+    WLOGFE("SetPointerVisible=%{public}d", visible);
+    surfaceNode_->SetPositionZ(PTR_SURFACE_NODE_Z_ORDER);
+    Rosen::DisplayManagerServiceInner::GetInstance().UpdateRSTree(0, 0, surfaceNode_, visible, false);
+    if (visible) {
+        if (DrawPointerByStyle(lastMouseStyle_) != WMError::WM_OK) {
+            WLOGFE("draw pointer by style fail");
+            return false;
+        }
+    } else {
+        if (ClearDrawPointer() != WMError::WM_OK) {
+            WLOGFE("clear pointer fail");
+            return false;
+        }
+    }
+    return true;
+}
+
 void PointerDrawingManager::UpdateDisplayInfo(const ScreenDisplayInfo& displayInfo)
 {
     (void) displayInfo;
@@ -163,6 +187,23 @@ WMError PointerDrawingManager::InitSurfaceNode(int32_t x, int32_t y)
         WLOGFE("create renderContext fail");
     }
 #endif
+    return WMError::WM_OK;
+}
+
+WMError PointerDrawingManager::ClearDrawPointer()
+{
+    if (rsSurface_ == nullptr) {
+        return WMError::WM_ERROR_NULLPTR;
+    }
+    auto framePtr = rsSurface_->RequestFrame(ICON_WIDTH, ICON_HEIGHT);
+    if (framePtr == nullptr) {
+        WLOGFE("RequestFrame fail");
+        return WMError::WM_ERROR_NULLPTR;
+    }
+    auto canvas = framePtr->GetCanvas();
+    canvas->clear(SK_ColorTRANSPARENT);
+    framePtr->SetDamageRegion(0, 0, ICON_WIDTH, ICON_HEIGHT);
+    rsSurface_->FlushFrame(framePtr);
     return WMError::WM_OK;
 }
 

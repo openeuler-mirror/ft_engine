@@ -121,7 +121,7 @@ public:
     virtual void OnWindowInfo(int32_t windowPid, int32_t windowId) {}
     virtual bool Init() { return true;}
     virtual void DeletePointerVisible(int32_t pid) {}
-    virtual int32_t SetPointerVisible(int32_t pid, bool visible) { return 0;}
+    virtual bool SetPointerVisible(int32_t pid, bool visible) { return 0;}
     virtual int32_t SetPointerStyle(int32_t pid, int32_t windowId, int32_t pointerStyle) { return 0; }
     virtual int32_t GetPointerStyle(int32_t pid, int32_t windowId, int32_t &pointerStyle) { return 0;}
     virtual void DrawPointerStyle() {}

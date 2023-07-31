@@ -119,10 +119,7 @@ public:
     void DeletePointerVisible(int32_t pid) override {}
     void SetMouseDisplayState(bool state) override {}
     void DrawPointerStyle() override {}
-    int32_t SetPointerVisible(int32_t pid, bool visible) override
-    {
-        return OHOS::WMError::WM_OK;
-    }
+    bool SetPointerVisible(int32_t pid, bool visible) override;
     int32_t SetPointerStyle(int32_t pid, int32_t windowId, int32_t pointerStyle) override
     {
         return OHOS::WMError::WM_OK;
@@ -150,6 +147,7 @@ private:
 
     OHOS::WMError InitSurfaceNode(int32_t x, int32_t y);
     OHOS::WMError DrawPointerByStyle(int mouseStyle);
+    OHOS::WMError ClearDrawPointer();
     OHOS::WMError InitIconPixel();
     OHOS::WMError CheckPixelFile(const std::string &filePath);
     OHOS::WMError MoveTo(int32_t x, int32_t y);
