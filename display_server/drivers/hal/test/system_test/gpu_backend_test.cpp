@@ -14,6 +14,7 @@
  */
 
 #include <csignal>
+#include <cassert>
 
 #include "display_device.h"
 #include "event_loop/event_loop.h"
