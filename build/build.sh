@@ -38,13 +38,13 @@ fi
 
 # builder third_party
 cd ${PROJECT_DIR}/third_party/ft_flutter
-./build.sh -i
+./build.sh -b release -i
 
 cd ${PROJECT_DIR}/third_party/ft_multimedia
-./build.sh
+./build.sh -b release
 
 cd ${PROJECT_DIR}/third_party/ft_mmi
-./build.sh
+./build.sh -b release
 
 cd ${PROJECT_DIR}
 
