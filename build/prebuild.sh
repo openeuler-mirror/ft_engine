@@ -132,7 +132,7 @@ cd ${PROJECT_DIR}/third_party/ft_multimedia
 fi
 
 if [ ! -d ${PROJECT_DIR}/third_party/ft_mmi ]; then
-git clone https://gitee.com/openeuler/ft_mmi.git ${PROJECT_DIR}/third_party/ft_mmi
+git clone https://gitee.com/openeuler/ft_mmi.git -b weekly_20230804 ${PROJECT_DIR}/third_party/ft_mmi
 cd ${PROJECT_DIR}/third_party/ft_mmi
 ./build/prebuild.sh
 ./build.sh
