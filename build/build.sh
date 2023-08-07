@@ -41,10 +41,10 @@ cd ${PROJECT_DIR}/third_party/ft_flutter
 ./build.sh -b release -i
 
 cd ${PROJECT_DIR}/third_party/ft_multimedia
-./build.sh -b release
+./build.sh -b release -i
 
 cd ${PROJECT_DIR}/third_party/ft_mmi
-./build.sh -b release
+./build.sh -b release -i
 
 cd ${PROJECT_DIR}
 
