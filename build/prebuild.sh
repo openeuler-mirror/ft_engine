@@ -128,14 +128,14 @@ if [ ! -d ${PROJECT_DIR}/third_party/ft_multimedia ]; then
 git clone https://gitee.com/huangyuxin2023/ft_multimedia.git ${PROJECT_DIR}/third_party/ft_multimedia
 cd ${PROJECT_DIR}/third_party/ft_multimedia
 ./build/prebuild.sh
-./build.sh -b release
+./build.sh -b release -i
 fi
 
 if [ ! -d ${PROJECT_DIR}/third_party/ft_mmi ]; then
 git clone https://gitee.com/huangyuxin2023/ft_mmi.git ${PROJECT_DIR}/third_party/ft_mmi
 cd ${PROJECT_DIR}/third_party/ft_mmi
 ./build/prebuild.sh
-./build.sh -b release
+./build.sh -b release -i
 fi
 
 cd ${PROJECT_DIR}
