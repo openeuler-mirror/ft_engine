@@ -125,14 +125,14 @@ cd ${PROJECT_DIR}/third_party/ft_flutter
 fi
 
 if [ ! -d ${PROJECT_DIR}/third_party/ft_multimedia ]; then
-git clone https://gitee.com/openeuler/ft_multimedia.git ${PROJECT_DIR}/third_party/ft_multimedia
+git clone https://gitee.com/huangyuxin2023/ft_multimedia.git ${PROJECT_DIR}/third_party/ft_multimedia
 cd ${PROJECT_DIR}/third_party/ft_multimedia
 ./build/prebuild.sh
 ./build.sh -b release
 fi
 
 if [ ! -d ${PROJECT_DIR}/third_party/ft_mmi ]; then
-git clone https://gitee.com/openeuler/ft_mmi.git ${PROJECT_DIR}/third_party/ft_mmi
+git clone https://gitee.com/huangyuxin2023/ft_mmi.git ${PROJECT_DIR}/third_party/ft_mmi
 cd ${PROJECT_DIR}/third_party/ft_mmi
 ./build/prebuild.sh
 ./build.sh -b release
