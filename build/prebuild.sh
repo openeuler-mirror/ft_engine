@@ -60,7 +60,7 @@ rm -rf ${PROJECT_DIR}/out
 echo -e "\e[36m[-] Prepare system packages...\e[0m"
 
 # Check & Install required system packages
-python3 ${PROJECT_DIR}/build/builder.py check --install-packages $*
+python3 ${PROJECT_DIR}/build/builder.py check --install-packages
 
 # =============================================================================
 # Prebuild
