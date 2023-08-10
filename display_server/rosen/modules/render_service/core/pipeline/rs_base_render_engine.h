@@ -130,6 +130,8 @@ public:
     virtual void DrawLayers(RSPaintFilterCanvas& canvas, const std::vector<LayerInfoPtr>& layers, bool forceCPU = false,
         float mirrorAdaptiveCoefficient = 1.0f) = 0;
 
+    static void PostProcessOutput(RSPaintFilterCanvas& canvas, bool forceCPU = false, float mirrorAdaptiveCoefficient = 1.0f);
+
     static void ShrinkCachesIfNeeded();
     static void SetColorFilterMode(ColorFilterMode mode);
     static ColorFilterMode GetColorFilterMode()
