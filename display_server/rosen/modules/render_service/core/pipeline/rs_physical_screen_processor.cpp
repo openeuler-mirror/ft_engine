@@ -92,6 +92,7 @@ void RSPhysicalScreenProcessor::Redraw(const sptr<Surface>& surface, const std::
     canvas->clear(SK_ColorTRANSPARENT);
     canvas->concat(screenTransformMatrix_);
     renderEngine_->DrawLayers(*canvas, layers, forceCPU, mirrorAdaptiveCoefficient_);
+    renderEngine_->PostProcessOutput(*canvas, forceCPU, mirrorAdaptiveCoefficient_);
     renderFrame->Flush();
     RS_LOGD("RsDebug RSPhysicalScreenProcessor::Redraw flush frame buffer end");
 }
