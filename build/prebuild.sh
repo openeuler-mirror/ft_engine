@@ -114,27 +114,27 @@ sudo cp ${PROJECT_DIR}/window_manager/resources/config/other/display_manager_con
 sudo cp ${PROJECT_DIR}/window_manager/resources/config/other/window_manager_config.xml /usr/local/share/ft/window_manager
 
 # =============================================================================
-# download ft thirt part files
+# download ft third party files
 # =============================================================================
 
 if [ ! -d ${PROJECT_DIR}/third_party/ft_flutter ]; then
 git clone https://gitee.com/openeuler/ft_flutter.git ${PROJECT_DIR}/third_party/ft_flutter
 cd ${PROJECT_DIR}/third_party/ft_flutter
-./project_build/prebuild.sh
+./project_build/prebuild.sh $*
 ./build.sh $*
 fi
 
 if [ ! -d ${PROJECT_DIR}/third_party/ft_multimedia ]; then
 git clone https://gitee.com/openeuler/ft_multimedia.git ${PROJECT_DIR}/third_party/ft_multimedia
 cd ${PROJECT_DIR}/third_party/ft_multimedia
-./build/prebuild.sh
+./build/prebuild.sh $*
 ./build.sh $*
 fi
 
 if [ ! -d ${PROJECT_DIR}/third_party/ft_mmi ]; then
 git clone https://gitee.com/openeuler/ft_mmi.git ${PROJECT_DIR}/third_party/ft_mmi
 cd ${PROJECT_DIR}/third_party/ft_mmi
-./build/prebuild.sh
+./build/prebuild.sh $*
 ./build.sh $*
 fi
 
