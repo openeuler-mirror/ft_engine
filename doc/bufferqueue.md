@@ -477,3 +477,4 @@ rnote over BufferQueue : 将buffer状态变为released\nbuffer入队freeList_
 ```
 
 ## 4 小结
+![输入图片说明](BufferQueue%E6%80%BB%E7%BB%93.png)
