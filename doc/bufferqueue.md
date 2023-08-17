@@ -47,15 +47,17 @@
 
 ### 1.2. Producer 相关的类
 
-`RSSurfaceOhosGl` 可视为 `BufferQueue` 在 Client 端的 `Producer` 端，
-对应 Server 端的 `BufferQueueProducer`。
+`RSSurfaceOhosGl` 可视为处于用户端的生产者。
+
+`RSSurfaceOhosGl` 类包含一个指向 `ProducerSurface` 的指针 `producer_`，该指针包含一个指向 `BufferClientProducer` 的指针 `producer_`，
+`BufferClientProducer` 对象可通过IPC远程调用 `BufferQueueProducer` 的函数，请求或者发送 buffer 到 `BufferQueue`。
 
 ![5](picture/5.png)
 
 ### 1.3. Consumer 相关的类
 
-每一个 Client 都有一个对应的 `HdiFramebufferSurface` 对象。
-`HdiFramebufferSurface` 可视为 `BufferQueue` 的 `Consumer` 端。
-该类包含一个指向 `ConsumerSurface` 和 `ProducerSurface` 的指针。
+`HdiFramebufferSurface` 可视为 `BufferQueue` 的消费者。
+
+`HdiFramebufferSurface` 类包含一个指向 `ConsumerSurface` 的指针 `consumerSurface_`，该指针包含一个指向 `BufferQueueConsumer` 的指针 `consumer_`，对应着 `BufferQueue` 的直接消费者。
  
 ![6](picture/6.png)
