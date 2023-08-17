@@ -47,7 +47,7 @@
 
 ### 1.2. Producer 相关的类
 
-`RSSurfaceOhosGl` 可视为处于用户端的生产者。
+`RSSurfaceOhosGl` 可视为处于客户端的生产者。
 
 `RSSurfaceOhosGl` 类包含一个指向 `ProducerSurface` 的指针 `producer_`，该指针包含一个指向 `BufferClientProducer` 的指针 `producer_`，
 `BufferClientProducer` 对象可通过IPC远程调用 `BufferQueueProducer` 的函数，请求或者发送 buffer 到 `BufferQueue`。
@@ -61,3 +61,90 @@
 `HdiFramebufferSurface` 类包含一个指向 `ConsumerSurface` 的指针 `consumerSurface_`，该指针包含一个指向 `BufferQueueConsumer` 的指针 `consumer_`，对应着 `BufferQueue` 的直接消费者。
  
 ![6](picture/6.png)
+
+## 2. Producer
+下图展示了`clock.cpp` 中 `ClockDemo::Run()` 的运行过程。
+
+![7](picture/7.png)
+
+下面以 `clock` 为例分析请求 buffer 和提交 buffer 的流程。
+
+### 2.1. RequestBuffer
+
+生产者调用 `RequestFrame()` 请求 buffer，客户端通过 IPC 将信息传到服务端的 `BufferQueueProducer`，使其调用 `BufferQueue` 相应的函数。
+调用 `RSSurface::RequestFrame` 请求 Buffer。
+
+#### 2.1.1. Client
+
+![8](picture/8.png)
+
+#### 2.1.2. Server
+
+服务端主要指 Render Service 和 Display Gralloc。
+
+##### 2.1.2.1. Render Service
+
+...todo
+
+![9](picture/9.png)
+
+##### 2.1.2.2. Display Gralloc
+
+...todo
+
+### 2.2. FlushBuffer
+
+`FlushFrame()` 实现送显 `buffer`，通过 IPC 将信息传到服务端。
+
+...todo
+
+#### 2.2.1. Client
+
+...todo
+
+![10](picture/10.png)
+
+#### 2.2.2. Server
+
+服务端主要指 Render Service 和 Display Gralloc。
+
+...todo
+
+##### 2.2.2.1. Render Service
+
+...todo
+
+![11](picture/11.png)
+
+##### 2.2.2.2. Display Gralloc
+
+...todo
+
+## 3. Consumer
+
+...todo
+
+### 3.1. AcquireBuffer
+
+在 BufferQueue 的 `FlushFrame`中，完成 `doFlushFrame` 后，
+会调用 `HdiFramebufferSurface::OnBufferAvailable()`。
+
+...todo
+
+![12](picture/12.png)
+
+### 3.2. ReleaseBuffer
+
+...todo
+
+![13](picture/13.png)
+
+## 4. 小结
+
+...todo
+
+总结的图片待添加
+
+图片存在不完整的部分，待修改。
+
+
