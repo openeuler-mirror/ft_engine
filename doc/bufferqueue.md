@@ -8,7 +8,7 @@
 
 `BufferQueue` 的原始生产者和消费者分别为 `BufferQueueProducer` 和 `BufferQueueConsumer`，其关系如下图所示。
 
-![bufferqueue原理](picture/bufferqueue%E5%8E%9F%E7%90%86.png)
+![1](picture/1.png)
 
 ##### BufferQueueProducer
 生产者通过 `RequestBuffer()` 从 `BufferQueue` 中请求一个可用的 buffer，
@@ -27,9 +27,35 @@
 ##### Buffer 状态
 同时，buffer 的状态随生产者、消费者的操作而改变，其状态转移关系如下图所示。
 
-![buffer状态图](picture/buffer%E7%8A%B6%E6%80%81%E5%9B%BE.png)
-
+![2](picture/2.png)
 
 #### 1.1.2. BufferQueue 相关的类
 
 `BufferQueueProducer` 和 `BufferQueueConsumer` 均包含一个指向 `BufferQueue` 对象的指针，通过 `BufferQueue` 对象操作内存。
+
+![3](picture/3.png)
+
+#### 1.1.3. Surface 相关的类
+
+抽象类 `Surface` 是对 `BufferQueue` 直接生产者和消费者的封装。
+`ProducerSurface` 和 `ConsumerSurface` 是 `Surface` 的实现类，分别代表封装后的生产者和消费者。
+
+`ConsumerSurface` 包含一个指向 `BufferQueueProducer` 和 `BufferQueueConsumer` 的指针。
+`ProducerSurface` 包含一个指向 `IBufferProducer` 的指针。
+
+![4](picture/4.png)
+
+### 1.2. Producer 相关的类
+
+`RSSurfaceOhosGl` 可视为 `BufferQueue` 在 Client 端的 `Producer` 端，
+对应 Server 端的 `BufferQueueProducer`。
+
+![5](picture/5.png)
+
+### 1.3. Consumer 相关的类
+
+每一个 Client 都有一个对应的 `HdiFramebufferSurface` 对象。
+`HdiFramebufferSurface` 可视为 `BufferQueue` 的 `Consumer` 端。
+该类包含一个指向 `ConsumerSurface` 和 `ProducerSurface` 的指针。
+ 
+![6](picture/6.png)
