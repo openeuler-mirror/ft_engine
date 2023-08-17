@@ -56,7 +56,7 @@
 
 ### 1.3. Consumer 相关的类
 
-`HdiFramebufferSurface` 可视为 `BufferQueue` 的消费者。
+`HdiFramebufferSurface` 可视为消费者。
 
 `HdiFramebufferSurface` 类包含一个指向 `ConsumerSurface` 的指针 `consumerSurface_`，该指针包含一个指向 `BufferQueueConsumer` 的指针 `consumer_`，对应着 `BufferQueue` 的直接消费者。
  
