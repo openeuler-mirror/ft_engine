@@ -2,7 +2,7 @@
 
 ## 1. 类的关系
 
-### 1.1 BufferQueue
+### 1.1. BufferQueue
 
 生产者先通过 `RequestBuffer()` 从 `BufferQueue` 中请求一个可用的 buffer，
 填充完成后调用 `FlushBuffer()` 通知 `BufferQueue`。
@@ -182,7 +182,7 @@ BufferQueueProducer -u-|> IRemoteStub
 @enduml
 ```
 
-### 1.2 Producer
+### 1.2. Producer
 
 `RSSurfaceOhosGl` 可视为 `BufferQueue` 在 Client 端的 `Producer` 端，
 对应 Server 端的 `BufferQueueProducer`。
@@ -244,7 +244,7 @@ BufferClientProducer -> BufferQueueProducer
 RSSurfaceOhosGl -right-|> RSSurfaceOhos
 RSSurfaceOhos -right-|> RSSurface
 ```
-### 1.3 Consumer
+### 1.3. Consumer
 
 每一个 Client 都有一个对应的 `HdiFramebufferSurface` 对象。
 `HdiFramebufferSurface` 可视为 `BufferQueue` 的 `Consumer` 端。
@@ -283,7 +283,7 @@ BufferQueue -d-* BufferQueueConsumer
 @enduml
 ```
 
-## 2 Producer
+## 2. Producer
 下图展示了`clock.cpp` 中 `ClockDemo::Run()` 的运行过程。
 主要以 `clock` 为例分析绘制 `buffer`、送显 `buffer` 的使用。
 
@@ -301,12 +301,12 @@ end while
 -[hidden]->
 ```
 
-### 2.1 RequestBuffer
+### 2.1. RequestBuffer
 
 `RequestFrame()` 实现请求 `buffer`，经过 `IPC通信` 会把 `buffer` 信息传到Server，使其操作 `BufferQueue`。
 调用 `RSSurface::RequestFrame` 请求 Buffer。
 
-#### 2.1.1 Client
+#### 2.1.1. Client
 
 ```plantuml
 @startuml
@@ -332,9 +332,9 @@ BufferClientProducer ->? : SEND_REQUEST
 @enduml
 ```
 
-#### 2.1.2 Server
+#### 2.1.2. Server
 
-##### 2.1.2.1 Render Service
+##### 2.1.2.1. Render Service
 ```plantuml
 @startuml
 skinparam dpi 2000
@@ -357,16 +357,16 @@ DumbAllocator->? :drmIoctl
 @enduml
 ```
 
-##### 2.1.2.2 display
+##### 2.1.2.2. display
 
-### 2.2 FlushBuffer
+### 2.2. FlushBuffer
 
 `FlushFrame()` 实现送显 `buffer`，经过 `IPC通信` 会把 `buffer` 信息传到服务端 `BufferQueue`。
 调用 `RSSurface::FlushFrame` 对 Buffer 进行渲染，flush 到消费端。
 渲染完成之后会调用 `renderFrame->Flush` 将buffer的使用权还给render_server
 填充好数据后，通过 `FlushFrame` 把这个buffer再返还给BufferQueue。
 
-#### 2.2.1 Client
+#### 2.2.1. Client
 
 ```plantuml
 @startuml
@@ -393,11 +393,11 @@ BufferClientProducer ->? : SEND_REQUEST_WITH_SEQ
 @enduml
 ```
 
-#### 2.2.2 Server
+#### 2.2.2. Server
 
 服务端主要指 Render Service 和 disp_gralloc_bo。
 
-##### 2.2.2.1 Render Service
+##### 2.2.2.1. Render Service
 ```plantuml
 @startuml
 skinparam dpi 2000
@@ -417,14 +417,14 @@ BufferQueue  -> HdiFramebufferSurface : HdiFramebufferSurface::\nOnBufferAvailab
 @enduml
 ```
 
-##### 2.2.2 disp_gralloc_bo
+##### 2.2.2.2. disp_gralloc_bo
 
 
-## 3 Consumer
+## 3. Consumer
 
 
 
-### 3.1 AcquireBuffer
+### 3.1. AcquireBuffer
 
 在 BufferQueue 的 `FlushFrame`中，完成 `doFlushFrame` 后，
 会调用 `HdiFramebufferSurface::OnBufferAvailable()`。
@@ -450,7 +450,7 @@ rnote over BufferQueue : buffer从dirtyList_出队\n状态由flushed变为acquir
 @enduml
 ```
 
-### 3.2 ReleaseBuffer
+### 3.2. ReleaseBuffer
 
 ```plantuml
 @startuml
@@ -474,4 +474,4 @@ rnote over BufferQueue : 将buffer状态变为released\nbuffer入队freeList_
 @enduml
 ```
 
-## 4 小结
+## 4. 小结
