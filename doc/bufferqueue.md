@@ -8,7 +8,7 @@
 
 `BufferQueue` 的原始生产者和消费者分别为 `BufferQueueProducer` 和 `BufferQueueConsumer`，其关系如下图所示。
 
-![bufferqueue简介](picture/bufferqueue%E7%AE%80%E4%BB%8B.png)
+![bufferqueue原理](picture/bufferqueue%E5%8E%9F%E7%90%86.png)
 
 ##### BufferQueueProducer
 生产者通过 `RequestBuffer()` 从 `BufferQueue` 中请求一个可用的 buffer，
@@ -28,6 +28,7 @@
 同时，buffer 的状态随生产者、消费者的操作而改变，其状态转移关系如下图所示。
 
 ![buffer状态图](picture/buffer%E7%8A%B6%E6%80%81%E5%9B%BE.png)
+
 
 #### 1.1.2. BufferQueue 相关的类
 
