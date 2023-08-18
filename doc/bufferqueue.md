@@ -71,80 +71,65 @@
 
 ### 2.1. RequestBuffer
 
-生产者调用 `RequestFrame()` 请求 buffer，客户端通过 IPC 将信息传到服务端的 `BufferQueueProducer`，使其调用 `BufferQueue` 相应的函数。
-调用 `RSSurface::RequestFrame` 请求 Buffer。
+首先，客户端调用 `RequestFrame()` 请求一个 surface buffer，
+`BufferClientProducer` 将请求传递给服务端，
+`BufferQueueProducer` 接收到后会调用 `RequestBufferRemote` 进行处理。
+
+下面展示客户端和服务端两部分调用流程。
 
 #### 2.1.1. Client
+
+客户端部分主要指：从应用程序请求一个 surface buffer 到 `BufferClientPorducer` 向服务端发送请求消息的过程。
 
 ![8](picture/8.png)
 
 #### 2.1.2. Server
 
-服务端主要指 Render Service 和 Display Gralloc。
-
-##### 2.1.2.1. Render Service
-
-...todo
+服务端部分主要指：从 `BufferQueueProducer` 接收到远程调用到 BufferQueue 重复使用 buffer 或申请内存的过程。
 
 ![9](picture/9.png)
 
-##### 2.1.2.2. Display Gralloc
-
-...todo
-
 ### 2.2. FlushBuffer
 
-`FlushFrame()` 实现送显 `buffer`，通过 IPC 将信息传到服务端。
-
-...todo
+首先，客户端调用 `FlushFrame()` 送显，
+`BufferClientProducer` 将消息传递给服务端，
+`BufferQueueProducer` 接收到后会调用 `FlushBufferRemote` 进行处理。
+下面展示客户端和服务端两部分调用流程。
 
 #### 2.2.1. Client
 
-...todo
+客户端部分主要指：从应用程序调用 `FlushFrame()` 送显到 `BufferClientPorducer` 向服务端发送送显消息的过程。
 
 ![10](picture/10.png)
 
 #### 2.2.2. Server
 
-服务端主要指 Render Service 和 Display Gralloc。
-
-...todo
-
-##### 2.2.2.1. Render Service
-
-...todo
+服务端部分主要指：从 `BufferQueueProducer` 接收到远程调用到 BufferQueue 对 buffer 进行处理并调用消费者监听回调函数的过程。
 
 ![11](picture/11.png)
 
-##### 2.2.2.2. Display Gralloc
-
-...todo
-
 ## 3. Consumer
 
-...todo
+消费者的主要作用是从 `dirtyList` 中取出 buffer，完成若干操作后释放 buffer。
 
 ### 3.1. AcquireBuffer
 
-在 BufferQueue 的 `FlushFrame`中，完成 `doFlushFrame` 后，
-会调用 `HdiFramebufferSurface::OnBufferAvailable()`。
-
-...todo
+在 BufferQueue 完成 `doFlushFrame()` 后，会调用消费者监听回调函数 `HdiFramebufferSurface::OnBufferAvailable()`。
+此时，消费者便可以获取 buffer 去完成送显的后续操作。 
 
 ![12](picture/12.png)
 
 ### 3.2. ReleaseBuffer
 
-...todo
+消费者释放 buffer 最终会在 `BufferQueueConsumer` 中调用 `ReleaseBuffer()` 进行释放，
+最后会调用生产者监听回调函数 `OnBufferRelease()`。
 
 ![13](picture/13.png)
 
 ## 4. 小结
 
-...todo
+下图总结了 buffer 的出入队流程。
 
-总结的图片待添加
-
-图片存在不完整的部分，待修改。
+![14](picture/14.png)
 
 
