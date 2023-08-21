@@ -30,8 +30,10 @@ group("ft_window_manager") {
 group("samples") {
   deps = [
     "//samples:clock",
+    "//samples:simInput",
   ]
 }
+
 
 group("ft_test") {
   testonly = true
