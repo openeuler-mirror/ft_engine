@@ -49,6 +49,41 @@ ft_executable("clock") {
   ]
 }
 
+ft_executable("simInput") {
+  sources = [ "simInput.cpp" ]
+
+  cflags = [ "-Wno-c++11-narrowing" ]
+
+  defines = [ "ENABLE_MMI" ]
+  if (ds_enable_gpu) {
+    defines += [ "ENABLE_GPU" ]
+    libs = [ "EGL", "GLESv2" ]
+  }
+
+  include_dirs = [
+    "$window_manager_path/interfaces/innerkits",
+    "$display_server_root/rosen/modules/2d_graphics/src",
+  ]
+
+  deps = [
+    "$display_server_root/rosen/modules/render_service_base/ft_build:librender_service_base",
+    "$display_server_root/rosen/modules/render_service_client/ft_build:librender_service_client",
+    "$display_server_root/rosen/modules/animation/window_animation/ft_build:window_animation",
+    "$display_server_root/utils/buffer_handle/ft_build:buffer_handle",
+    "$window_manager_path/wm/ft_build:libwm",
+    "$window_manager_path/utils/ft_build:libwmutil",
+    "$window_manager_path/wmserver/ft_build:libwms",
+    "$window_manager_path/dmserver/ft_build:libdms",
+    "$window_manager_path/dm/ft_build:libdm",
+    "//build/gn/configs/system_libs:skia",
+    "//build/gn/configs/system_libs:c_utils",
+    "//build/gn/configs/system_libs:ipc_core",
+    "//build/gn/configs/system_libs:eventhandler",
+    "//build/gn/configs/system_libs:mmi",
+  ]
+}
+
+
 ft_executable("desktop") {
   sources = [ "desktop.cpp" ]
 
