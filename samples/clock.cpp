@@ -103,9 +103,11 @@ void ClockDemoEventConsumer::HandleMovePointerEvent(std::shared_ptr<OHOS::MMI::P
 
     //移动窗口，并记录当前鼠标位置
     if (enableMove && lastPointerX != INVALID_COORDINATE && lastPointerY != INVALID_COORDINATE) {
-        window_->MoveTo(newX, newY);
-        lastWindowX = newX;
-        lastWindowY = newY;
+        if (pointerEvent->GetButtonId() == OHOS::MMI::PointerEvent::MOUSE_BUTTON_LEFT) {
+            window_->MoveTo(newX, newY);
+            lastWindowX = newX;
+            lastWindowY = newY;
+        }
     }
     lastPointerX = pointerItem.GetDisplayX();
     lastPointerY = pointerItem.GetDisplayY();
