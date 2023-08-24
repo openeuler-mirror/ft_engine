@@ -169,7 +169,7 @@ eglSwapBuffers(eglDisplay_, surface);
                 ANativeWindow_queueBuffer(dri2_surf->window, dri2_surf->buffer, fence_fd);
                     NativeWindowFlushBuffer(window, buffer, fenceFd, dirty);
 ```
-最终，`NativeWindowFlushBuffer()` 会调用 `ProducerSurface::FlushBuffer()`，远程调用 `BufferQueueProducer`。
+最终，`NativeWindowFlushBuffer()` 会调用 `ProducerSurface::FlushBuffer()`，远程调用 `BufferQueueProducer::FlushBufferRemote()`。
 
 ![draw_flushbuffer](picture/draw_flushbuffer.png)
 
