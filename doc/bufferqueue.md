@@ -77,7 +77,7 @@
 
 ## 3. 绘制 BufferQueue
 
-### 3.1. 生产者 App
+### 3.1. 生产者 Application
 
 绘制 `BufferQueue` 的生产者是处于客户端的 `ClockDemo`，
 调用 `RSSerfaceOhosGl::RequestFrame()` 和 `RSSurfaceOhosGl::FlushFrame()` 请求和发送 `FrameBuffer`。
