@@ -37,14 +37,27 @@ if [[ "${PROJECT_DIR}x" == "x" ]]; then
 fi
 
 # builder third_party
-cd ${PROJECT_DIR}/third_party/ft_flutter
-./build.sh $*
+if [ -d ${PROJECT_DIR}/third_party/ft_flutter ]; then
+    cd ${PROJECT_DIR}/third_party/ft_flutter
+    ./build.sh $*
+else
+    echo -e "\033[31m[!] The third_party/ft_flutter directory does not exist. Ensure that relevant dynamic libraries are available. Otherwise, run \"./build/prebuild.sh\" in the project root directory first.\033[0m"
+fi
 
-cd ${PROJECT_DIR}/third_party/ft_multimedia
-./build.sh $*
+if [ -d ${PROJECT_DIR}/third_party/ft_multimedia ]; then
+    cd ${PROJECT_DIR}/third_party/ft_multimedia
+    ./build.sh $*
+else
+    echo -e "\033[31m[!] The third_party/ft_multimedia directory does not exist. Ensure that relevant dynamic libraries are available. Otherwise, run \"./build/prebuild.sh\" in the project root directory first.\033[0m"
+fi
 
-cd ${PROJECT_DIR}/third_party/ft_mmi
-./build.sh $*
+if [ -d ${PROJECT_DIR}/third_party/ft_mmi ]; then
+    cd ${PROJECT_DIR}/third_party/ft_mmi
+    ./build.sh $*
+else
+    echo -e "\033[31m[!] The third_party/ft_mmi directory does not exist. Ensure that relevant dynamic libraries are available. Otherwise, run \"./build/prebuild.sh\" in the project root directory first.\033[0m"
+fi
+
 
 cd ${PROJECT_DIR}
 
