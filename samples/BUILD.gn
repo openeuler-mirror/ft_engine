@@ -106,3 +106,34 @@ ft_executable("desktop") {
     "//build/gn/configs/system_libs:image",
   ]
 }
+
+ft_executable("snapshot") {
+  sources = [ "snapshot.cpp" ]
+
+  cflags = [ "-Wno-c++11-narrowing" ]
+
+  defines = [ "ENABLE_MMI" ]
+  if (ds_enable_gpu) {
+    defines += [ "ENABLE_GPU" ]
+    libs = [ "EGL", "GLESv2" ]
+  }
+
+  include_dirs = [
+    "$window_manager_path/snapshot/include",
+    "$window_manager_path/interfaces/innerkits",
+    "$display_server_root/rosen/modules/2d_graphics/src",
+  ]
+
+  deps = [
+    "$display_server_root/rosen/modules/render_service_base/ft_build:librender_service_base",
+    "$display_server_root/rosen/modules/render_service_client/ft_build:librender_service_client",
+    "$display_server_root/rosen/modules/animation/window_animation/ft_build:window_animation",
+    "$window_manager_path/snapshot/ft_build:libsnapshot_util",
+    "$window_manager_path/wm/ft_build:libwm",
+    "$window_manager_path/utils/ft_build:libwmutil",
+    "$window_manager_path/dm/ft_build:libdm",
+    "//build/gn/configs/system_libs:c_utils",
+    "//build/gn/configs/system_libs:eventhandler",
+    "//build/gn/configs/system_libs:mmi",
+  ]
+}
