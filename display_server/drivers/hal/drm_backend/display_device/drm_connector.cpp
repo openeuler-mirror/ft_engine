@@ -192,8 +192,10 @@ void DrmConnector::SetDefaultActiveMode()
         if (activeModeId_ == -1) {
             activeModeId_ = 0;
         }
-        auto mi = modes_[activeModeId_].get()->ToHdiModeInfo();
-        LOG_INFO("current display resolution is %dx%d\n", mi.width, mi.height);
+        if (activeModeId_ < modes_.size()) {
+            auto mi = modes_[activeModeId_].get()->ToHdiModeInfo();
+            LOG_INFO("current display resolution is %dx%d\n", mi.width, mi.height);
+        }
     }
 }
 
