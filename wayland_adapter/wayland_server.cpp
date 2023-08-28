@@ -20,8 +20,11 @@
 
 namespace FT {
 namespace Wayland {
-const bool REGISTER_RESULT =
-    OHOS::SystemAbility::MakeAndRegisterAbility(new WaylandServer());
+namespace {
+    constexpr HiLogLabel LABEL = {LOG_CORE, HILOG_DOMAIN_WAYLAND, "WaylandServer"};
+}
+
+const bool REGISTER_RESULT =  OHOS::SystemAbility::MakeAndRegisterAbility(new WaylandServer());
 
 WaylandServer::WaylandServer() : OHOS::SystemAbility(OHOS::WINDOW_MANAGER_ID, true) {}
 
@@ -29,12 +32,12 @@ WaylandServer::~WaylandServer() noexcept {}
 
 void WaylandServer::OnStart()
 {
-    LOG_INFO("WaylandServer::OnStart");
+    LOG_INFO("OnStart");
 }
 
 void WaylandServer::OnStop()
 {
-    LOG_INFO("WaylandServer::OnStop");
+    LOG_INFO("OnStop");
 }
 
 void WaylandServer::OnAddSystemAbility(int32_t systemAbilityId, const std::string &deviceId)
