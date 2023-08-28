@@ -19,23 +19,15 @@ config("libwayland_adapter_config") {
 
   cflags = [ "-Wno-c++11-narrowing" ]
 
-  include_dirs = [
-    ".",
-  ]
+  include_dirs = [ "." ]
 }
 
 ft_shared_library("libwayland_adapter") {
   defines = ft_defines
 
-  sources = [
-    "wayland_server.cpp",
-  ]
+  sources = [ "wayland_server.cpp" ]
 
-  configs = [
-    ":libwayland_adapter_config",
-  ]
-
-  libs = [ "xml2" ]
+  configs = [ ":libwayland_adapter_config" ]
 
   deps = [
     "//build/gn/configs/system_libs:hilog",
