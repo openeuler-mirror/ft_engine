@@ -17,7 +17,6 @@
 #define WAYLAND_SERVER_H
 
 #include <cstring>
-#include <singleton.h>
 #include <system_ability.h>
 
 namespace FT {
