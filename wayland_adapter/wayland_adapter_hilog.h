@@ -22,14 +22,19 @@ using namespace OHOS::HiviewDFX;
 
 namespace FT {
 namespace Wayland {
-constexpr HiLogLabel LABEL = { LOG_CORE, 0xD004202, "WaylandAdapter" };
+static constexpr unsigned int HILOG_DOMAIN_WAYLAND = 0xD004202;
 
-#define LOG_FATAL(format, ...) HiLog::Fatal(LABEL, format, ##__VA_ARGS__)
-#define LOG_ERROR(format, ...) HiLog::Error(LABEL, format, ##__VA_ARGS__)
-#define LOG_WARN(format, ...) HiLog::Warn(LABEL, format, ##__VA_ARGS__)
-#define LOG_INFO(format, ...) HiLog::Info(LABEL, format, ##__VA_ARGS__)
-#define LOG_DEBUG(format, ...) HiLog::Debug(LABEL, format, ##__VA_ARGS__)
-#define LOG_TRACE(format, ...) HiLog::Trace(LABEL, format, ##__VA_ARGS__)
+#define _W_CPRINTF(func, fmt, ...) func(LABEL, "<%{public}d>" fmt, __LINE__, ##__VA_ARGS__)
+#define WLOGD(fmt, ...) _W_CPRINTF(HiLog::Debug, fmt, ##__VA_ARGS__)
+#define WLOGI(fmt, ...) _W_CPRINTF(HiLog::Info, fmt, ##__VA_ARGS__)
+#define WLOGW(fmt, ...) _W_CPRINTF(HiLog::Warn, fmt, ##__VA_ARGS__)
+#define WLOGE(fmt, ...) _W_CPRINTF(HiLog::Error, fmt, ##__VA_ARGS__)
+
+#define _W_FUNC __func__
+#define LOG_DEBUG(fmt, ...) WLOGD("%{public}s: " fmt, _W_FUNC, ##__VA_ARGS__)
+#define LOG_INFO(fmt, ...) WLOGI("%{public}s: " fmt, _W_FUNC, ##__VA_ARGS__)
+#define LOG_WARN(fmt, ...) WLOGW("%{public}s: " fmt, _W_FUNC, ##__VA_ARGS__)
+#define LOG_ERROR(fmt, ...) WLOGE("%{public}s: " fmt, _W_FUNC, ##__VA_ARGS__)
 } // namespace Wayland
 } // namespace FT
 #endif // WAYLAND_ADAPTER_HILOG_H
