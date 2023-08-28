@@ -27,6 +27,12 @@ group("ft_window_manager") {
   ]
 }
 
+group("ft_wayland_adapter") {
+  deps = [
+    "//wayland_adapter:libwayland_adapter",
+  ]
+}
+
 group("samples") {
   deps = [
     "//samples:clock",
