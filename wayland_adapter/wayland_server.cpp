@@ -26,6 +26,7 @@ namespace {
 
 const bool REGISTER_RESULT =  OHOS::SystemAbility::MakeAndRegisterAbility(new WaylandServer());
 
+// TODO: replace WINDOW_MANAGER_ID with WAYLAND_ADAPTER_ID
 WaylandServer::WaylandServer() : OHOS::SystemAbility(OHOS::WINDOW_MANAGER_ID, true) {}
 
 WaylandServer::~WaylandServer() noexcept {}
