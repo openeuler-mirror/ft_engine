@@ -18,7 +18,7 @@
 #include "event_loop.h"
 #include "log.h"
 
-namespace oewm {
+namespace FT {
 EventChannel::EventChannel(int fd, EventLoop *eventLoop) : fd_(fd), eventLoop_(eventLoop)
 {
     if (eventLoop_ == nullptr) {
@@ -145,4 +145,4 @@ void EventChannel::HandleEventInner(TimeStamp receivedTime)
         }
     }
 }
-} // namespace oewm
+} // namespace FT

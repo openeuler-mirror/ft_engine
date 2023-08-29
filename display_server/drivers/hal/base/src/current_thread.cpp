@@ -18,7 +18,7 @@
 #include <stdlib.h>
 #include <sys/syscall.h>
 
-namespace oewm {
+namespace FT {
 namespace detail {
 static ProcessId pid = 0;
 static char pidString[16];
@@ -76,4 +76,4 @@ const char *PidString()
     return detail::pidString;
 }
 } // namespace CurrentThread
-} // namespace oewm
+} // namespace FT

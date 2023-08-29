@@ -20,7 +20,7 @@
 #include "display_type.h"
 #include "drm_common.h"
 
-namespace oewm {
+namespace FT {
 namespace drm {
 // typedef struct _drmModeModeInfo {
 // 	uint32_t clock;
@@ -60,4 +60,4 @@ private:
     uint32_t blobId_ = DRM_INVALID_OBJECT_ID;
 };
 } // namespace drm
-} // namespace oewm
+} // namespace FT

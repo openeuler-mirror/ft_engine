@@ -22,7 +22,7 @@
 
 #include "types.h"
 
-namespace oewm {
+namespace FT {
 static constexpr char defaultSeat[] = "seat0";
 
 // RAII for udev objects to do auto unref.
@@ -74,4 +74,4 @@ inline bool IsBootVGADevice(struct udev_device *device)
 
     return strcmp(bootVGAId, "1") == 0;
 }
-} // namespace oewm
+} // namespace FT

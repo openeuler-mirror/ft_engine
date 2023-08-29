@@ -24,6 +24,7 @@ group("render_service_group") {
 ft_shared_library("librender_service") {
   defines = ft_defines
   defines += gpu_defines
+  defines += fps_defines
   if (use_musl) {
     defines += [ "FRAME_AWARE_TRACE" ]
   }

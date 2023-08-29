@@ -21,7 +21,7 @@
 #include "display_device.h"
 #include "hdi_layer.h"
 
-namespace oewm {
+namespace FT {
 namespace HDI {
 namespace DISPLAY {
 using DisplayId = uint32_t;
@@ -95,4 +95,4 @@ protected:
 } // namespace HDI
 using HdiDisplayId = HDI::DISPLAY::DisplayId;
 using HdiDisplay = HDI::DISPLAY::HdiDisplay;
-} // namespace oewm
+} // namespace FT

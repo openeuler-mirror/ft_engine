@@ -22,7 +22,7 @@
 #include "log.h"
 #include "types.h"
 
-namespace oewm {
+namespace FT {
 namespace HDI {
 namespace DISPLAY {
 HdiLayerBuffer::HdiLayerBuffer(const BufferHandle &handle)
@@ -38,7 +38,7 @@ HdiLayerBuffer::HdiLayerBuffer(const BufferHandle &handle)
     if (!IsInvalidFd(handle.fd)) {
         fd_ = OHOS::UniqueFd(::dup(handle.fd));
         if (fd_ < 0) {
-            LOG_ERROR("Failed to dup from fd: %{public}i, err: %{public}s, errno: %{public}i", 
+            LOG_ERROR("Failed to dup from fd: %{public}i, err: %{public}s, errno: %{public}i",
                 handle.fd, ErrnoToString(errno).c_str(), errno);
         }
     }
@@ -177,7 +177,7 @@ void HdiLayer::SetPixel(const BufferHandle &handle, int x, int y, uint32_t color
     }
 
     if (x < 0 || x >= handle.width || y < 0 || y >= handle.height) {
-        LOG_ERROR("HdiLayer::SetPixel: invalid parameter: x: %{public}d, bufWidth: %{public}d, y: %{public}d, bufHeight: %{public}d", 
+        LOG_ERROR("HdiLayer::SetPixel: invalid parameter: x: %{public}d, bufWidth: %{public}d, y: %{public}d, bufHeight: %{public}d",
             x, handle.width, y, handle.height);
         return;
     }
@@ -211,4 +211,4 @@ void HdiLayer::WaitAcquireFence()
 }
 } // namespace DISPLAY
 } // namespace HDI
-} // namespace oewm
+} // namespace FT

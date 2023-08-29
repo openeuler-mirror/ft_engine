@@ -20,7 +20,7 @@
 #include "event_loop/event_loop_thread.h"
 #include "udev_object_helper.h"
 
-namespace oewm {
+namespace FT {
 namespace HDI {
 namespace DISPLAY {
 class DeviceEventMonitor : NonCopyable {
@@ -83,4 +83,4 @@ private:
 };
 } // namespace DISPLAY
 } // namespace HDI
-} // namespace oewm
+} // namespace FT

@@ -23,12 +23,14 @@
 #include "drm_encoder.h"
 #include "drm_crtc.h"
 
-namespace oewm {
+namespace FT {
 namespace drm {
 // prop for connector
 constexpr char PROP_CRTCID[] = "CRTC_ID";
 constexpr char PROP_DPMS[] = "DPMS";
 constexpr char PROP_BRIGHTNESS[] = "brightness";
+constexpr int DEFAULT_RESOLUTION_WIDTH = 1280;
+constexpr int DEFAULT_RESOLUTION_HEIGHT = 800;
 
 class DrmConnector : NonCopyable {
 public:
@@ -101,11 +103,9 @@ public:
 
     void GetDisplayCapability(DisplayCapability *cap) const;
     void GetSupportedModes(uint32_t *num, DisplayModeInfo *modes) const;
-    uint32_t GetActiveModeId() const
-    {
-        return activeModeId_;
-    }
+    uint32_t GetActiveModeId() const;
     bool SetActiveModeId(uint32_t modeId);
+    void SetDefaultActiveMode();
     // display power manager status
     uint64_t GetDpms() const
     {
@@ -147,7 +147,7 @@ private:
     uint32_t brightnessPropId_ = DRM_INVALID_PROP_ID;
     uint64_t brightness_ = DRM_INVLIAD_VALUE;
     std::vector<std::unique_ptr<DrmModeInfo>> modes_;
-    uint32_t activeModeId_ = 0; // mode 3 is 1920*1080
+    uint32_t activeModeId_ = -1;
 };
 } // namespace drm
-} // namespace oewm
+} // namespace FT

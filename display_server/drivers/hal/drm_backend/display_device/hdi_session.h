@@ -25,7 +25,7 @@
 #include "udev_object_helper.h"
 #endif // USE_LIBUDEV
 
-namespace oewm {
+namespace FT {
 namespace HDI {
 namespace DISPLAY {
 // singleton
@@ -77,7 +77,7 @@ public:
         auto &display = displays.at(devId);
         auto layer = display->GetHdiLayer(layerId);
         if (layer == nullptr) {
-            LOG_ERROR("HdiSession::CallLayerFunction: can not find layer(id: %{public}" PRIu32 ") for display %{public}" PRIu32, 
+            LOG_ERROR("HdiSession::CallLayerFunction: can not find layer(id: %{public}" PRIu32 ") for display %{public}" PRIu32,
                 layerId, devId);
             return DISPLAY_FAILURE;
         }
@@ -103,4 +103,4 @@ private:
 };
 } // namespace DISPLAY
 } // namespace HDI
-} // namespace oewm
+} // namespace FT

@@ -20,7 +20,7 @@
 #include "log.h"
 #include "drm_property.h"
 
-namespace oewm {
+namespace FT {
 namespace drm {
 DrmConnector::DrmConnector(int drmFd, uint32_t connectorId) : drmFd_(drmFd), id_(connectorId)
 {
@@ -31,6 +31,7 @@ DrmConnector::DrmConnector(int drmFd, uint32_t connectorId) : drmFd_(drmFd), id_
     }
     ParseFrom(conn);
     drmModeFreeConnector(conn);
+    SetDefaultActiveMode();
 }
 
 DrmConnector::~DrmConnector() noexcept {}
@@ -174,7 +175,33 @@ bool DrmConnector::SetActiveModeId(uint32_t modeId)
         return false;
     }
     activeModeId_ = modeId;
+    auto mi = modes_[activeModeId_].get()->ToHdiModeInfo();
+    LOG_INFO("set display mode resolution is %dx%d\n", mi.width, mi.height);
     return true;
+}
+void DrmConnector::SetDefaultActiveMode()
+{
+    if (activeModeId_ == -1) {
+        for (uint32_t i = 0; i < modes_.size(); i++) {
+            auto mi = modes_[i].get()->ToHdiModeInfo();
+            if (mi.width == DEFAULT_RESOLUTION_WIDTH && mi.height == DEFAULT_RESOLUTION_HEIGHT) {
+                activeModeId_ = i;
+                break;
+            }
+        }
+        if (activeModeId_ == -1) {
+            activeModeId_ = 0;
+        }
+        if (activeModeId_ < modes_.size()) {
+            auto mi = modes_[activeModeId_].get()->ToHdiModeInfo();
+            LOG_INFO("current display resolution is %dx%d\n", mi.width, mi.height);
+        }
+    }
+}
+
+uint32_t DrmConnector::GetActiveModeId() const
+{
+    return activeModeId_;
 }
 
 bool DrmConnector::SetDpms(uint64_t dpms)
@@ -199,4 +226,4 @@ bool DrmConnector::SetBrightness(uint64_t brightness)
     return true;
 }
 } // namespace drm
-} // namespace oewm
+} // namespace FT

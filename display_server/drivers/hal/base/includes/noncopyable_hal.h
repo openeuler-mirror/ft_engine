@@ -15,7 +15,7 @@
 
 #pragma once
 
-namespace oewm {
+namespace FT {
 class NonCopyable {
 public:
     NonCopyable(const NonCopyable &other) = delete;
@@ -25,4 +25,4 @@ protected:
     NonCopyable() = default;
     ~NonCopyable() = default;
 };
-} // namespace oewm
+} // namespace FT

@@ -17,7 +17,7 @@
 
 #include "log.h"
 
-namespace oewm {
+namespace FT {
 namespace drm {
 DrmProperty::DrmProperty(int drmFd, uint32_t propId, uint64_t propValue)
     : prop_(::drmModeGetProperty(drmFd, propId)), propId_(propId), value_(propValue)
@@ -107,4 +107,4 @@ uint64_t DrmObjectPropertyFetcher::GetPropValue(const std::string &name) const
     return propsMap_.at(name)->Value();
 }
 } // namespace drm
-} // namespace oewm
+} // namespace FT

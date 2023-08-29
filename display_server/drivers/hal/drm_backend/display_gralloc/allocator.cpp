@@ -15,8 +15,8 @@
 
 #include "allocator.h"
 
-namespace oewm {
+namespace FT {
 namespace HDI {
 namespace DISPLAY {} // namespace DISPLAY
 } // namespace HDI
-} // namespace oewm
+} // namespace FT

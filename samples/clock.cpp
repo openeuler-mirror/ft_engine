@@ -40,7 +40,7 @@ constexpr int HOUR_HAND_LEN = 80; // 时针长度
 constexpr int NOT_HOUR_HAND_LEN = 120; // 秒针、分针长度
 constexpr int HOUR_HAND_STROKE_WIDTH = 3; // 时针的宽度
 constexpr int NOT_HOUR_HAND_STROKE_WIDTH = 2; // 秒针和分钟的宽度
-constexpr int CLOCK_DOT_RADIUS = 5; // 中心原点的半径大小
+constexpr int CLOCK_DOT_RADIUS = 5; // 中心圆点的半径大小
 constexpr int CLOCK_DAIL_RADIUS = 180; // 表盘半径大小
 constexpr float CLOCK_FONT_SIZE = 24.0f; // 表盘上文字字体大小
 constexpr int CLOCK_FONT_STROKE_WIDTH = 2; //表盘文字字体笔画粗细
@@ -103,9 +103,11 @@ void ClockDemoEventConsumer::HandleMovePointerEvent(std::shared_ptr<OHOS::MMI::P
 
     //移动窗口，并记录当前鼠标位置
     if (enableMove && lastPointerX != INVALID_COORDINATE && lastPointerY != INVALID_COORDINATE) {
-        window_->MoveTo(newX, newY);
-        lastWindowX = newX;
-        lastWindowY = newY;
+        if (pointerEvent->GetButtonId() == OHOS::MMI::PointerEvent::MOUSE_BUTTON_LEFT) {
+            window_->MoveTo(newX, newY);
+            lastWindowX = newX;
+            lastWindowY = newY;
+        }
     }
     lastPointerX = pointerItem.GetDisplayX();
     lastPointerY = pointerItem.GetDisplayY();
