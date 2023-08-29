@@ -171,7 +171,7 @@ eglSwapBuffers(eglDisplay_, surface);
 ```
 最终，`NativeWindowFlushBuffer()` 会调用 `ProducerSurface::FlushBuffer()`，远程调用 `BufferQueueProducer::FlushBufferRemote()`。
 
-![draw_flushbuffer](picture/draw_flushframe2.png)
+![draw_flushframe2](picture/draw_flushframe2.png)
 
 ##### 3.1.2.2. 服务端 FlushBuffer
 
