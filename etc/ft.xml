@@ -19,6 +19,7 @@
         <libpath>/usr/lib64/librender_service.so</libpath>
         <libpath>/usr/lib64/libmmi-server.so</libpath>
         <libpath>/usr/lib64/libdms.so</libpath>
+        <libpath>/usr/lib64/libwayland_adapter.so</libpath>
         <libpath>/usr/lib64/libwms.so</libpath>
     </loadlibs>
 
@@ -33,6 +34,14 @@
     <systemability>
         <name>3101</name>
         <libpath>/usr/lib64/libmmi-server.so</libpath>
+        <run-on-create>true</run-on-create>
+        <distributed>false</distributed>
+        <dump-level>1</dump-level>
+    </systemability>
+
+    <systemability>
+        <name>4600</name>
+        <libpath>/usr/lib64/libwayland_adapter.so</libpath>
         <run-on-create>true</run-on-create>
         <distributed>false</distributed>
         <dump-level>1</dump-level>
