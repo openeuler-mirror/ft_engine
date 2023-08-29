@@ -21,7 +21,7 @@
 #include "display_type.h"
 #include "log.h"
 
-namespace oewm {
+namespace FT {
 namespace HDI {
 namespace DISPLAY {
 
@@ -87,4 +87,4 @@ std::shared_ptr<Allocator> AllocatorController::GetAllocator(uint64_t usage)
 
 } // namespace DISPLAY
 } // namespace HDI
-} // namespace oewm
+} // namespace FT

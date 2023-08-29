@@ -20,7 +20,7 @@
 
 #include "log.h"
 
-namespace oewm {
+namespace FT {
 namespace detail {
 std::string EpollOperationToString(int operation)
 {
@@ -93,7 +93,7 @@ void EventPoller::EpollCtl(EventChannel *channel, int operation)
     epollEvent.data.fd = fd;
     int ret = TEMP_FAILURE_RETRY(::epoll_ctl(epollFd_.Get(), operation, fd, &epollEvent));
     if (ret < 0) {
-        LOG_ERROR("%{public}s failed for EventPoller(fd: %{public}i): %{public}s.", 
+        LOG_ERROR("%{public}s failed for EventPoller(fd: %{public}i): %{public}s.",
             detail::EpollOperationToString(operation).c_str(), fd, ErrnoToString(errno).c_str());
     }
 }
@@ -134,4 +134,4 @@ void EventPoller::RemoveChannel(int fd)
     EpollCtl(channels_[fd], EPOLL_CTL_DEL);
     channels_.erase(fd);
 }
-} // namespace oewm
+} // namespace FT

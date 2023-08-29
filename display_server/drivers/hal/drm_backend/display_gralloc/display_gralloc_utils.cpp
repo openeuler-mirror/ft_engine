@@ -24,7 +24,7 @@
 namespace GrallocUtils {
 int GetDrmFdFromSession()
 {
-    const auto &session = oewm::HDI::DISPLAY::HdiSession::GetInstance();
+    const auto &session = FT::HDI::DISPLAY::HdiSession::GetInstance();
     const auto &device = session.GetDisplayDevice();
     if (device == nullptr) {
         LOG_ERROR("[Gralloc] Get empty DRM device from HdiSession.");
@@ -98,7 +98,7 @@ int ReopenDrmFd(int drmFd, bool enableRenderNode /*= true*/)
         return -1;
     }
 
-    LOG_INFO("[Gralloc::GbmUtils::ReopenDrmFd] Reopen new device '%{public}s'(%{public}d) from DRM fd(%{public}d).", 
+    LOG_INFO("[Gralloc::GbmUtils::ReopenDrmFd] Reopen new device '%{public}s'(%{public}d) from DRM fd(%{public}d).",
         deviceName, newFd, drmFd);
 
     /* Clear */
