@@ -17,7 +17,7 @@
 
 #include "log.h"
 
-namespace oewm {
+namespace FT {
 EventLoopThread::EventLoopThread() : EventLoopThread("OEWMEventLoopThread") {}
 
 EventLoopThread::EventLoopThread(std::string name) : name_(std::move(name)) {}
@@ -64,4 +64,4 @@ void EventLoopThread::LoopThreadFunc()
         loop_ = nullptr;
     }
 }
-} // namespace oewm
+} // namespace FT

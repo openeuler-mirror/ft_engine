@@ -19,7 +19,7 @@
 #include "log.h"
 #include "drm_property.h"
 
-namespace oewm {
+namespace FT {
 namespace drm {
 DrmCrtc::DrmCrtc(int drmFd, uint32_t crtcId, uint32_t pipe) : drmFd_(drmFd), id_(crtcId), pipe_(pipe)
 {
@@ -67,4 +67,4 @@ void DrmCrtc::ParseFrom(drmModeCrtcPtr const &crtc)
     outFencePropId_ = crtcPropFetcher.GetPropId(PROP_OUTFENCE);
 }
 } // namespace drm
-} // namespace oewm
+} // namespace FT

@@ -21,7 +21,7 @@
 #include "drm_display.h"
 #include "log.h"
 
-namespace oewm {
+namespace FT {
 namespace drm {
 std::shared_ptr<DrmDevice> DrmDevice::Create(std::string devicePath)
 {
@@ -103,14 +103,14 @@ bool DrmDevice::InitKmsCaps()
 
     ret = drmSetClientCap(fd_, DRM_CLIENT_CAP_UNIVERSAL_PLANES, 1);
     if (ret) {
-        LOG_ERROR("%{public}s DRM KMS doesn't support universal planes! error: %{public}s", 
+        LOG_ERROR("%{public}s DRM KMS doesn't support universal planes! error: %{public}s",
             devicePath_.c_str(), ErrnoToString(errno).c_str());
         return false;
     }
 
     ret = drmGetCap(fd_, DRM_CAP_DUMB_BUFFER, &cap);
     if (ret != 0 || cap == 0) {
-        LOG_ERROR("%{public}s DRM KMS doesn't support dumb buffers! error: %{public}s", 
+        LOG_ERROR("%{public}s DRM KMS doesn't support dumb buffers! error: %{public}s",
             devicePath_.c_str(), ErrnoToString(errno).c_str());
     }
     supportDumbBuffer_ = (cap != 0);
@@ -241,14 +241,14 @@ void DrmDevice::DiscoveryDisplays()
     for (int i = 0; i != drmResource_->count_connectors; ++i) {
         auto connectorId = drmResource_->connectors[i];
         if (connectors_.count(connectorId) == 0) {
-            LOG_ERROR("DrmDevice::DiscoveryDisplays: unexpected error: can not find connector for conId %{public}" PRIu32 ".", 
+            LOG_ERROR("DrmDevice::DiscoveryDisplays: unexpected error: can not find connector for conId %{public}" PRIu32 ".",
                       connectorId);
             continue;
         }
 
         const auto &connector = connectors_.at(connectorId);
         if (!connector->Connected()) {
-            LOG_INFO("DrmDevice::DiscoveryDisplays: ignore unused connector %{public}" PRIu32 ".", 
+            LOG_INFO("DrmDevice::DiscoveryDisplays: ignore unused connector %{public}" PRIu32 ".",
                 connectorId);
             continue;
         }
@@ -262,4 +262,4 @@ void DrmDevice::DiscoveryDisplays()
     }
 }
 } // namespace drm
-} // namespace oewm
+} // namespace FT

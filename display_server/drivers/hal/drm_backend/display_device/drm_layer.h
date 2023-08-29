@@ -20,7 +20,7 @@
 #include "drm_frame_buffer.h"
 #include "hdi_layer.h"
 
-namespace oewm {
+namespace FT {
 namespace drm {
 class DrmLayer : public HdiLayer {
 public:
@@ -34,4 +34,4 @@ private:
     std::unique_ptr<DrmFrameBuffer> currentFrameBuffer_;
 };
 } // namespace drm
-} // namespace oewm
+} // namespace FT

@@ -24,7 +24,7 @@
 #include <cinttypes>
 #include <sys/mman.h> // for shm_xxx
 
-namespace oewm {
+namespace FT {
 namespace HDI {
 namespace DISPLAY {
 
@@ -213,4 +213,4 @@ int ShmAllocator::AllocateShmFile(size_t size)
 
 } // namespace DISPLAY
 } // namespace HDI
-} // namespace oewm
+} // namespace FT

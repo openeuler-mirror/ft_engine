@@ -21,7 +21,7 @@
 #include "unique_fd.h"
 #include "event_channel.h"
 
-namespace oewm {
+namespace FT {
 class EventLoop;
 
 class EventPoller : NonCopyable {
@@ -43,4 +43,4 @@ private:
     std::vector<epoll_event> activeEvents_; // to receive events from epoll_wait.
     std::unordered_map<int, EventChannel *> channels_;
 };
-} // namespace oewm
+} // namespace FT
