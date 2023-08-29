@@ -17,7 +17,7 @@
 
 #include "log.h"
 
-namespace oewm {
+namespace FT {
 namespace HDI {
 namespace DISPLAY {
 HdiDisplay::HdiDisplay() {}
@@ -92,4 +92,4 @@ HdiLayer *HdiDisplay::GetHdiLayer(LayerId id)
 }
 } // namespace DISPLAY
 } // namespace HDI
-} // namespace oewm
+} // namespace FT

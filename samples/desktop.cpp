@@ -117,8 +117,8 @@ public:
         option->SetWindowName("desktop");
         window_ = OHOS::Rosen::Window::Create(option->GetWindowName(), option);
         if (window_ != nullptr) {
-            SurfaceNode_ = window_->GetSurfaceNode();
-            SurfaceNode_->SetBounds(0, 0, desktopW, desktopH); // surface bounds is window rect.
+            surfaceNode_ = window_->GetSurfaceNode();
+            surfaceNode_->SetBounds(0, 0, desktopW, desktopH); // surface bounds is window rect.
             RSTransaction::FlushImplicitTransaction();
             window_->Show();
         } else {
@@ -126,11 +126,11 @@ public:
             return;
         }
 
-        if (SurfaceNode_ == nullptr) {
+        if (surfaceNode_ == nullptr) {
             return;
         }
 
-        rsSurface_ = RSSurfaceExtractor::ExtractRSSurface(SurfaceNode_);
+        rsSurface_ = RSSurfaceExtractor::ExtractRSSurface(surfaceNode_);
         if (rsSurface_ == nullptr) {
             return;
         }
@@ -179,7 +179,7 @@ public:
 
 private:
     OHOS::sptr<OHOS::Rosen::Window> window_ = nullptr;
-    std::shared_ptr<RSSurfaceNode> SurfaceNode_ = nullptr;
+    std::shared_ptr<RSSurfaceNode> surfaceNode_ = nullptr;
     std::shared_ptr<RSSurface> rsSurface_ = nullptr;
     int desktopW = 500;
     int desktopH = 500;

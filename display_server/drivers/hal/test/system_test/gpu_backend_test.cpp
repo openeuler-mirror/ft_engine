@@ -26,9 +26,9 @@
 #include <gbm.h>
 #include <GLES2/gl2.h>
 
-oewm::HDI::DISPLAY::HdiSession& g_session = oewm::HDI::DISPLAY::HdiSession::GetInstance();
-oewm::HDI::DISPLAY::AllocatorController& g_alloc_controller = oewm::HDI::DISPLAY::AllocatorController::GetInstance();
-oewm::EventLoop g_mainLoop = oewm::EventLoop();
+FT::HDI::DISPLAY::HdiSession& g_session = FT::HDI::DISPLAY::HdiSession::GetInstance();
+FT::HDI::DISPLAY::AllocatorController& g_alloc_controller = FT::HDI::DISPLAY::AllocatorController::GetInstance();
+FT::EventLoop g_mainLoop = FT::EventLoop();
 
 bool DestoryBufferHandle(BufferHandle **handle);
 
@@ -58,7 +58,7 @@ static struct gbm_device *gbm_device;
 static EGLContext context;
 static struct gbm_surface *gbm_surface;
 static EGLSurface egl_surface;
-static BufferHandle tmpBufferHandle; 
+static BufferHandle tmpBufferHandle;
 
 EGLConfig GetEGLConfig()
 {
@@ -110,8 +110,8 @@ struct gbm_bo* SwapBuffer(BufferHandle *handle)
     }
 	//获取前端缓冲区的句柄
 	handle->key = gbm_bo_get_handle(bo).u32;
-    handle->stride = gbm_bo_get_stride(bo); 
-    handle->size = handle->stride * handle->height; 
+    handle->stride = gbm_bo_get_stride(bo);
+    handle->size = handle->stride * handle->height;
     handle->format = gbm_bo_get_format(bo);
     return bo;
 }
@@ -138,9 +138,9 @@ bool InitEGL(uint32_t devId, BufferHandle **handle)
     uint32_t num = 0;
 
     int32_t ret = g_session.CallDisplayFunction(
-        devId, 
-        &oewm::HDI::DISPLAY::HdiDisplay::GetDisplaySupportedModes, 
-        &num, 
+        devId,
+        &FT::HDI::DISPLAY::HdiDisplay::GetDisplaySupportedModes,
+        &num,
         (DisplayModeInfo*)nullptr
     );
     if (ret != DISPLAY_SUCCESS) {
@@ -155,9 +155,9 @@ bool InitEGL(uint32_t devId, BufferHandle **handle)
 
     displayModeInfos.resize(num);
     ret = g_session.CallDisplayFunction(
-        devId, 
-        &oewm::HDI::DISPLAY::HdiDisplay::GetDisplaySupportedModes, 
-        &num, 
+        devId,
+        &FT::HDI::DISPLAY::HdiDisplay::GetDisplaySupportedModes,
+        &num,
         displayModeInfos.data()
     );
     if (ret != DISPLAY_SUCCESS) {
@@ -171,8 +171,8 @@ bool InitEGL(uint32_t devId, BufferHandle **handle)
     uint32_t width = displayModeInfos[DEFAULT_MODE_INDEX].width;
     uint32_t height = displayModeInfos[DEFAULT_MODE_INDEX].height;
     ret = g_session.CallDisplayFunction(
-        devId, 
-        &oewm::HDI::DISPLAY::HdiDisplay::SetDisplayMode,
+        devId,
+        &FT::HDI::DISPLAY::HdiDisplay::SetDisplayMode,
         DEFAULT_MODE_INDEX);
     if (ret != DISPLAY_SUCCESS) {
         printf("Draw: Failed to set display mode, ret=%d\n", ret);
@@ -181,7 +181,7 @@ bool InitEGL(uint32_t devId, BufferHandle **handle)
     printf("CreateBuffer: choose display mode 0 to create fb: width=%d, height=%d.\n", width, height);
 
     gbm_device = g_session.GetDisplayDevice()->GetGbmDevice();
-	defaultDisplay = eglGetDisplay(gbm_device); 
+	defaultDisplay = eglGetDisplay(gbm_device);
 	int major, minor;
 	eglInitialize(defaultDisplay, &major, &minor);
 	printf("EGL version:%d.%d\n", major, minor);
@@ -244,7 +244,7 @@ void Screen::OnVsync(uint32_t sequence, uint64_t timestamp, void *data)
         printf("OnVSync: screen is null\n");
         return;
     }
-    
+
     // Do draw in main loop
     g_mainLoop.RunInLoop([screen, sequence, timestamp]() {
         uint32_t devId = screen->devId;
@@ -274,19 +274,19 @@ void Screen::OnVsync(uint32_t sequence, uint64_t timestamp, void *data)
 
         // Set fb as screen's current buffer
         ret = g_session.CallDisplayFunction(
-            devId, 
-            &oewm::HDI::DISPLAY::HdiDisplay::SetDisplayClientBuffer, 
-            static_cast<const BufferHandle*>(screen->fb[0]->handle), 
+            devId,
+            &FT::HDI::DISPLAY::HdiDisplay::SetDisplayClientBuffer,
+            static_cast<const BufferHandle*>(screen->fb[0]->handle),
             fenceFd);
         if (ret != DISPLAY_SUCCESS) {
             printf("Draw: Failed to set display client buffer, ret=%d\n", ret);
             return;
         }
-        
+
         // Commit
         ret = g_session.CallDisplayFunction(
-            devId, 
-            &oewm::HDI::DISPLAY::HdiDisplay::Commit,
+            devId,
+            &FT::HDI::DISPLAY::HdiDisplay::Commit,
             &fenceFd);
         if (fenceFd >= 0) {
             auto fence = OHOS::SyncFence(fenceFd);
@@ -310,8 +310,8 @@ static void OnHotPlug(uint32_t devId, bool connected, void *data)
 
     // Register VSync callback
     int32_t ret = g_session.CallDisplayFunction(
-        devId, 
-        &oewm::HDI::DISPLAY::HdiDisplay::RegDisplayVBlankCallback, 
+        devId,
+        &FT::HDI::DISPLAY::HdiDisplay::RegDisplayVBlankCallback,
         Screen::OnVsync,
         static_cast<void *>(g_screens.at(devId))
     );

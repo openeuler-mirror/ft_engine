@@ -29,7 +29,7 @@
 #include "drm_encoder.h"
 #include "drm_plane.h"
 
-namespace oewm {
+namespace FT {
 namespace drm {
 class DrmDevice : private NonCopyable {
 public:
@@ -153,4 +153,4 @@ private:
     IdMapPtr<HdiDisplay> displays_; // guarded by mutex_;
 };
 } // namespace drm
-} // namespace oewm
+} // namespace FT

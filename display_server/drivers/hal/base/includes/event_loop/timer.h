@@ -20,7 +20,7 @@
 #include "noncopyable_hal.h"
 #include "timestamp.h"
 
-namespace oewm {
+namespace FT {
 class Timer;
 
 // NonCopyable
@@ -87,12 +87,12 @@ private:
     bool repeat_ = false;
     TimerId id_;
 };
-} // namespace oewm
+} // namespace FT
 
 namespace std {
 template <>
-struct hash<typename oewm::TimerId> {
-    std::size_t operator()(oewm::TimerId timerId) const
+struct hash<typename FT::TimerId> {
+    std::size_t operator()(FT::TimerId timerId) const
     {
         return static_cast<std::size_t>(timerId.id ^ reinterpret_cast<uintptr_t>(timerId.timer));
     }

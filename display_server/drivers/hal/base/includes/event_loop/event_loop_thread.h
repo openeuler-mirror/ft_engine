@@ -21,7 +21,7 @@
 
 #include "event_loop.h"
 
-namespace oewm {
+namespace FT {
 class EventLoopThread : NonCopyable {
 public:
     EventLoopThread();
@@ -43,4 +43,4 @@ private:
     std::thread thread_;
     EventLoop *loop_ = nullptr;
 };
-} // namespace oewm
+} // namespace FT

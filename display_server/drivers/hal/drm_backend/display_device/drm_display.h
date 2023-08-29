@@ -24,7 +24,7 @@
 #include "drm_plane.h"
 #include "hdi_display.h"
 
-namespace oewm {
+namespace FT {
 namespace drm {
 class DrmDisplay : public HdiDisplay {
 public:
@@ -103,4 +103,4 @@ private:
 #endif // ENABLE_HARDWARE_VSYNC
 };
 } // namespace drm
-} // namespace oewm
+} // namespace FT
