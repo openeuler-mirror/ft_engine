@@ -20,10 +20,10 @@
 namespace FT {
 namespace Wayland {
 namespace {
-    constexpr HiLogLabel LABEL = {LOG_CORE, HILOG_DOMAIN_WAYLAND, "OEResourceObject"};
+    constexpr HiLogLabel LABEL = {LOG_CORE, HILOG_DOMAIN_WAYLAND, "WaylandResourceObject"};
 }
 
-OEResourceObject::OEResourceObject(struct wl_client *client, const struct wl_interface *interface,
+WaylandResourceObject::WaylandResourceObject(struct wl_client *client, const struct wl_interface *interface,
     uint32_t version, uint32_t id, void *implementation)
     : client_(client),
       display_(wl_client_get_display(client_)),
@@ -39,20 +39,20 @@ OEResourceObject::OEResourceObject(struct wl_client *client, const struct wl_int
     }
 
     id_ = wl_resource_get_id(resource_);
-    wl_resource_set_implementation(resource_, implementation_, this, &OEResourceObject::OnDestroy);
+    wl_resource_set_implementation(resource_, implementation_, this, &WaylandResourceObject::OnDestroy);
     name_ = std::string(interface_->name) + "_" + std::to_string(version_) + "_" + std::to_string(id_);
 }
 
-OEResourceObject::~OEResourceObject() noexcept
+WaylandResourceObject::~WaylandResourceObject() noexcept
 {
     if (resource_ != nullptr) {
         wl_resource_destroy(resource_);
     }
 }
 
-void OEResourceObject::DefaultDestroyResource(struct wl_client *client, struct wl_resource *resource)
+void WaylandResourceObject::DefaultDestroyResource(struct wl_client *client, struct wl_resource *resource)
 {
-    auto object = CastFromResource<OEResourceObject>(resource);
+    auto object = CastFromResource<WaylandResourceObject>(resource);
     if (object == nullptr) {
         LOG_WARN("object is nullptr");
         return;
@@ -62,9 +62,9 @@ void OEResourceObject::DefaultDestroyResource(struct wl_client *client, struct w
     wl_resource_destroy(resource);
 }
 
-void OEResourceObject::OnDestroy(struct wl_resource *resource)
+void WaylandResourceObject::OnDestroy(struct wl_resource *resource)
 {
-    auto object = CastFromResource<OEResourceObject>(resource);
+    auto object = CastFromResource<WaylandResourceObject>(resource);
     if (object == nullptr) {
         LOG_WARN("object is nullptr");
         return;
@@ -75,7 +75,7 @@ void OEResourceObject::OnDestroy(struct wl_resource *resource)
     WaylandObjectsPool::GetInstance().RemoveObject(ObjectId(object->WlClient(), object->Id()), object);
 }
 
-bool OEResourceObject::CheckIfObjectIsValid(const OHOS::sptr<OEResourceObject> &object)
+bool WaylandResourceObject::CheckIfObjectIsValid(const OHOS::sptr<WaylandResourceObject> &object)
 {
     if (object == nullptr) {
         LOG_ERROR("object is nullptr");
