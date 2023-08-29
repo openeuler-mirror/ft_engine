@@ -19,7 +19,10 @@ config("libwayland_adapter_config") {
 
   cflags = [ "-Wno-c++11-narrowing" ]
 
-  include_dirs = [ "." ]
+  include_dirs = [
+    "utils",
+    "/usr/include",
+  ]
 }
 
 ft_shared_library("libwayland_adapter") {
@@ -29,8 +32,11 @@ ft_shared_library("libwayland_adapter") {
 
   configs = [ ":libwayland_adapter_config" ]
 
+  libs = [ "wayland-server" ]
+
   deps = [
     "//build/gn/configs/system_libs:hilog",
     "//build/gn/configs/system_libs:safwk",
+    "//display_server/drivers/hal/base:ft_event_loop",
   ]
 }

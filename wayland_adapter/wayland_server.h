@@ -19,6 +19,9 @@
 #include <cstring>
 #include <system_ability.h>
 
+#include "wayland-server-core.h"
+#include "event_loop.h"
+
 namespace FT {
 namespace Wayland {
 class WaylandServer : public OHOS::SystemAbility {
@@ -34,6 +37,13 @@ public:
     void OnStop() override;
     void OnAddSystemAbility(int32_t systemAbilityId, const std::string &deviceId) override;
     std::string GetClassName() override;
+
+private:
+    struct wl_display *display_ = nullptr;
+    struct wl_event_loop *wlDisplayLoop_ = nullptr;
+    std::string socketName_;
+    std::unique_ptr<EventChannel> wlDisplayChannel_;
+    std::shared_ptr<EventLoop> loop_;
 };
 } // namespace Wayland
 } // namespace FT

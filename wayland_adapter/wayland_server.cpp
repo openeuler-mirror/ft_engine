@@ -34,11 +34,57 @@ WaylandServer::~WaylandServer() noexcept {}
 void WaylandServer::OnStart()
 {
     LOG_INFO("OnStart");
+
+    display_ = wl_display_create();
+    if (display_ == nullptr) {
+        LOG_ERROR("wl_display_create failed");
+        return;
+    }
+
+    wlDisplayLoop_ = wl_display_get_event_loop(display_);
+    if (wlDisplayLoop_ == nullptr) {
+        LOG_ERROR("wl_display_get_event_loop failed");
+        wl_display_destroy(display_);
+        return;
+    }
+
+    socketName_ = wl_display_add_socket_auto(display_);
+    if (socketName_.empty()) {
+        LOG_ERROR("wl_display_add_socket_auto failed");
+        wl_display_destroy(display_);
+        return;
+    }
+
+    loop_ = std::make_shared<EventLoop>();
+    wlDisplayChannel_ = std::make_unique<EventChannel>(wl_event_loop_get_fd(wlDisplayLoop_), loop_.get());
+    wlDisplayChannel_->SetReadCallback([this](TimeStamp timeStamp) {
+        wl_event_loop_dispatch(wlDisplayLoop_, -1);
+        wl_display_flush_clients(display_);
+    });
+    wlDisplayChannel_->EnableReading(true);
 }
 
 void WaylandServer::OnStop()
 {
     LOG_INFO("OnStop");
+
+    if (display_ == nullptr || loop_ == nullptr) {
+        return;
+    }
+
+    auto stopWlDisplay = loop_->Schedule([this]() {
+        wl_display_terminate(display_);
+        wl_display_destroy_clients(display_);
+        wl_display_destroy(display_);
+        if (wlDisplayChannel_ != nullptr) {
+            wlDisplayChannel_->DisableAll(true);
+            wlDisplayChannel_ = nullptr;
+        }
+    });
+    stopWlDisplay.wait();
+
+    display_ = nullptr;
+    loop_ = nullptr;
 }
 
 void WaylandServer::OnAddSystemAbility(int32_t systemAbilityId, const std::string &deviceId)
