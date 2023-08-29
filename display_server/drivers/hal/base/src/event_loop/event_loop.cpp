@@ -21,7 +21,7 @@
 #include "current_thread.h"
 #include "log.h"
 
-namespace oewm {
+namespace FT {
 namespace detail {
 int CreateEventFdOrDie()
 {
@@ -204,4 +204,4 @@ EventLoop *EventLoop::EventLoopOfCurrThread()
 {
     return t_currLoop;
 }
-} // namespace oewm
+} // namespace FT

@@ -22,9 +22,9 @@
 #include "sync_fence.h"
 #include "allocator_controller.h"
 
-oewm::HDI::DISPLAY::HdiSession& g_session = oewm::HDI::DISPLAY::HdiSession::GetInstance();
-oewm::HDI::DISPLAY::AllocatorController& g_alloc_controller = oewm::HDI::DISPLAY::AllocatorController::GetInstance();
-oewm::EventLoop g_mainLoop = oewm::EventLoop();
+FT::HDI::DISPLAY::HdiSession& g_session = FT::HDI::DISPLAY::HdiSession::GetInstance();
+FT::HDI::DISPLAY::AllocatorController& g_alloc_controller = FT::HDI::DISPLAY::AllocatorController::GetInstance();
+FT::EventLoop g_mainLoop = FT::EventLoop();
 
 bool DestoryBufferHandle(BufferHandle **handle);
 
@@ -61,9 +61,9 @@ bool CreateBuffer(uint32_t devId, BufferHandle **handle)
     uint32_t num = 0;
 
     int32_t ret = g_session.CallDisplayFunction(
-        devId, 
-        &oewm::HDI::DISPLAY::HdiDisplay::GetDisplaySupportedModes, 
-        &num, 
+        devId,
+        &FT::HDI::DISPLAY::HdiDisplay::GetDisplaySupportedModes,
+        &num,
         (DisplayModeInfo*)nullptr
     );
     if (ret != DISPLAY_SUCCESS) {
@@ -78,9 +78,9 @@ bool CreateBuffer(uint32_t devId, BufferHandle **handle)
 
     displayModeInfos.resize(num);
     ret = g_session.CallDisplayFunction(
-        devId, 
-        &oewm::HDI::DISPLAY::HdiDisplay::GetDisplaySupportedModes, 
-        &num, 
+        devId,
+        &FT::HDI::DISPLAY::HdiDisplay::GetDisplaySupportedModes,
+        &num,
         displayModeInfos.data()
     );
     if (ret != DISPLAY_SUCCESS) {
@@ -94,8 +94,8 @@ bool CreateBuffer(uint32_t devId, BufferHandle **handle)
     uint32_t width = displayModeInfos[DEFAULT_MODE_INDEX].width;
     uint32_t height = displayModeInfos[DEFAULT_MODE_INDEX].height;
     ret = g_session.CallDisplayFunction(
-        devId, 
-        &oewm::HDI::DISPLAY::HdiDisplay::SetDisplayMode,
+        devId,
+        &FT::HDI::DISPLAY::HdiDisplay::SetDisplayMode,
         DEFAULT_MODE_INDEX);
     if (ret != DISPLAY_SUCCESS) {
         printf("Draw: Failed to set display mode, ret=%d\n", ret);
@@ -109,12 +109,12 @@ bool CreateBuffer(uint32_t devId, BufferHandle **handle)
         .height = height,
         .usage = HBM_USE_MEM_DMA | HBM_USE_CPU_READ | HBM_USE_MEM_FB | HBM_USE_CPU_WRITE, // allocate dumb buffer with "HBM_USE_CPU_WRITE"
         .format = PIXEL_FMT_BGRA_8888}; // TODO: format
-    auto allocator = g_alloc_controller.GetAllocator(info.usage); 
+    auto allocator = g_alloc_controller.GetAllocator(info.usage);
     if (allocator == nullptr) {
         printf("CreateBuffer: Failed to get buffer allocator.\n");
         return false;
     }
-    
+
     // Do allocate memory
     ret = allocator->AllocMem(info, handle);
     if (*handle == nullptr || ret != DISPLAY_SUCCESS) {
@@ -128,7 +128,7 @@ bool CreateBuffer(uint32_t devId, BufferHandle **handle)
         printf("CreateBuffer: Failed to mmap fb.\n");
         return false;
     }
-    
+
     printf("CreateBuffer: end. handle fd: %i.\n", (*handle)->fd);
     return true;
 }
@@ -193,12 +193,12 @@ void Screen::OnVsync(uint32_t sequence, uint64_t timestamp, void *data)
         printf("OnVSync: screen is null\n");
         return;
     }
-    
+
     // Print first frames
     static int i = 0;
     if (i < 3) {
         printf("OnVSync: screen devId=%d, sequence=%u, timestamp=%lu\n", screen->devId, sequence, timestamp);
-        LOG_DEBUG("DRM Backend Test: OnVSync: screen devId=%{public}d, sequence=%{public}u, timestamp=%{public}lu", 
+        LOG_DEBUG("DRM Backend Test: OnVSync: screen devId=%{public}d, sequence=%{public}u, timestamp=%{public}lu",
             screen->devId, sequence, timestamp);
         ++i;
     }
@@ -228,9 +228,9 @@ void Screen::OnVsync(uint32_t sequence, uint64_t timestamp, void *data)
 
             // // Set fb as screen's current buffer
             // ret = g_session.CallDisplayFunction(
-            //     devId, 
-            //     &oewm::HDI::DISPLAY::HdiDisplay::SetDisplayClientBuffer, 
-            //     static_cast<const BufferHandle*>(screen->fb[screen->fbIdx]->handle), 
+            //     devId,
+            //     &FT::HDI::DISPLAY::HdiDisplay::SetDisplayClientBuffer,
+            //     static_cast<const BufferHandle*>(screen->fb[screen->fbIdx]->handle),
             //     fenceFd);
             // if (ret != DISPLAY_SUCCESS) {
             //     printf("Draw: Failed to set display client buffer, ret=%d\n", ret);
@@ -247,26 +247,26 @@ void Screen::OnVsync(uint32_t sequence, uint64_t timestamp, void *data)
 
         // Set fb as screen's current buffer
         ret = g_session.CallDisplayFunction(
-            devId, 
-            &oewm::HDI::DISPLAY::HdiDisplay::SetDisplayClientBuffer, 
-            static_cast<const BufferHandle*>(screen->fb[screen->fbIdx]->handle), 
+            devId,
+            &FT::HDI::DISPLAY::HdiDisplay::SetDisplayClientBuffer,
+            static_cast<const BufferHandle*>(screen->fb[screen->fbIdx]->handle),
             fenceFd);
         if (ret != DISPLAY_SUCCESS) {
             printf("Draw: Failed to set display client buffer, ret=%d\n", ret);
             return;
         }
-        
+
         // Commit
         ret = g_session.CallDisplayFunction(
-            devId, 
-            &oewm::HDI::DISPLAY::HdiDisplay::Commit,
+            devId,
+            &FT::HDI::DISPLAY::HdiDisplay::Commit,
             &fenceFd);
         if (fenceFd >= 0) {
             auto fence = OHOS::SyncFence(fenceFd);
         } else {
             auto fence = OHOS::SyncFence(-1);
         }
-        
+
         screen->fbIdx ^= 1;
     });
 }
@@ -284,9 +284,9 @@ static void OnHotPlug(uint32_t devId, bool connected, void *data)
 
     // Register VSync callback
     int32_t ret = g_session.CallDisplayFunction(
-        devId, 
-        &oewm::HDI::DISPLAY::HdiDisplay::RegDisplayVBlankCallback, 
-        Screen::OnVsync, 
+        devId,
+        &FT::HDI::DISPLAY::HdiDisplay::RegDisplayVBlankCallback,
+        Screen::OnVsync,
         static_cast<void *>(g_screens.at(devId))
     );
     if (ret != DISPLAY_SUCCESS) {

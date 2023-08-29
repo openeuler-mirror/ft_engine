@@ -17,7 +17,7 @@
 
 #include <atomic>
 
-namespace oewm {
+namespace FT {
 namespace detail {
 uint64_t GenSequenceId()
 {
@@ -46,4 +46,4 @@ void Timer::Restart(TimeStamp now)
     ASSERT(IsRepeat());
     expireTime_ = TimeAdd(now, interval_);
 }
-} // namespace oewm
+} // namespace FT

@@ -19,7 +19,7 @@
 #include "drm_common.h"
 #include "drm_property.h"
 
-namespace oewm {
+namespace FT {
 namespace drm {
 // prop for plane
 constexpr char PROP_FBID[] = "FB_ID";
@@ -128,4 +128,4 @@ private:
     uint32_t possibleCrtcs_ = 0;
 };
 } // namespace drm
-} // namespace oewm
+} // namespace FT

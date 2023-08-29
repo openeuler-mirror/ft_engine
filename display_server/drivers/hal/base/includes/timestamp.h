@@ -17,7 +17,7 @@
 
 #include "types.h"
 
-namespace oewm {
+namespace FT {
 constexpr int MILLI_SECS_PER_SECOND = 1000;
 constexpr int MICRO_SECS_PER_MILLISECOND = 1000;
 constexpr int MICRO_SECS_PER_SECOND = MICRO_SECS_PER_MILLISECOND * MILLI_SECS_PER_SECOND;
@@ -114,4 +114,4 @@ inline TimeStamp TimeAdd(TimeStamp t, TimeType micros)
 {
     return TimeStamp(t.Micros() + micros);
 }
-} // namespace oewm
+} // namespace FT
