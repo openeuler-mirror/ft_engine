@@ -71,11 +71,11 @@ inline OutStream &operator<<(OutStream &os, const ObjectId &objId)
     return os;
 }
 
-class OEResourceObject : NonCopyable, virtual public OHOS::RefBase {
+class WaylandResourceObject : NonCopyable, virtual public OHOS::RefBase {
 public:
-    OEResourceObject(struct wl_client *client, const struct wl_interface *interface,
+    WaylandResourceObject(struct wl_client *client, const struct wl_interface *interface,
         uint32_t version, uint32_t id, void *implementation);
-    virtual ~OEResourceObject() noexcept override;
+    virtual ~WaylandResourceObject() noexcept override;
 
     const std::string &Name() const
     {
@@ -102,7 +102,7 @@ public:
         return resource_;
     }
 
-    static bool CheckIfObjectIsValid(const OHOS::sptr<OEResourceObject> &object);
+    static bool CheckIfObjectIsValid(const OHOS::sptr<WaylandResourceObject> &object);
     static void DefaultDestroyResource(struct wl_client *client, struct wl_resource *resource);
 
 protected:
@@ -138,14 +138,14 @@ inline OHOS::sptr<T> CastFromResource(struct wl_resource *resource)
     }
 
     static_assert(detail::HasFuncDefaultDestroyResource<T>::value,
-        "Can't cast wl_resource to the type which is neither an OEResourceObject nor the derived type of it.");
+        "Can't cast wl_resource to the type which is neither ResourceObject nor the derived type of it.");
 
     auto wptrObj = OHOS::wptr<T>(DownCast<T *>(wl_resource_get_user_data(resource)));
     return wptrObj.promote();
 }
 
 #define OBJECT_CHECK(object, errlog)                                                                                   \
-    if (!OEResourceObject::CheckIfObjectIsValid(object)) {                                                             \
+    if (!WaylandResourceObject::CheckIfObjectIsValid(object)) {                                                             \
         LOG_WARN(errlog);                                                                                            \
         return;                                                                                                        \
     }

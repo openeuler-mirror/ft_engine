@@ -21,13 +21,13 @@ namespace {
     constexpr HiLogLabel LABEL = {LOG_CORE, HILOG_DOMAIN_WAYLAND, "WaylandObjectsPool"};
 }
 
-OHOS::sptr<OEObjectsPoolCallback> WaylandObjectsPool::cb_ = nullptr;
-void WaylandObjectsPool::SetCallback(OHOS::sptr<OEObjectsPoolCallback> cb)
+OHOS::sptr<WaylandObjectsPoolCallback> WaylandObjectsPool::cb_ = nullptr;
+void WaylandObjectsPool::SetCallback(OHOS::sptr<WaylandObjectsPoolCallback> cb)
 {
     cb_ = cb;
 }
 
-void WaylandObjectsPool::AddObject(ObjectId id, const OHOS::sptr<OEResourceObject> &object)
+void WaylandObjectsPool::AddObject(ObjectId id, const OHOS::sptr<WaylandResourceObject> &object)
 {
     std::lock_guard<std::mutex> lock(mutex_);
     if (objects_.count(id) > 0) {
@@ -37,7 +37,7 @@ void WaylandObjectsPool::AddObject(ObjectId id, const OHOS::sptr<OEResourceObjec
     objects_[id] = object;
 }
 
-void WaylandObjectsPool::RemoveObject(ObjectId id, const OHOS::sptr<OEResourceObject> &object)
+void WaylandObjectsPool::RemoveObject(ObjectId id, const OHOS::sptr<WaylandResourceObject> &object)
 {
     std::lock_guard<std::mutex> lock(mutex_);
     if (objects_.count(id) == 0) {
@@ -58,7 +58,7 @@ void WaylandObjectsPool::RemoveObject(ObjectId id, const OHOS::sptr<OEResourceOb
     }
 }
 
-OHOS::sptr<OEResourceObject> WaylandObjectsPool::GetObject(ObjectId id) const
+OHOS::sptr<WaylandResourceObject> WaylandObjectsPool::GetObject(ObjectId id) const
 {
     std::lock_guard<std::mutex> lock(mutex_);
     if (objects_.count(id) == 0) {

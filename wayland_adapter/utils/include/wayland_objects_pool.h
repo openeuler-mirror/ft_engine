@@ -23,7 +23,7 @@
 
 namespace FT {
 namespace Wayland {
-class OEObjectsPoolCallback : public OHOS::RefBase {
+class WaylandObjectsPoolCallback : public OHOS::RefBase {
 public:
     virtual void OnDestroy(ObjectId objectId) {}
 };
@@ -32,18 +32,18 @@ class WaylandObjectsPool : public Singleton<WaylandObjectsPool> {
     DECLARE_SINGLETON(WaylandObjectsPool)
 
 public:
-    static void SetCallback(OHOS::sptr<OEObjectsPoolCallback> cb);
-    void AddObject(ObjectId id, const OHOS::sptr<OEResourceObject> &object);
-    void RemoveObject(ObjectId id, const OHOS::sptr<OEResourceObject> &object);
-    OHOS::sptr<OEResourceObject> GetObject(ObjectId id) const;
+    static void SetCallback(OHOS::sptr<WaylandObjectsPoolCallback> cb);
+    void AddObject(ObjectId id, const OHOS::sptr<WaylandResourceObject> &object);
+    void RemoveObject(ObjectId id, const OHOS::sptr<WaylandResourceObject> &object);
+    OHOS::sptr<WaylandResourceObject> GetObject(ObjectId id) const;
 
 private:
     WaylandObjectsPool() = default;
     ~WaylandObjectsPool() noexcept override = default;
 
-    static OHOS::sptr<OEObjectsPoolCallback> cb_;
+    static OHOS::sptr<WaylandObjectsPoolCallback> cb_;
     mutable std::mutex mutex_;
-    std::map<ObjectId, OHOS::sptr<OEResourceObject>> objects_;
+    std::map<ObjectId, OHOS::sptr<WaylandResourceObject>> objects_;
 };
 } // namespace Wayland
 } // namespace FT
