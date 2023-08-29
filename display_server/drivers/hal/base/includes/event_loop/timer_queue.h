@@ -23,7 +23,7 @@
 #include "event_channel.h"
 #include "timer.h"
 
-namespace oewm {
+namespace FT {
 class EventLoop;
 
 using TimerPtr = std::unique_ptr<Timer>;
@@ -64,4 +64,4 @@ private:
     TimerMap timers_;
     TimerEntrySet timerEntries_;
 };
-} // namespace oewm
+} // namespace FT

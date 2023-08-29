@@ -19,7 +19,7 @@
 #include "drm_common.h"
 #include "drm_crtc.h"
 
-namespace oewm {
+namespace FT {
 namespace drm {
 class DrmEncoder : NonCopyable {
 public:
@@ -36,4 +36,4 @@ private:
     uint32_t possibleCrtcs_ = DRM_INVALID_OBJECT_ID;
 };
 } // namespace drm
-} // namespace oewm
+} // namespace FT

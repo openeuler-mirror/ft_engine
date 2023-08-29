@@ -19,7 +19,7 @@
 
 #include "display_layer.h"
 
-namespace oewm {
+namespace FT {
 namespace HDI {
 namespace DISPLAY {
 namespace detail {
@@ -151,9 +151,9 @@ void HdiSession::OnHotPlugEvent(TimeStamp timeStamp, struct udev_device *event) 
 #endif // USE_LIBUDEV
 } // namespace DISPLAY
 } // namespace HDI
-} // namespace oewm
+} // namespace FT
 
-using namespace oewm::HDI::DISPLAY;
+using namespace FT::HDI::DISPLAY;
 static int32_t RegHotPlugCallback(HotPlugCallback callback, void *data)
 {
     HdiSession::GetInstance().RegHotPlugCallback(callback, data);
@@ -508,7 +508,7 @@ int32_t DeviceInitialize(DeviceFuncs **funcs)
 
     auto deviceFuncs = (DeviceFuncs *)calloc(1, sizeof(DeviceFuncs));
     if (deviceFuncs == nullptr) {
-        LOG_ERROR("DeviceInitialize: deviceFuncs alloc failed, err: %{public}s", oewm::ErrnoToString(errno).c_str());
+        LOG_ERROR("DeviceInitialize: deviceFuncs alloc failed, err: %{public}s", FT::ErrnoToString(errno).c_str());
         return DISPLAY_FAILURE;
     }
 
@@ -572,7 +572,7 @@ int32_t LayerInitialize(LayerFuncs **funcs)
 
     LayerFuncs *layerFuncs = (LayerFuncs *)calloc(1, sizeof(LayerFuncs));
     if (layerFuncs == nullptr) {
-        LOG_ERROR("LayerInitialize: layerFuncs alloc failed, err: %{public}s", oewm::ErrnoToString(errno).c_str());
+        LOG_ERROR("LayerInitialize: layerFuncs alloc failed, err: %{public}s", FT::ErrnoToString(errno).c_str());
         return DISPLAY_FAILURE;
     }
 

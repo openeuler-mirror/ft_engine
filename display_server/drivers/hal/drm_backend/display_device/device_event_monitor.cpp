@@ -19,7 +19,7 @@
 #include "hdi_display.h"
 #include "log.h"
 
-namespace oewm {
+namespace FT {
 namespace HDI {
 namespace DISPLAY {
 namespace detail {
@@ -183,7 +183,7 @@ void DeviceEventMonitor::RegisterVsyncEventHandler()
     } else {
 #endif // ENABLE_HARDWARE_VSYNC
         // use soft vsync.
-        softVsyncTimer_ = loop_->RunEvery([this]() { 
+        softVsyncTimer_ = loop_->RunEvery([this]() {
             TimeStamp timestamp(TimeDiff(TimeStamp::Now(), TimeStamp::SystemStartTime()));
             OnSoftVsyncEvent(timestamp);
         }, softVsyncPeriod_);
@@ -218,4 +218,4 @@ bool DeviceEventMonitor::Init()
 }
 } // namespace DISPLAY
 } // namespace HDI
-} // namespace oewm
+} // namespace FT
