@@ -17,7 +17,7 @@
 
 #include "types.h"
 
-namespace oewm {
+namespace FT {
 namespace CurrentThread {
 // Thread Local Storage
 struct TLS {
@@ -53,4 +53,4 @@ inline const char *Name()
 const char *TidString();
 const char *PidString();
 } // namespace CurrentThread
-} // namespace oewm
+} // namespace FT

@@ -20,7 +20,7 @@
 #include "log.h"
 #include "drm_property.h"
 
-namespace oewm {
+namespace FT {
 namespace drm {
 DrmConnector::DrmConnector(int drmFd, uint32_t connectorId) : drmFd_(drmFd), id_(connectorId)
 {
@@ -226,4 +226,4 @@ bool DrmConnector::SetBrightness(uint64_t brightness)
     return true;
 }
 } // namespace drm
-} // namespace oewm
+} // namespace FT

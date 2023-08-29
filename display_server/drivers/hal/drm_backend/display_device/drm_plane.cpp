@@ -18,7 +18,7 @@
 #include "drm_mode.h"
 #include "log.h"
 
-namespace oewm {
+namespace FT {
 namespace drm {
 DrmPlane::DrmPlane(int drmFd, uint32_t planeId) : drmFd_(drmFd), id_(planeId)
 {
@@ -51,4 +51,4 @@ void DrmPlane::ParseFrom(drmModePlanePtr const &plane)
     possibleCrtcs_ = plane->possible_crtcs;
 }
 } // namespace drm
-} // namespace oewm
+} // namespace FT

@@ -25,7 +25,7 @@
 #include <drm.h>
 #include <xf86drm.h>
 
-namespace oewm {
+namespace FT {
 namespace HDI {
 namespace DISPLAY {
 GbmAllocator::~GbmAllocator() noexcept
@@ -56,7 +56,7 @@ int32_t GbmAllocator::Init()
         return DISPLAY_FAILURE;
     }
 
-    LOG_INFO("[Gralloc::GbmAllocator::Init] Created GBM device with backend: %{public}s", 
+    LOG_INFO("[Gralloc::GbmAllocator::Init] Created GBM device with backend: %{public}s",
         gbm_device_get_backend_name(gbmContext_));
     char *drmName = drmGetDeviceNameFromFd2(drmFd);
     LOG_INFO("[Gralloc::GbmAllocator::Init] Using DRM node: %{public}s", drmName);
@@ -218,7 +218,7 @@ int32_t GbmAllocator::Unmap(BufferHandle &buffer)
 
     gbm_bo_unmap(gbmBo, buffer.virAddr);
     buffer.virAddr = nullptr;
-    
+
     LOG_DEBUG("[Gralloc::GbmAllocator::Unmap] Unmap done.");
 
     return DISPLAY_SUCCESS;
@@ -334,4 +334,4 @@ int32_t GbmAllocator::AllocMemWithUsage(const AllocInfo &info, BufferHandle **bu
 }
 } // namespace DISPLAY
 } // namespace HDI
-} // namespace oewm
+} // namespace FT

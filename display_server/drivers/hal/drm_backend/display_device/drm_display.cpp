@@ -21,7 +21,7 @@
 
 #include "hdi_session.h"
 
-namespace oewm {
+namespace FT {
 namespace drm {
 DrmDisplay::DrmDisplay(
     int drmFd,
@@ -197,7 +197,7 @@ bool DrmDisplay::IsConnected()
 
 void DrmDisplay::InitReservedFb()
 {
-    const auto &displayDevice = oewm::HDI::DISPLAY::HdiSession::GetInstance().GetDisplayDevice();
+    const auto &displayDevice = FT::HDI::DISPLAY::HdiSession::GetInstance().GetDisplayDevice();
     ASSERT(displayDevice != nullptr);
 
     auto modeId = connector_->GetActiveModeId();
@@ -234,7 +234,7 @@ int32_t DrmDisplay::RegDisplayVBlankCallback(VBlankCallback cb, void *data)
             return DISPLAY_FAILURE;
         }
 
-        const auto &displayDevice = oewm::HDI::DISPLAY::HdiSession::GetInstance().GetDisplayDevice();
+        const auto &displayDevice = FT::HDI::DISPLAY::HdiSession::GetInstance().GetDisplayDevice();
         ASSERT(displayDevice != nullptr);
 
         int fenceFd = INVALID_FD;
@@ -360,7 +360,7 @@ int32_t DrmDisplay::SetDisplayClientBuffer(const BufferHandle *buffer, int32_t f
 int32_t DrmDisplay::PrepareDisplayLayers(bool *needFlushFb)
 {
     changeLayers_.clear();
-    std::vector<oewm::HDI::DISPLAY::HdiLayer *> layers;
+    std::vector<FT::HDI::DISPLAY::HdiLayer *> layers;
     for (auto &[layerId, layer] : layers_) {
         UNUSED(layerId);
         layers.push_back(layer.get());
@@ -368,7 +368,7 @@ int32_t DrmDisplay::PrepareDisplayLayers(bool *needFlushFb)
     sort(
         layers.begin(),
         layers.end(),
-        [](const oewm::HDI::DISPLAY::HdiLayer *lhs, const oewm::HDI::DISPLAY::HdiLayer *rhs) {
+        [](const FT::HDI::DISPLAY::HdiLayer *lhs, const FT::HDI::DISPLAY::HdiLayer *rhs) {
             return lhs->GetZOrder() < rhs->GetZOrder();
         }); // sort by Zorder
     for (auto &layer : layers) {
@@ -404,7 +404,7 @@ int32_t DrmDisplay::GetDisplayCompChange(uint32_t *num, uint32_t *layers, int32_
         if (layers != nullptr && type != nullptr) {
             *(layers + i) = changeLayers_[i]->GetId();
             *(type + i) = changeLayers_[i]->GetCompositionType();
-            LOG_DEBUG("DrmDisplay::GetDisplayCompChange layerId %{public}u, fencefd %{public}i", 
+            LOG_DEBUG("DrmDisplay::GetDisplayCompChange layerId %{public}u, fencefd %{public}i",
                 changeLayers_[i]->GetId(), changeLayers_[i]->GetCompositionType());
         }
     }
@@ -432,7 +432,7 @@ void DrmDisplay::CommitAtomic(int32_t *fence, const DrmFrameBuffer *fb, int comm
         "Plain CRTC W: %{public}u, "
         "Plain CRTC H: %{public}u, "
         "Commit flag: %{public}d.",
-        connector_->Id(), crtc_->Id(), connector_->BlobId(), (uint64_t)fence, 
+        connector_->Id(), crtc_->Id(), connector_->BlobId(), (uint64_t)fence,
         primaryPlane_->Id(), fbId, width << 16, height << 16, width, height, commitFlag);
 
     DrmAtomicCommitter atomicAutoCommitter(drmFd_, commitFlag, this);
@@ -503,7 +503,7 @@ int32_t DrmDisplay::Commit(int32_t *fence)
         fb = reservedFb_.get();
     }
 
-    if (oewm::HDI::DISPLAY::HdiSession::GetInstance().GetDisplayDevice()->SupportAtomicModeSet()) {
+    if (FT::HDI::DISPLAY::HdiSession::GetInstance().GetDisplayDevice()->SupportAtomicModeSet()) {
         CommitAtomic(fence, fb, commitFlag_);
     } else {
         // legacy
@@ -513,4 +513,4 @@ int32_t DrmDisplay::Commit(int32_t *fence)
     return DISPLAY_SUCCESS;
 }
 } // namespace drm
-} // namespace oewm
+} // namespace FT

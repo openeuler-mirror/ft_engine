@@ -183,9 +183,9 @@ uint32_t ConvertPixelFormatToDrmFormat(PixelFormat fmtIn)
     }
     // LOG_DEBUG << "Convert pixelFormat(" << fmtIn << " : " << GetHdiPixelFmtStr(fmtIn) << ") to DrmFormat(" << fmtOut
     //           << " : " << GetDrmFmtStr(fmtOut) << ")";
-    // LOG_DEBUG << oewm::Fmt(
+    // LOG_DEBUG << FT::Fmt(
     //     "Convert PixelFormat(%u:%s) to DrmFormat(%u:%s)",
-    //     oewm::ECast(fmtIn),
+    //     FT::ECast(fmtIn),
     //     GetHdiPixelFmtStr(fmtIn),
     //     fmtOut,
     //     GetDrmFmtStr(fmtOut));
@@ -201,11 +201,11 @@ PixelFormat ConvertDrmFormatToPixelFormat(uint32_t fmtIn)
             break;
         }
     }
-    // LOG_DEBUG << oewm::Fmt(
+    // LOG_DEBUG << FT::Fmt(
     //     "Convert DrmFormat(%u:%s) to PixelFormat(%u:%s)",
     //     fmtIn,
     //     GetDrmFmtStr(fmtIn),
-    //     oewm::ECast(fmtOut),
+    //     FT::ECast(fmtOut),
     //     GetHdiPixelFmtStr(fmtOut));
     return fmtOut;
 }

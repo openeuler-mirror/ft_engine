@@ -31,7 +31,7 @@
 #include "display_type.h"
 #include "log.h"
 
-using namespace oewm::HDI::DISPLAY;
+using namespace FT::HDI::DISPLAY;
 
 int32_t AllocMem(const AllocInfo *info, BufferHandle **handle)
 {
@@ -100,7 +100,7 @@ int32_t Unmap(BufferHandle *handle)
     if (allocator == nullptr) {
         return DISPLAY_NULL_PTR;
     }
-        
+
     return allocator->InvalidateCache(*handle);
 }
 

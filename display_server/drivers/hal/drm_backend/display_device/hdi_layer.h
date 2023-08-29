@@ -22,7 +22,7 @@
 #include "display_type.h"
 #include "noncopyable_hal.h"
 
-namespace oewm {
+namespace FT {
 namespace HDI {
 namespace DISPLAY {
 const uint32_t INVALID_VALUE = ~0x0;
@@ -220,4 +220,4 @@ using HdiLayerId = HDI::DISPLAY::LayerId;
 using HdiLayer = HDI::DISPLAY::HdiLayer;
 using HdiLayerBuffer = HDI::DISPLAY::HdiLayerBuffer;
 } // namespace drm
-} // namespace oewm
+} // namespace FT

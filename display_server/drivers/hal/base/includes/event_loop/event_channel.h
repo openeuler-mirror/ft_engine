@@ -24,7 +24,7 @@
 #include "noncopyable_hal.h"
 #include "timestamp.h"
 
-namespace oewm {
+namespace FT {
 using EventCallback = std::function<void()>;
 using ReadCallback = std::function<void(TimeStamp)>;
 
@@ -144,4 +144,4 @@ protected:
     std::weak_ptr<void> ownerObj_;
     std::atomic<bool> tied_{false};
 };
-} // namespace oewm
+} // namespace FT

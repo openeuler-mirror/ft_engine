@@ -21,7 +21,7 @@
 #include "event_poller.h"
 #include "timer_queue.h"
 
-namespace oewm {
+namespace FT {
 using Functor = std::function<void()>;
 
 namespace detail {
@@ -114,4 +114,4 @@ private:
 
     std::unique_ptr<TimerQueue> timerQueue_;
 };
-} // namespace oewm
+} // namespace FT

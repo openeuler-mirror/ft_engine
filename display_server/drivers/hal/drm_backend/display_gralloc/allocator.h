@@ -19,7 +19,7 @@
 
 #include <cstdint>
 
-namespace oewm {
+namespace FT {
 namespace HDI {
 namespace DISPLAY {
 
@@ -80,4 +80,4 @@ public:
 
 } // namespace DISPLAY
 } // namespace HDI
-} // namespace oewm
+} // namespace FT
