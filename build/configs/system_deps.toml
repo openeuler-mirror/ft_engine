@@ -33,6 +33,7 @@ package_deps = [
     "libxml2-devel",
     "libpng-devel",
     "libicu",
+    "wayland-devel",
     # DRM Backend
     "libdrm-devel",
     "systemd-pam",
