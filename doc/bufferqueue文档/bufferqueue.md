@@ -82,7 +82,7 @@
 `HdiFramebufferSurface` 类中的 `producerSurface_` 所指向的 `ProducerSurface` 对象，
 其 `producer_` 与 `consumerSurface_` 中的 `producer` 一致。
 
-```cpp
+```c++
 SurfaceError HdiFramebufferSurface::CreateSurface(sptr<HdiFramebufferSurface> &fbSurface)
 { 
     ...
@@ -139,13 +139,13 @@ ProducerSurface::ProducerSurface(sptr<IBufferProducer>& producer)
 
 其中，`eglMakeCurrent()` 是 EGL 的 API，定义如下，主要负责绑定将 `Display`, `Surface` 与 `Context` 进行绑定。
 
-```
+```c++
 EGLBoolean EGLAPIENTRY
 eglMakeCurrent(EGLDisplay dpy, EGLSurface draw, EGLSurface read, EGLContext ctx)
 ```
 
 在 MESA 部分，调用顺序如下所示，可知最后会调用 `NativeWindowRequestBuffer()`。
-```
+```c++
 eglMakeCurrent(eglDisplay_, eglSurface_, eglSurface_, eglContext_)
     disp->Driver->MakeCurrent(disp, draw_surf, read_surf, context); // _eglDriver.MakeCurrent = dri2_make_current
         dri2_dpy->core->bindContext(cctx, ddraw, rdraw) // driCoreExtension.bindContext = driBindContext
@@ -189,14 +189,14 @@ eglMakeCurrent(eglDisplay_, eglSurface_, eglSurface_, eglContext_)
 ![draw_flushframe](img/draw_flushframe.png)
 
 调用 EGL 的 API `eglSwapBuffers()` 进入 MESA 模块，该接口定义如下：
-```
+```c++
 EGLBoolean eglSwapBuffers(EGLDisplay display, EGLSurface surface)
 ```
 
 其中， 参数 `display` 和 `surface` 分别代表 `EGL display connection`
 和其 buffer 将要被置换的 `EGL drawing surface`。 调用顺序如下：
 
-```
+```c++
 eglSwapBuffers(eglDisplay_, surface);
     disp->Driver->SwapBuffers(disp, surf)  // _eglDriver.SwapBuffers = dri2_swap_buffers
         dri2_dpy->vtbl->swap_buffers(disp, surf); // ohos_display_vtbl.swap_buffers = ohos_swap_buffers
