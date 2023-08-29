@@ -37,7 +37,7 @@
 #define OE_UNLIKELY(x) (__builtin_expect(!!(x), 0))
 #endif
 
-namespace oewm {
+namespace FT {
 template <typename EnumType>
 inline constexpr typename std::underlying_type<EnumType>::type ECast(EnumType e)
 {
@@ -156,4 +156,4 @@ inline size_t HashCombine(const Args &...args)
     (HashCombineOne(hash, args), ...);
     return hash;
 }
-} // namespace oewm
+} // namespace FT

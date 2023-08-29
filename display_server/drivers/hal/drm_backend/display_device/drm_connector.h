@@ -23,7 +23,7 @@
 #include "drm_encoder.h"
 #include "drm_crtc.h"
 
-namespace oewm {
+namespace FT {
 namespace drm {
 // prop for connector
 constexpr char PROP_CRTCID[] = "CRTC_ID";
@@ -150,4 +150,4 @@ private:
     uint32_t activeModeId_ = -1;
 };
 } // namespace drm
-} // namespace oewm
+} // namespace FT

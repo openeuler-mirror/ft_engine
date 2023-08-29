@@ -23,7 +23,7 @@
 #include "noncopyable_hal.h"
 #include "types.h"
 
-namespace oewm {
+namespace FT {
 namespace drm {
 constexpr uint32_t DRM_INVALID_OBJECT_ID = 0;
 constexpr uint32_t DRM_INVALID_OBJECT_TYPE = 0;
@@ -65,4 +65,4 @@ inline std::string ObjInfoDump(uint32_t objId, uint32_t objType)
     return "DrmObject [id: " + std::to_string(objId) + ", type: " + DrmObjTypeToString(objType) + "]";
 }
 } // namespace drm
-} // namespace oewm
+} // namespace FT

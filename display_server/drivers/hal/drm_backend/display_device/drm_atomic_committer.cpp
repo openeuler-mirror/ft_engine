@@ -18,7 +18,7 @@
 #include "drm_display.h"
 #include "log.h"
 
-namespace oewm {
+namespace FT {
 namespace drm {
 DrmAtomicCommitter::DrmAtomicCommitter(int drmFd, int flags, void *userData)
     : drmFd_(drmFd), req_(drmModeAtomicAlloc()), flags_(flags), userData_(userData)
@@ -51,4 +51,4 @@ void DrmAtomicCommitter::Commit()
     }
 }
 } // namespace drm
-} // namespace oewm
+} // namespace FT

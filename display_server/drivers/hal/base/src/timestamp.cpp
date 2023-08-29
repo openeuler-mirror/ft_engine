@@ -19,7 +19,7 @@
 #include <iomanip>
 #include <sstream>
 
-namespace oewm {
+namespace FT {
 namespace detail {
 // Class std::chrono::steady_clock represents a monotonic clock. The time points of this clock cannot decrease as
 // physical time moves forward and the time between ticks of this clock is constant. This clock is not related to wall
@@ -106,4 +106,4 @@ std::string TimeStamp::ToFormattedString(TimePrecision precision) const noexcept
 
     return ss.str();
 }
-} // namespace oewm
+} // namespace FT

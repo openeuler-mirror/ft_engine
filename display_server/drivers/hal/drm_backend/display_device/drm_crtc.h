@@ -20,7 +20,7 @@
 #include "drm_property.h"
 #include "hdi_display.h"
 
-namespace oewm {
+namespace FT {
 namespace drm {
 // prop for crtc
 constexpr char PROP_MODEID[] = "MODE_ID";
@@ -78,4 +78,4 @@ private:
     uint32_t pipe_ = 0;
 };
 } // namespace drm
-} // namespace oewm
+} // namespace FT

@@ -32,7 +32,7 @@
 #include "hdi_session.h"
 #include "log.h"
 
-namespace oewm {
+namespace FT {
 namespace HDI {
 namespace DISPLAY {
 
@@ -261,8 +261,8 @@ int32_t DumbAllocator::DestroyGemDumbHandle(unsigned int handle)
 
 bool DumbAllocator::GetSupportGbmModifyFromSession()
 {
-    auto &session = oewm::HDI::DISPLAY::HdiSession::GetInstance();
-    const std::shared_ptr<oewm::drm::DrmDevice> device = session.GetDisplayDevice();
+    auto &session = FT::HDI::DISPLAY::HdiSession::GetInstance();
+    const std::shared_ptr<FT::drm::DrmDevice> device = session.GetDisplayDevice();
     if (device == nullptr) {
         LOG_ERROR("[Gralloc::DumbAllocator::DestroyGemDumbHandle] Get empty DRM device from HdiSession.");
         return false;
@@ -271,4 +271,4 @@ bool DumbAllocator::GetSupportGbmModifyFromSession()
 }
 } // namespace DISPLAY
 } // namespace HDI
-} // namespace oewm
+} // namespace FT

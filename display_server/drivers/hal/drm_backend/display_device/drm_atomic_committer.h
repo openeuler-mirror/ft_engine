@@ -17,7 +17,7 @@
 
 #include "drm_common.h"
 
-namespace oewm {
+namespace FT {
 namespace drm {
 // RAII object for drm auto atomic committing.
 class DrmAtomicCommitter : NonCopyable {
@@ -38,4 +38,4 @@ private:
     void *userData_ = nullptr;
 };
 } // namespace drm
-} // namespace oewm
+} // namespace FT

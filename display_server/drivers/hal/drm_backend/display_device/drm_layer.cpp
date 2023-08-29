@@ -17,7 +17,7 @@
 
 #include "log.h"
 
-namespace oewm {
+namespace FT {
 namespace drm {
 DrmFrameBuffer *DrmLayer::GetFrameBuffer(int drmFd)
 {
@@ -44,4 +44,4 @@ DrmFrameBuffer *DrmLayer::GetFrameBuffer(int drmFd)
     return currentFrameBuffer_.get();
 }
 } // namespace drm
-} // namespace oewm
+} // namespace FT
