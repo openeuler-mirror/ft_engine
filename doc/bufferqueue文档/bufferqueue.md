@@ -267,7 +267,7 @@ eglSwapBuffers(eglDisplay_, surface);
 
 #### 4.1.1. Request
 
-MESA 部分与 绘制 `BufferQueue` 同理，此处略去。需要注意的是，
+MESA 部分与绘制 `BufferQueue` 同理，此处略去。需要注意的是，
 此处 `ProducerSurface` 中的 `producer_` 直接指向 `BufferQueuePorducer`,
 因此直接调用 `RequestBuffer()`, 这里不存在远程调用。
 
@@ -275,7 +275,7 @@ MESA 部分与 绘制 `BufferQueue` 同理，此处略去。需要注意的是�
 
 #### 4.1.2. Flush
 
-MESA 部分与 绘制 `BufferQueue` 同理，此处略去。
+MESA 部分与绘制 `BufferQueue` 同理，此处略去。
 
 ![comp_flush](img/comp_flush.png)
 
