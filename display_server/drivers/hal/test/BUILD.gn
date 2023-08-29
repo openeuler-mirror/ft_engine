@@ -16,40 +16,33 @@ import("//build/gn/fangtian.gni")
 ft_executable("drm_backend_test") {
   testonly = true
 
-  sources = [
-    "system_test/main.cpp"
-  ]
+  sources = [ "system_test/main.cpp" ]
 
   deps = [
-    "//display_server/drivers/hal/drm_backend:drm_backend",
-    "//display_server/drivers/hal/base:hal_base",
-    "//display_server/utils/sync_fence/ft_build:sync_fence",
-
     "//build/gn/configs/system_libs:ipc_core",
+    "//display_server/drivers/hal/base:ft_event_loop",
+    "//display_server/drivers/hal/drm_backend:drm_backend",
+    "//display_server/utils/sync_fence/ft_build:sync_fence",
   ]
 
-  configs = [
-    "//display_server/drivers/hal:hal_public_config"
-  ]
+  configs = [ "//display_server/drivers/hal:hal_public_config" ]
 }
 
 ft_executable("gpu_backend_test") {
-    testonly = true
+  testonly = true
 
-    sources = [
-        "system_test/gpu_backend_test.cpp"
-    ]
+  sources = [ "system_test/gpu_backend_test.cpp" ]
 
-    deps = [
-        "//display_server/drivers/hal/drm_backend:drm_backend",
-        "//display_server/drivers/hal/base:hal_base",
-        "//display_server/utils/sync_fence/ft_build:sync_fence",
-        "//build/gn/configs/system_libs:ipc_core",
-    ]
+  deps = [
+    "//build/gn/configs/system_libs:ipc_core",
+    "//display_server/drivers/hal/base:ft_event_loop",
+    "//display_server/drivers/hal/drm_backend:drm_backend",
+    "//display_server/utils/sync_fence/ft_build:sync_fence",
+  ]
 
-    configs = [
-        "//display_server/drivers/hal:hal_public_config"
-    ]
-    libs = [ "EGL", "GLESv2" ]
+  configs = [ "//display_server/drivers/hal:hal_public_config" ]
+  libs = [
+    "EGL",
+    "GLESv2",
+  ]
 }
-

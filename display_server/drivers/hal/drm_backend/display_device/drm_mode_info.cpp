@@ -17,7 +17,7 @@
 
 #include "log.h"
 
-namespace oewm {
+namespace FT {
 namespace drm {
 DrmModeInfo::DrmModeInfo(const drmModeModeInfo &modeInfo, int id, int drmFd)
     : modeInfo_(modeInfo), id_(id), drmFd_(drmFd)
@@ -48,4 +48,4 @@ DisplayModeInfo DrmModeInfo::ToHdiModeInfo() const
     return res;
 }
 } // namespace drm
-} // namespace oewm
+} // namespace FT

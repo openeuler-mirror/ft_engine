@@ -21,7 +21,7 @@
 #include "display_type.h"
 #include "drm_common.h"
 
-namespace oewm {
+namespace FT {
 namespace drm {
 struct FrameBufferInfo {
     uint32_t fbId = DRM_INVALID_OBJECT_ID;
@@ -70,4 +70,4 @@ private:
     uint32_t fbHandle_ = DRM_INVALID_OBJECT_ID;
 };
 } // namespace drm
-} // namespace oewm
+} // namespace FT

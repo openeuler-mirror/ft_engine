@@ -20,7 +20,7 @@
 
 #include "log.h"
 
-namespace oewm {
+namespace FT {
 namespace drm {
 DrmEncoder::DrmEncoder(int drmFd, uint32_t encoderId) : drmFd_(drmFd), id_(encoderId)
 {
@@ -70,4 +70,4 @@ void DrmEncoder::ParseFrom(drmModeEncoderPtr const &encoder)
     possibleCrtcs_ = encoder->possible_crtcs;
 }
 } // namespace drm
-} // namespace oewm
+} // namespace FT

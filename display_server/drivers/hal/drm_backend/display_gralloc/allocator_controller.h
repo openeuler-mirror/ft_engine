@@ -20,7 +20,7 @@
 #include <cstdint>
 #include <memory>
 
-namespace oewm {
+namespace FT {
 namespace HDI {
 namespace DISPLAY {
 
@@ -71,4 +71,4 @@ private:
 
 } // namespace DISPLAY
 } // namespace HDI
-} // namespace oewm
+} // namespace FT

@@ -14,28 +14,28 @@
 import("//build/gn/fangtian.gni")
 
 config("hal_base_public_config") {
-  include_dirs = [ 
+  include_dirs = [
     "./includes",
-    "./includes/event_loop"
+    "./includes/event_loop",
   ]
 }
 
-ft_shared_library("hal_base") {
+ft_shared_library("ft_event_loop") {
   sources = [
     "./src/current_thread.cpp",
-    "./src/timestamp.cpp",
     "./src/event_loop/event_channel.cpp",
     "./src/event_loop/event_loop.cpp",
     "./src/event_loop/event_loop_thread.cpp",
     "./src/event_loop/event_poller.cpp",
     "./src/event_loop/timer.cpp",
     "./src/event_loop/timer_queue.cpp",
+    "./src/timestamp.cpp",
   ]
 
   public_configs = [ ":hal_base_public_config" ]
 
   public_deps = [
-    "//build/gn/configs/system_libs:hilog",
     "//build/gn/configs/system_libs:c_utils",
+    "//build/gn/configs/system_libs:hilog",
   ]
 }

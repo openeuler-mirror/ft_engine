@@ -21,7 +21,7 @@
 
 #include "drm_common.h"
 
-namespace oewm {
+namespace FT {
 namespace drm {
 enum class DrmPropertyType {
     DRM_PROPERTY_TYPE_RANGE,
@@ -132,4 +132,4 @@ private:
     std::unordered_map<std::string, std::unique_ptr<DrmProperty>> propsMap_;
 };
 } // namespace drm
-} // namespace oewm
+} // namespace FT

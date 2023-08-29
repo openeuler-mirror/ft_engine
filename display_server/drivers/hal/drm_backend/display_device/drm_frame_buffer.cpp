@@ -20,7 +20,7 @@
 
 #include "log.h"
 
-namespace oewm {
+namespace FT {
 namespace drm {
 namespace detail {
 // add fbId to fbInfo
@@ -190,7 +190,7 @@ DrmFrameBuffer::DrmFrameBuffer(int drmFd, const FrameBufferInfo &fbInfo, uint32_
     : drmFd_(drmFd), info_(fbInfo), isCreateFromBufferHandle_(false), fbHandle_(fbHandle)
 {}
 
-DrmFrameBuffer::DrmFrameBuffer(int drmFd, const FrameBufferInfo &fbInfo) 
+DrmFrameBuffer::DrmFrameBuffer(int drmFd, const FrameBufferInfo &fbInfo)
     : drmFd_(drmFd), info_(fbInfo), isCreateFromBufferHandle_(true)
 {}
 
@@ -237,4 +237,4 @@ void DrmFrameBuffer::Cleanup(uint32_t color)
     }
 }
 } // namespace drm
-} // namespace oewm
+} // namespace FT
