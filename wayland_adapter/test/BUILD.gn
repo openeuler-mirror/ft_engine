@@ -14,34 +14,16 @@
 import("//build/gn/fangtian.gni")
 import("//config.gni")
 
-config("libwayland_adapter_config") {
-  visibility = [ ":*" ]
+ft_executable("wayland_demo") {
+  sources = [ "wayland_demo.cpp" ]
 
-  cflags = [
-    "-Wno-c++11-narrowing",
-    "-Wno-c++20-extensions",
-  ]
+  include_dirs = [ "." ]
 
-  include_dirs = [
-    "utils",
-    "/usr/include",
-  ]
-}
-
-ft_shared_library("libwayland_adapter") {
-  defines = ft_defines
-
-  sources = [ "wayland_server.cpp" ]
-
-  configs = [ ":libwayland_adapter_config" ]
-
-  libs = [ "wayland-server" ]
+  libs = [ "wayland-client" ]
 
   deps = [
-    "//build/gn/configs/system_libs:hilog",
-    "//build/gn/configs/system_libs:safwk",
+    "//build/gn/configs/system_libs:skia",
     "//display_server/drivers/hal/base:ft_event_loop",
-    "//wayland_adapter/framework:wayland_framewok_sources",
-    "//wayland_adapter/utils:wayland_adapter_utils_sources",
+    "//wayland_adapter/wayland_protocols:wayland_protocols_sources",
   ]
 }
