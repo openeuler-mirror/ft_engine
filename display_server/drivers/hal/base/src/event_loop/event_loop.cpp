@@ -149,6 +149,8 @@ void EventLoop::Start()
 {
     AssertInLoopThread();
 
+    printf("jinguoen EventLoop start\n");
+
     running_ = true;
     while (running_) {
         std::vector<EventChannel *> activeChannels;
