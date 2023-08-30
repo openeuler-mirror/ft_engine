@@ -319,6 +319,7 @@ MESA 部分与绘制 `BufferQueue` 同理，此处略去。
 
 ## 5. 总结
 
-综上，绘制 `BufferQueue` 与 合成 `BufferQueue` 与生产者、消费者的关系如下图所示。
+综上，绘制 `BufferQueue` 与合成 `BufferQueue` 与生产者、消费者的关系如下图所示。
+下图中的序号展示了一种可能的前后调用顺序。
 
 ![summary](img/summary.png)
