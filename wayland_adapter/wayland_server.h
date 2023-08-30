@@ -21,6 +21,7 @@
 
 #include "wayland-server-core.h"
 #include "event_loop.h"
+#include "wayland_compositor.h"
 
 namespace FT {
 namespace Wayland {
@@ -39,11 +40,14 @@ public:
     std::string GetClassName() override;
 
 private:
+    void CreateGlobalObjects();
+
     struct wl_display *display_ = nullptr;
     struct wl_event_loop *wlDisplayLoop_ = nullptr;
     std::string socketName_;
     std::unique_ptr<EventChannel> wlDisplayChannel_;
     std::shared_ptr<EventLoop> loop_;
+    OHOS::sptr<WaylandCompositor> compositorGlobal_;
 };
 } // namespace Wayland
 } // namespace FT

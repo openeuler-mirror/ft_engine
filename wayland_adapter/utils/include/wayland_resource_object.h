@@ -16,7 +16,7 @@
 #pragma once
 
 #include <string>
-#include "wayland-server-core.h"
+#include "wayland-server-protocol.h"
 #include "wayland_adapter_hilog.h"
 #include "noncopyable_hal.h"
 #include "refbase.h"
