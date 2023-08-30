@@ -29,7 +29,15 @@ const bool REGISTER_RESULT =  OHOS::SystemAbility::MakeAndRegisterAbility(new Wa
 // TODO: replace WINDOW_MANAGER_ID with WAYLAND_ADAPTER_ID
 WaylandServer::WaylandServer() : OHOS::SystemAbility(OHOS::WINDOW_MANAGER_ID, true) {}
 
-WaylandServer::~WaylandServer() noexcept {}
+WaylandServer::~WaylandServer() noexcept
+{
+    OnStop();
+}
+
+void WaylandServer::CreateGlobalObjects()
+{
+    compositorGlobal_ = WaylandCompositor::Create(display_);
+}
 
 void WaylandServer::OnStart()
 {
@@ -55,6 +63,8 @@ void WaylandServer::OnStart()
         return;
     }
 
+    CreateGlobalObjects();
+
     loop_ = std::make_shared<EventLoop>();
     wlDisplayChannel_ = std::make_unique<EventChannel>(wl_event_loop_get_fd(wlDisplayLoop_), loop_.get());
     wlDisplayChannel_->SetReadCallback([this](TimeStamp timeStamp) {
@@ -62,6 +72,7 @@ void WaylandServer::OnStart()
         wl_display_flush_clients(display_);
     });
     wlDisplayChannel_->EnableReading(true);
+    loop_->Start();
 }
 
 void WaylandServer::OnStop()
@@ -85,6 +96,7 @@ void WaylandServer::OnStop()
 
     display_ = nullptr;
     loop_ = nullptr;
+    compositorGlobal_ = nullptr;
 }
 
 void WaylandServer::OnAddSystemAbility(int32_t systemAbilityId, const std::string &deviceId)
