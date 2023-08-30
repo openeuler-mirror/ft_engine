@@ -25,6 +25,7 @@
 #include <signal.h>
 #include <errno.h>
 
+#include <securec.h>
 #include <wayland-client.h>
 #include "timestamp.h"
 #include "types.h"
@@ -53,7 +54,7 @@ struct display {
     struct wl_compositor *compositor;
     struct xdg_wm_base *wm_base;
     struct wl_shm *shm;
-    bool has_xrgb;
+    bool has_xrgb = false;
 };
 
 struct buffer {
@@ -71,7 +72,7 @@ struct window {
     struct buffer buffers[2];
     struct buffer *prev_buffer;
     struct wl_callback *callback;
-    bool wait_for_configure;
+    bool wait_for_configure = true;
 };
 
 bool g_running = true;
@@ -183,7 +184,7 @@ static int32_t CreateShmBuffer(struct display *display, struct buffer *buffer, i
 
 static void HandleXdgSurfaceConfigure(void *data, struct xdg_surface *surface, uint32_t serial)
 {
-    struct window *window = (struct window *)data;
+    struct window *window = static_cast<struct window *>(data);
 
     xdg_surface_ack_configure(surface, serial);
 
@@ -204,11 +205,11 @@ struct xdg_toplevel_listener g_xdgToplevelListener = {HandleXdgToplevelConfigure
 
 static struct window *CreateWindow(struct display *display, int32_t width, int32_t height)
 {
-    struct window *pWindow;
-
-    pWindow = (struct window *)malloc(sizeof(*pWindow));
-    if (!pWindow)
+    struct window *pWindow = static_cast<struct window *>(malloc(sizeof(*pWindow)));
+    if (!pWindow) {
         return nullptr;
+    }
+    memset_s(pWindow, sizeof(*pWindow), 0, sizeof(*pWindow));
 
     pWindow->callback = nullptr;
     pWindow->display = display;
@@ -266,8 +267,6 @@ static void DestroyWindow(struct window *window)
 static struct buffer *WindowNextBuffer(struct window *window)
 {
     struct buffer *buffer;
-    int32_t ret = 0;
-
     if (!window->buffers[0].busy) {
         buffer = &window->buffers[0];
     } else if (!window->buffers[1].busy) {
@@ -277,7 +276,7 @@ static struct buffer *WindowNextBuffer(struct window *window)
     }
 
     if (!buffer->buffer) {
-        ret = CreateShmBuffer(window->display, buffer, window->width, window->height, WL_SHM_FORMAT_XRGB8888);
+        int32_t ret = CreateShmBuffer(window->display, buffer, window->width, window->height, WL_SHM_FORMAT_XRGB8888);
         if (ret < 0) {
             return nullptr;
         }
@@ -496,10 +495,8 @@ static void PaintPixels(void *data, int32_t padding, int32_t width, int32_t heig
 
 static void Redraw(void *data, struct wl_callback *callback, uint32_t time)
 {
-    struct window *window = (struct window *)data;
-    struct buffer *buffer;
-
-    buffer = WindowNextBuffer(window);
+    struct window *window = static_cast<struct window *>(data);
+    struct buffer *buffer = WindowNextBuffer(window);
     if (!buffer) {
         fprintf(stderr, !callback ? "Failed to create the first buffer.\n" : "Both buffers busy at Redraw()\n");
         abort();
@@ -517,12 +514,12 @@ static void Redraw(void *data, struct wl_callback *callback, uint32_t time)
     window->callback = wl_surface_frame(window->surface);
     wl_callback_add_listener(window->callback, &g_frameListener, window);
     wl_surface_commit(window->surface);
-    buffer->busy = 1;
+    buffer->busy = true;
 }
 
 static void ShmFormat(void *data, struct wl_shm *wl_shm, uint32_t format)
 {
-    struct display *d = (struct display *)data;
+    struct display *d = static_cast<struct display *>(data);
 
     if (format == WL_SHM_FORMAT_XRGB8888) {
         d->has_xrgb = true;
@@ -540,7 +537,7 @@ static const struct xdg_wm_base_listener xdg_wm_base_listener = {XdgWmBasePing};
 static void RegistryGlobal(void *data, struct wl_registry *registry,
     uint32_t id, const char *interface, uint32_t version)
 {
-    struct display *d = (struct display *)data;
+    struct display *d = static_cast<struct display *>(data);
 
     if (strcmp(interface, "wl_compositor") == 0) {
         d->compositor = (struct wl_compositor *)wl_registry_bind(registry, id, &wl_compositor_interface, 1);
@@ -556,15 +553,14 @@ static void RegistryGlobal(void *data, struct wl_registry *registry,
 static void RegistryHandleGlobalRemove(void *data, struct wl_registry *registry, uint32_t name) {}
 struct wl_registry_listener g_registryListener = {RegistryGlobal, RegistryHandleGlobalRemove};
 
-static struct display *CreateDisplay(void)
+static struct display *CreateDisplay()
 {
-    struct display *pDisplay;
-
-    pDisplay = (struct display *)malloc(sizeof(*pDisplay));
+    struct display *pDisplay = (struct display *)malloc(sizeof(*pDisplay));
     if (pDisplay == nullptr) {
         fprintf(stderr, "out of memory\n");
         exit(1);
     }
+    memset_s(pDisplay, sizeof(*pDisplay), 0, sizeof(*pDisplay));
     pDisplay->display = wl_display_connect(nullptr);
     assert(pDisplay->display);
 
@@ -617,17 +613,14 @@ static void SignalInt(int32_t signum)
 int32_t main(int32_t argc, char **argv)
 {
     fprintf(stderr, "window width: %d, height: %d\n", WINDOW_WIDTH, WINDOW_HEIGHT);
-    struct sigaction sigint;
-    struct display *display;
-    struct window *window;
-    int32_t ret = 0;
 
-    display = CreateDisplay();
-    window = CreateWindow(display, WINDOW_WIDTH, WINDOW_HEIGHT);
+    struct display *display = CreateDisplay();
+    struct window *window = CreateWindow(display, WINDOW_WIDTH, WINDOW_HEIGHT);
     if (!window) {
         return 1;
     }
 
+    struct sigaction sigint;
     sigint.sa_handler = SignalInt;
     sigemptyset(&sigint.sa_mask);
     sigint.sa_flags = SA_RESETHAND;
@@ -639,6 +632,7 @@ int32_t main(int32_t argc, char **argv)
         Redraw(window, nullptr, 0);
     }
 
+    int32_t ret = 0;
     while (g_running && ret != -1) {
         ret = wl_display_dispatch(display->display);
     }
