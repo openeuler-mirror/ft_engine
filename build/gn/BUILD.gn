@@ -30,6 +30,7 @@ group("ft_window_manager") {
 group("ft_wayland_adapter") {
   deps = [
     "//wayland_adapter:libwayland_adapter",
+    "//wayland_adapter/test:wayland_demo",
   ]
 }
 
