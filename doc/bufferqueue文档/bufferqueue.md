@@ -293,7 +293,7 @@ MESA 部分与绘制 `BufferQueue` 同理，此处略去。
 
 #### 4.2.1. Acquire
 
-在调用 `HdiFramebufferSurface::onbufferavailable()` 后，
+在调用 `HdiFramebufferSurface::OnBufferAvailable()` 后，
 获取前面的合成后的图层 buffer 并压入 `availableBuffers_` 中。
 唤醒 bufferCond_ 等待事件。
 
