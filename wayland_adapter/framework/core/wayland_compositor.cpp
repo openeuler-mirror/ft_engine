@@ -15,6 +15,7 @@
 
 #include "wayland_compositor.h"
 
+#include "wayland_surface.h"
 #include "wayland_objects_pool.h"
 #include "version.h"
 
@@ -72,6 +73,11 @@ WaylandCompositorObject::~WaylandCompositorObject() noexcept {}
 
 void WaylandCompositorObject::CreateSurface(struct wl_client *client, struct wl_resource *resource, uint32_t id)
 {
+    auto surface = WaylandSurface::Create(client, resource, wl_resource_get_version(resource), id);
+    if (surface == nullptr) {
+        LOG_ERROR("no memory");
+        return;
+    }
 }
 
 void WaylandCompositorObject::CreateRegion(struct wl_client *client, struct wl_resource *resource, uint32_t id)
