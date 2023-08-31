@@ -37,6 +37,8 @@ WaylandServer::~WaylandServer() noexcept
 void WaylandServer::CreateGlobalObjects()
 {
     compositorGlobal_ = WaylandCompositor::Create(display_);
+    xdgWmBaseGlobal_ = WaylandXdgWmBase::Create(display_);
+    wl_display_init_shm(display_);
 }
 
 void WaylandServer::OnStart()
@@ -97,6 +99,7 @@ void WaylandServer::OnStop()
     display_ = nullptr;
     loop_ = nullptr;
     compositorGlobal_ = nullptr;
+    xdgWmBaseGlobal_ = nullptr;
 }
 
 void WaylandServer::OnAddSystemAbility(int32_t systemAbilityId, const std::string &deviceId)
