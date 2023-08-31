@@ -42,7 +42,6 @@ void IWaylandXdgWmBase::CreatePositioner(struct wl_client *client, struct wl_res
 void IWaylandXdgWmBase::GetXdgSurface(struct wl_client *client, struct wl_resource *xdgWmBaseResource,
     uint32_t id, struct wl_resource *surfaceResource)
 {
-    printf("GetXdgSurface\n");
     CAST_OBJECT_AND_CALL_FUNC(WaylandXdgWmObject, xdgWmBaseResource,
         "IWaylandXdgWmBase::GetXdgSurface: failed to find object.",
         GetXdgSurface, client, xdgWmBaseResource, id, surfaceResource);
