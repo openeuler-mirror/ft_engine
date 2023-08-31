@@ -99,6 +99,7 @@ void WaylandServer::OnStop()
     display_ = nullptr;
     loop_ = nullptr;
     compositorGlobal_ = nullptr;
+    xdgWmBaseGlobal_ = nullptr;
 }
 
 void WaylandServer::OnAddSystemAbility(int32_t systemAbilityId, const std::string &deviceId)
