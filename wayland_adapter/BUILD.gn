@@ -43,5 +43,6 @@ ft_shared_library("libwayland_adapter") {
     "//display_server/drivers/hal/base:ft_event_loop",
     "//wayland_adapter/framework:wayland_framewok_sources",
     "//wayland_adapter/utils:wayland_adapter_utils_sources",
+    "//wayland_adapter/wayland_protocols:wayland_protocols_sources",
   ]
 }
