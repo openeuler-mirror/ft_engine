@@ -16,6 +16,8 @@
 #include "wayland_xdg_surface.h"
 
 #include "wayland_objects_pool.h"
+#include "wayland_xdg_toplevel.h"
+#include "wayland_xdg_wm_base.h"
 
 namespace FT {
 namespace Wayland {
@@ -82,6 +84,12 @@ WaylandXdgSurface::~WaylandXdgSurface() noexcept {}
 
 void WaylandXdgSurface::GetToplevel(uint32_t id)
 {
+    auto xdgTopLevel = WaylandXdgToplevel::Create(this, id);
+    if (xdgTopLevel == nullptr) {
+        LOG_ERROR("no memory");
+        return;
+    }
+    toplevel_ = xdgTopLevel;
 }
 
 void WaylandXdgSurface::GetPopup(uint32_t id, struct wl_resource *parent, struct wl_resource *positioner)
