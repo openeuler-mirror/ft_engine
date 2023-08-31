@@ -15,8 +15,7 @@
 
 #include "wayland_xdg_wm_base.h"
 
-#include <algorithm>
-#include <mutex>
+#include "wayland_xdg_surface.h"
 #include "wayland_objects_pool.h"
 #include "version.h"
 
@@ -43,6 +42,7 @@ void IWaylandXdgWmBase::CreatePositioner(struct wl_client *client, struct wl_res
 void IWaylandXdgWmBase::GetXdgSurface(struct wl_client *client, struct wl_resource *xdgWmBaseResource,
     uint32_t id, struct wl_resource *surfaceResource)
 {
+    printf("GetXdgSurface\n");
     CAST_OBJECT_AND_CALL_FUNC(WaylandXdgWmObject, xdgWmBaseResource,
         "IWaylandXdgWmBase::GetXdgSurface: failed to find object.",
         GetXdgSurface, client, xdgWmBaseResource, id, surfaceResource);
@@ -61,9 +61,9 @@ OHOS::sptr<WaylandXdgWmObject> WaylandXdgWmObject::Create(struct wl_client *clie
         return nullptr;
     }
 
-    auto xdgClient = OHOS::sptr<WaylandXdgWmObject>(new WaylandXdgWmObject(client, version, id));
-    WaylandObjectsPool::GetInstance().AddObject(ObjectId(xdgClient->WlClient(), xdgClient->Id()), xdgClient);
-    return xdgClient;
+    auto xdgWm = OHOS::sptr<WaylandXdgWmObject>(new WaylandXdgWmObject(client, version, id));
+    WaylandObjectsPool::GetInstance().AddObject(ObjectId(xdgWm->WlClient(), xdgWm->Id()), xdgWm);
+    return xdgWm;
 }
 
 WaylandXdgWmObject::WaylandXdgWmObject(struct wl_client *client, uint32_t version, uint32_t id)
@@ -78,6 +78,22 @@ void WaylandXdgWmObject::CreatePositioner(struct wl_client *client, uint32_t id)
 void WaylandXdgWmObject::GetXdgSurface(struct wl_client *client, struct wl_resource *xdgWmBaseResource,
     uint32_t id, struct wl_resource *surfaceResource)
 {
+    if (client != client_) {
+        LOG_WARN("client conflict");
+        return;
+    }
+
+    auto surface = CastFromResource<WaylandSurface>(surfaceResource);
+    if (surface == nullptr) {
+        LOG_WARN("waylandSurface is nullptr");
+        return;
+    }
+
+    auto xdgSurface = WaylandXdgSurface::Create(this, surface, id);
+    if (xdgSurface == nullptr) {
+        LOG_ERROR("no memory");
+        return;
+    }
 }
 
 void WaylandXdgWmObject::Pong(struct wl_client *client, struct wl_resource *resource, uint32_t serial) {}
@@ -99,8 +115,8 @@ WaylandXdgWmBase::~WaylandXdgWmBase() noexcept {}
 
 void WaylandXdgWmBase::Bind(struct wl_client *client, uint32_t version, uint32_t id)
 {
-    auto xdgClient = WaylandXdgWmObject::Create(client, version, id);
-    if (xdgClient == nullptr) {
+    auto xdgWm = WaylandXdgWmObject::Create(client, version, id);
+    if (xdgWm == nullptr) {
         LOG_ERROR("no memory");
     }
 }
