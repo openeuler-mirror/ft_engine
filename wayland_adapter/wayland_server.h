@@ -22,6 +22,7 @@
 #include "wayland-server-core.h"
 #include "event_loop.h"
 #include "wayland_compositor.h"
+#include "wayland_xdg_wm_base.h"
 
 namespace FT {
 namespace Wayland {
@@ -48,6 +49,7 @@ private:
     std::unique_ptr<EventChannel> wlDisplayChannel_;
     std::shared_ptr<EventLoop> loop_;
     OHOS::sptr<WaylandCompositor> compositorGlobal_;
+    OHOS::sptr<WaylandXdgWmBase> xdgWmBaseGlobal_;
 };
 } // namespace Wayland
 } // namespace FT
