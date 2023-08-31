@@ -23,7 +23,6 @@ namespace FT {
 namespace Wayland {
 class WaylandXdgWmObject;
 class WaylandXdgToplevel;
-class WaylandXdgSurface;
 struct IWaylandXdgSurface {
     static void GetToplevel(struct wl_client *client, struct wl_resource *resource, uint32_t id);
     static void GetPopup(struct wl_client *client, struct wl_resource *resource,
