@@ -15,8 +15,8 @@
 
 #include "wayland_xdg_wm_base.h"
 
-#include "wayland_xdg_surface.h"
 #include "wayland_objects_pool.h"
+#include "wayland_xdg_surface.h"
 #include "version.h"
 
 namespace FT {
