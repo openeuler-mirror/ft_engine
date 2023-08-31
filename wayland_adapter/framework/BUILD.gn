@@ -29,6 +29,7 @@ ft_source_set("wayland_framewok_sources") {
 
   sources += [
     "stable/wayland_xdg_surface.cpp",
+    "stable/wayland_xdg_toplevel.cpp",
     "stable/wayland_xdg_wm_base.cpp",
   ]
 
