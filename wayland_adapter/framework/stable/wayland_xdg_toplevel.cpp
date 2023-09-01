@@ -206,6 +206,11 @@ void WaylandXdgToplevel::HandleCommit()
 
 void WaylandXdgToplevel::HandleAttach(struct wl_shm_buffer *shm)
 {
+    if (rsSurface_ == nullptr) {
+        LOG_ERROR("rsSurface_ is nullptr");
+        return;
+    }
+
     SkColorType format = ShmFormatToSkia(wl_shm_buffer_get_format(shm));
     if (format == SkColorType::kUnknown_SkColorType) {
         LOG_ERROR("unsupported format %{public}d", wl_shm_buffer_get_format(shm));
@@ -221,13 +226,8 @@ void WaylandXdgToplevel::HandleAttach(struct wl_shm_buffer *shm)
     }
 
     void *data = wl_shm_buffer_get_data(shm);
-    if (rsSurface_ == nullptr) {
+    if (data == nullptr) {
         LOG_ERROR("wl_shm_buffer_get_data fail");
-        return;
-    }
-
-    if (rsSurface_ == nullptr) {
-        LOG_ERROR("rsSurface_ is nullptr");
         return;
     }
 
