@@ -78,18 +78,23 @@ WaylandXdgSurface::WaylandXdgSurface(const OHOS::sptr<WaylandXdgWmObject> &xdgWm
     : WaylandResourceObject(xdgWm->WlClient(), &xdg_surface_interface, xdgWm->Version(),
       id, &IWaylandXdgSurface::impl_),
       xdgWm_(xdgWm),
-      surface_(surface) {}
+      surface_(surface)
+{
+    surface->AddCommitCallback([this]() { OnSurfaceCommit(); });
+    surface->AddAttachCallback([this](struct wl_shm_buffer *shm) { OnSurfaceAttach(shm); });
+}
 
 WaylandXdgSurface::~WaylandXdgSurface() noexcept {}
 
 void WaylandXdgSurface::GetToplevel(uint32_t id)
 {
-    auto xdgTopLevel = WaylandXdgToplevel::Create(this, id);
-    if (xdgTopLevel == nullptr) {
+    toplevel_ = WaylandXdgToplevel::Create(this, id);
+    if (toplevel_ == nullptr) {
         LOG_ERROR("no memory");
         return;
     }
-    toplevel_ = xdgTopLevel;
+
+    role_ = XdgSurfaceRole::TOPLEVEL;
 }
 
 void WaylandXdgSurface::GetPopup(uint32_t id, struct wl_resource *parent, struct wl_resource *positioner)
@@ -102,6 +107,38 @@ void WaylandXdgSurface::SetWindowGeometry(int32_t x, int32_t y, int32_t width, i
 
 void WaylandXdgSurface::AckConfigure(uint32_t serial)
 {
+}
+
+void WaylandXdgSurface::OnSurfaceCommit()
+{
+    switch (role_) {
+        case XdgSurfaceRole::TOPLEVEL: {
+            auto topLevel = toplevel_.promote();
+            if (topLevel != nullptr) {
+                topLevel->HandleCommit();
+            }
+            break;
+        }
+        default:
+            break;
+    }
+
+    xdg_surface_send_configure(WlResource(), wl_display_next_serial(WlDisplay()));
+}
+
+void WaylandXdgSurface::OnSurfaceAttach(struct wl_shm_buffer *shm)
+{
+    switch (role_) {
+        case XdgSurfaceRole::TOPLEVEL: {
+            auto topLevel = toplevel_.promote();
+            if (topLevel != nullptr) {
+                topLevel->HandleAttach(shm);
+            }
+            break;
+        }
+        default:
+            break;
+    }
 }
 } // namespace Wayland
 } // namespace FT
