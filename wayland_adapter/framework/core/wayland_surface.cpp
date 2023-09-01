@@ -118,8 +118,31 @@ WaylandSurface::WaylandSurface(struct wl_client *client, struct wl_resource *par
 
 WaylandSurface::~WaylandSurface() noexcept {}
 
+void WaylandSurface::AddCommitCallback(SurfaceCommitCallback callback)
+{
+    commitCallbacks_.push_back(std::move(callback));
+}
+
+void WaylandSurface::AddAttachCallback(SurfaceAttachCallback callback)
+{
+    attachCallbacks_.push_back(std::move(callback));
+}
+
 void WaylandSurface::Attach(struct wl_resource *bufferResource, int32_t x, int32_t y)
 {
+    wl_shm_buffer *shm = wl_shm_buffer_get(bufferResource);
+    if (shm == nullptr) {
+        LOG_ERROR("wl_shm_buffer_get fail");
+        return;
+    }
+
+    wl_shm_buffer_begin_access(shm);
+
+    for (auto &cb : attachCallbacks_) {
+        cb(shm);
+    }
+
+    wl_shm_buffer_end_access(shm);
 }
 
 void WaylandSurface::Damage(int32_t x, int32_t y, int32_t width, int32_t height)
@@ -140,6 +163,9 @@ void WaylandSurface::SetInputRegion(struct wl_resource *regionResource)
 
 void WaylandSurface::Commit()
 {
+    for (auto &cb : commitCallbacks_) {
+        cb();
+    }
 }
 
 void WaylandSurface::SetBufferTransform(int32_t transform)
