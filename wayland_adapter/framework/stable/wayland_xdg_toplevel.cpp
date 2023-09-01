@@ -134,7 +134,13 @@ WaylandXdgToplevel::WaylandXdgToplevel(const OHOS::sptr<WaylandXdgSurface> &xdgS
       id, &IWaylandXdgToplevel::impl_),
       xdgSurface_(xdgSurface) {}
 
-WaylandXdgToplevel::~WaylandXdgToplevel() noexcept {}
+WaylandXdgToplevel::~WaylandXdgToplevel() noexcept
+{
+    if (window_ != nullptr) {
+        window_->Hide();
+        window_->Destroy();
+    }
+}
 
 void WaylandXdgToplevel::SetTitle(const char *title)
 {
