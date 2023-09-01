@@ -15,9 +15,10 @@
 
 #pragma once
 
+#include <list>
+
 #include <wayland-server-protocol.h>
 #include "wayland_resource_object.h"
-
 
 namespace FT {
 namespace Wayland {
@@ -47,6 +48,11 @@ public:
     static OHOS::sptr<WaylandSurface> Create(struct wl_client *client, struct wl_resource *parent, uint32_t version, uint32_t id);
     ~WaylandSurface() noexcept override;
 
+    using SurfaceCommitCallback = std::function<void()>;
+    void AddCommitCallback(SurfaceCommitCallback callback);
+    using SurfaceAttachCallback = std::function<void(struct wl_shm_buffer *shm)>;
+    void AddAttachCallback(SurfaceAttachCallback callback);
+
 private:
     WaylandSurface(struct wl_client *client, struct wl_resource *parent, uint32_t version, uint32_t id);
 
@@ -61,8 +67,9 @@ private:
     void DamageBuffer(int32_t x, int32_t y, int32_t width, int32_t height);
     void Offset(int32_t x, int32_t y);
 
-private:
     struct wl_resource *parent_ = nullptr;
+    std::list<SurfaceCommitCallback> commitCallbacks_;
+    std::list<SurfaceAttachCallback> attachCallbacks_;
 };
 } // namespace Wayland
 } // namespace FT
