@@ -143,6 +143,7 @@ void WaylandSurface::Attach(struct wl_resource *bufferResource, int32_t x, int32
     }
 
     wl_shm_buffer_end_access(shm);
+    wl_callback_send_done(bufferResource, 0);
 }
 
 void WaylandSurface::Damage(int32_t x, int32_t y, int32_t width, int32_t height)
@@ -151,6 +152,15 @@ void WaylandSurface::Damage(int32_t x, int32_t y, int32_t width, int32_t height)
 
 void WaylandSurface::Frame(uint32_t callback)
 {
+    auto cb = FrameCallback::Create(WlClient(), WAYLAND_VERSION_MAJOR, callback);
+    if (cb == nullptr) {
+        LOG_ERROR("no memory");
+        return;
+    }
+
+    WaylandObjectsPool::GetInstance().AddObject(ObjectId(cb->WlClient(), cb->Id()), cb);
+    wl_callback_send_done(cb->WlResource(), 0);
+    wl_resource_destroy(cb->WlResource());
 }
 
 void WaylandSurface::SetOpaqueRegion(struct wl_resource *regionResource)
@@ -183,5 +193,16 @@ void WaylandSurface::DamageBuffer(int32_t x, int32_t y, int32_t width, int32_t h
 void WaylandSurface::Offset(int32_t x, int32_t y)
 {
 }
+
+OHOS::sptr<WaylandSurface::FrameCallback> WaylandSurface::FrameCallback::Create(struct wl_client *client,
+    uint32_t version, uint32_t callback)
+{
+    return OHOS::sptr<WaylandSurface::FrameCallback>(new WaylandSurface::FrameCallback(client, version, callback));
+}
+
+WaylandSurface::FrameCallback::FrameCallback(struct wl_client *client, uint32_t version, uint32_t callback)
+    : WaylandResourceObject(client, &wl_callback_interface, version, callback, nullptr), serial_(callback) {}
+
+WaylandSurface::FrameCallback::~FrameCallback() noexcept {}
 } // namespace Wayland
 } // namespace FT
