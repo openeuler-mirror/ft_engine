@@ -579,6 +579,7 @@ private:
         {DragType::DRAG_LEFT_TOP_CORNER, MMI::MOUSE_ICON::NORTH_WEST_SOUTH_EAST},
         {DragType::DRAG_RIGHT_TOP_CORNER, MMI::MOUSE_ICON::NORTH_EAST_SOUTH_WEST}
     };
+    float virtualPixelRatio_ = 0;
 };
 } // namespace Rosen
 } // namespace OHOS

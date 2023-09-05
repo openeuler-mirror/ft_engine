@@ -2463,15 +2463,22 @@ void WindowImpl::HandlePointerStyle(const std::shared_ptr<MMI::PointerEvent>& po
     }
     auto action = pointerEvent->GetPointerAction();
     if (WindowHelper::IsMainFloatingWindow(GetType(), GetMode())) {
-        auto display = SingletonContainer::IsDestroyed() ? nullptr :
-            SingletonContainer::Get<DisplayManager>().GetDisplayById(moveDragProperty_->targetDisplayId_);
-        if (display == nullptr || display->GetDisplayInfo() == nullptr) {
-            WLOGFE("get display failed displayId:%{public}" PRIu64", window id:%{public}u",
-                property_->GetDisplayId(), property_->GetWindowId());
-            return;
+        /* To optimize performance, we only get virtualPixelRatio once.
+         * TODO: If there is a change in virtualPixelRatio, the DMS will report the virtualPixelRatio change event,
+         * at this time, it is necessary to get the virtualPixelRatio again
+         */
+        if (virtualPixelRatio_ == 0) {
+            auto display = SingletonContainer::IsDestroyed() ? nullptr :
+                SingletonContainer::Get<DisplayManager>().GetDisplayById(moveDragProperty_->targetDisplayId_);
+            if (display == nullptr || display->GetDisplayInfo() == nullptr) {
+                WLOGFE("get display failed displayId:%{public}" PRIu64", window id:%{public}u",
+                    property_->GetDisplayId(), property_->GetWindowId());
+                return;
+            }
+            virtualPixelRatio_ = display->GetVirtualPixelRatio();
         }
-        float vpr = display->GetVirtualPixelRatio();
-        CalculateStartRectExceptHotZone(vpr);
+        CalculateStartRectExceptHotZone(virtualPixelRatio_);
+
         if (IsPointInDragHotZone(pointerItem.GetDisplayX(), pointerItem.GetDisplayY())) {
             uint32_t tempStyleID = mouseStyleID_;
             // calculate pointer style
