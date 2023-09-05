@@ -18,6 +18,7 @@
 #include <xdg-shell-server-protocol.h>
 #include "wayland_resource_object.h"
 #include "wayland_surface.h"
+#include "xdg_surface_utils.h"
 
 namespace FT {
 namespace Wayland {
@@ -47,7 +48,10 @@ private:
     void GetPopup(uint32_t id, struct wl_resource *parent, struct wl_resource *positioner);
     void SetWindowGeometry(int32_t x, int32_t y, int32_t width, int32_t height);
     void AckConfigure(uint32_t serial);
+    void OnSurfaceCommit();
+    void OnSurfaceAttach(struct wl_shm_buffer *shm);
 
+    XdgSurfaceRole role_ = XdgSurfaceRole::NONE;
     OHOS::wptr<WaylandXdgWmObject> xdgWm_;
     OHOS::wptr<WaylandSurface> surface_;
     OHOS::wptr<WaylandXdgToplevel> toplevel_;

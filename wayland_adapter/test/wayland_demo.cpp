@@ -54,7 +54,7 @@ struct display {
     struct wl_compositor *compositor;
     struct xdg_wm_base *wm_base;
     struct wl_shm *shm;
-    bool has_xrgb = false;
+    bool has_rgba8888 = false;
 };
 
 struct buffer {
@@ -276,7 +276,7 @@ static struct buffer *WindowNextBuffer(struct window *window)
     }
 
     if (!buffer->buffer) {
-        int32_t ret = CreateShmBuffer(window->display, buffer, window->width, window->height, WL_SHM_FORMAT_XRGB8888);
+        int32_t ret = CreateShmBuffer(window->display, buffer, window->width, window->height, WL_SHM_FORMAT_RGBA8888);
         if (ret < 0) {
             return nullptr;
         }
@@ -484,7 +484,7 @@ private:
 
 static void PaintPixels(void *data, int32_t padding, int32_t width, int32_t height, uint32_t time)
 {
-    SkImageInfo info = SkImageInfo::Make(width, height, kBGRA_8888_SkColorType, kPremul_SkAlphaType);
+    SkImageInfo info = SkImageInfo::Make(width, height, kRGBA_8888_SkColorType, kUnpremul_SkAlphaType);
     SkBitmap bitmap;
     bitmap.installPixels(info, data, info.minRowBytes());
     SkCanvas canvas(bitmap);
@@ -521,8 +521,8 @@ static void ShmFormat(void *data, struct wl_shm *wl_shm, uint32_t format)
 {
     struct display *d = static_cast<struct display *>(data);
 
-    if (format == WL_SHM_FORMAT_XRGB8888) {
-        d->has_xrgb = true;
+    if (format == WL_SHM_FORMAT_RGBA8888) {
+        d->has_rgba8888 = true;
     }
 }
 struct wl_shm_listener shm_listener = {ShmFormat};
@@ -564,7 +564,7 @@ static struct display *CreateDisplay()
     pDisplay->display = wl_display_connect(nullptr);
     assert(pDisplay->display);
 
-    pDisplay->has_xrgb = false;
+    pDisplay->has_rgba8888 = false;
     pDisplay->registry = wl_display_get_registry(pDisplay->display);
     wl_registry_add_listener(pDisplay->registry, &g_registryListener, pDisplay);
 
@@ -577,8 +577,8 @@ static struct display *CreateDisplay()
 
     wl_display_roundtrip(pDisplay->display);
 
-    if (!pDisplay->has_xrgb) {
-        fprintf(stderr, "WL_SHM_FORMAT_XRGB32 not available\n");
+    if (!pDisplay->has_rgba8888) {
+        fprintf(stderr, "rgba8888 not available\n");
         exit(1);
     }
 

@@ -13,6 +13,7 @@
 
 import("//build/gn/fangtian.gni")
 import("//config.gni")
+import("//display_server/ft_build/ds_config.gni")
 
 config("wayland_framework_public_config") {
   include_dirs = [
@@ -35,8 +36,16 @@ ft_source_set("wayland_framewok_sources") {
 
   public_configs = [ ":wayland_framework_public_config" ]
 
+  if (ds_enable_gpu) {
+    defines = [ "ENABLE_GPU" ]
+  }
+
   deps = [
+    "$window_manager_path/wm/ft_build:libwm",
+    "$display_server_root/rosen/modules/render_service_base/ft_build:librender_service_base",
+    "$display_server_root/rosen/modules/render_service_client/ft_build:librender_service_client",
     "//build/gn/configs/system_libs:hilog",
+    "//build/gn/configs/system_libs:image",
     "//display_server/drivers/hal/base:ft_event_loop",
     "//wayland_adapter/utils:wayland_adapter_utils_sources",
     "//wayland_adapter/wayland_protocols:wayland_protocols_sources",
