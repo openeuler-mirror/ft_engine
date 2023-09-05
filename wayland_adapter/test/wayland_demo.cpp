@@ -466,7 +466,7 @@ private:
         auto hour = nowTm_->tm_hour;
         auto minute = nowTm_->tm_min;
         auto sec = nowTm_->tm_sec;
-        DrawHand(sec, std::min(width_, height_) * 0.34, SK_ColorRED, 2.0);
+        DrawHand(sec, std::min(width_, height_) * 0.34, SK_ColorBLACK, 2.0);
         DrawHand(minute + sec * 1.0 / 60, std::min(width_, height_) * 0.26, SK_ColorBLACK, 6.0);
         DrawHand(hour * 5 + minute * 1.0 / 60 * 5, std::min(width_, height_) * 0.2, SK_ColorBLACK, 8.0);
     }
