@@ -22,19 +22,27 @@
 
 namespace FT {
 namespace Wayland {
-using SurfaceCommitCallback = std::function<void()>;
-using SurfaceAttachCallback = std::function<void(struct wl_shm_buffer *shm)>;
-
-static constexpr uint32_t DEFAULT_WIDTH = 500;
-static constexpr uint32_t DEFAULT_HEIGHT = 500;
-struct XdgSurfaceState {
-    uint32_t width = DEFAULT_WIDTH;
-    uint32_t height = DEFAULT_HEIGHT;
-    std::string title;
-    std::string appId;
+struct Rect {
+    int32_t x = 0;
+    int32_t y = 0;
+    uint32_t width = 0;
+    uint32_t height = 0;
 };
 
-enum class WaylandSurfaceRole : uint32_t {
+using SurfaceCommitCallback = std::function<void()>;
+using SurfaceRectCallback = std::function<void(Rect)>;
+
+struct SurfaceState {
+    struct wl_resource *buffer = nullptr;
+    Rect damage;
+    wl_output_transform transform = WL_OUTPUT_TRANSFORM_NORMAL;
+    int32_t scale = 0;
+    Rect damageBuffer;
+    int32_t offsetX = 0;
+    int32_t offsetY = 0;
+};
+
+enum class SurfaceRole : uint32_t {
     NONE = 0,
     XDG_TOPLEVEL,
     XDG_POPUP
