@@ -94,7 +94,7 @@ void WaylandXdgSurface::GetToplevel(uint32_t id)
         return;
     }
 
-    role_ = XdgSurfaceRole::TOPLEVEL;
+    role_ = WaylandSurfaceRole::XDG_TOPLEVEL;
 }
 
 void WaylandXdgSurface::GetPopup(uint32_t id, struct wl_resource *parent, struct wl_resource *positioner)
@@ -112,7 +112,7 @@ void WaylandXdgSurface::AckConfigure(uint32_t serial)
 void WaylandXdgSurface::OnSurfaceCommit()
 {
     switch (role_) {
-        case XdgSurfaceRole::TOPLEVEL: {
+        case WaylandSurfaceRole::XDG_TOPLEVEL: {
             auto topLevel = toplevel_.promote();
             if (topLevel != nullptr) {
                 topLevel->HandleCommit();
@@ -129,7 +129,7 @@ void WaylandXdgSurface::OnSurfaceCommit()
 void WaylandXdgSurface::OnSurfaceAttach(struct wl_shm_buffer *shm)
 {
     switch (role_) {
-        case XdgSurfaceRole::TOPLEVEL: {
+        case WaylandSurfaceRole::XDG_TOPLEVEL: {
             auto topLevel = toplevel_.promote();
             if (topLevel != nullptr) {
                 topLevel->HandleAttach(shm);
