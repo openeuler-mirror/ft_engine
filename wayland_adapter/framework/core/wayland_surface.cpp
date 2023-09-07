@@ -193,16 +193,5 @@ void WaylandSurface::DamageBuffer(int32_t x, int32_t y, int32_t width, int32_t h
 void WaylandSurface::Offset(int32_t x, int32_t y)
 {
 }
-
-OHOS::sptr<WaylandSurface::FrameCallback> WaylandSurface::FrameCallback::Create(struct wl_client *client,
-    uint32_t version, uint32_t callback)
-{
-    return OHOS::sptr<WaylandSurface::FrameCallback>(new WaylandSurface::FrameCallback(client, version, callback));
-}
-
-WaylandSurface::FrameCallback::FrameCallback(struct wl_client *client, uint32_t version, uint32_t callback)
-    : WaylandResourceObject(client, &wl_callback_interface, version, callback, nullptr), serial_(callback) {}
-
-WaylandSurface::FrameCallback::~FrameCallback() noexcept {}
 } // namespace Wayland
 } // namespace FT
