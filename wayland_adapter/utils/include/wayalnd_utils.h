@@ -22,6 +22,9 @@
 
 namespace FT {
 namespace Wayland {
+using SurfaceCommitCallback = std::function<void()>;
+using SurfaceAttachCallback = std::function<void(struct wl_shm_buffer *shm)>;
+
 static constexpr uint32_t DEFAULT_WIDTH = 500;
 static constexpr uint32_t DEFAULT_HEIGHT = 500;
 struct XdgSurfaceState {
@@ -31,10 +34,27 @@ struct XdgSurfaceState {
     std::string appId;
 };
 
-enum class XdgSurfaceRole : uint32_t {
+enum class WaylandSurfaceRole : uint32_t {
     NONE = 0,
-    TOPLEVEL,
-    POPUP
+    XDG_TOPLEVEL,
+    XDG_POPUP
+};
+
+class FrameCallback final : public WaylandResourceObject {
+public:
+    static OHOS::sptr<FrameCallback> Create(struct wl_client *client, uint32_t version, uint32_t callback)
+    {
+        return OHOS::sptr<FrameCallback>(new FrameCallback(client, version, callback));
+    }
+    uint32_t Serial() const
+    {
+        return serial_;
+    }
+private:
+    FrameCallback(struct wl_client *client, uint32_t version, uint32_t callback)
+        : WaylandResourceObject(client, &wl_callback_interface, version, callback, nullptr), serial_(callback) {}
+    ~FrameCallback() noexcept override {}
+    uint32_t serial_;
 };
 
 static SkColorType ShmFormatToSkia(const uint32_t& shmFormat)

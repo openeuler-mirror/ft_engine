@@ -19,6 +19,7 @@
 
 #include <wayland-server-protocol.h>
 #include "wayland_resource_object.h"
+#include "wayalnd_utils.h"
 
 namespace FT {
 namespace Wayland {
@@ -49,9 +50,7 @@ public:
         uint32_t version, uint32_t id);
     ~WaylandSurface() noexcept override;
 
-    using SurfaceCommitCallback = std::function<void()>;
     void AddCommitCallback(SurfaceCommitCallback callback);
-    using SurfaceAttachCallback = std::function<void(struct wl_shm_buffer *shm)>;
     void AddAttachCallback(SurfaceAttachCallback callback);
 
 private:
@@ -67,19 +66,6 @@ private:
     void SetBufferScale(int32_t scale);
     void DamageBuffer(int32_t x, int32_t y, int32_t width, int32_t height);
     void Offset(int32_t x, int32_t y);
-
-    class FrameCallback final : public WaylandResourceObject {
-    public:
-        static OHOS::sptr<FrameCallback> Create(struct wl_client *client, uint32_t version, uint32_t callback);
-        uint32_t Serial() const
-        {
-            return serial_;
-        }
-    private:
-        FrameCallback(struct wl_client *client, uint32_t version, uint32_t callback);
-        ~FrameCallback() noexcept override;
-        uint32_t serial_;
-    };
 
     struct wl_resource *parent_ = nullptr;
     std::list<SurfaceCommitCallback> commitCallbacks_;
