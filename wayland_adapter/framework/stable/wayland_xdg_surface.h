@@ -49,9 +49,9 @@ private:
     void SetWindowGeometry(int32_t x, int32_t y, int32_t width, int32_t height);
     void AckConfigure(uint32_t serial);
     void OnSurfaceCommit();
-    void OnSurfaceAttach(struct wl_shm_buffer *shm);
+    void OnSurfaceRect(Rect rect);
 
-    WaylandSurfaceRole role_ = WaylandSurfaceRole::NONE;
+    SurfaceRole role_ = SurfaceRole::NONE;
     OHOS::wptr<WaylandXdgWmObject> xdgWm_;
     OHOS::wptr<WaylandSurface> surface_;
     OHOS::wptr<WaylandXdgToplevel> toplevel_;
