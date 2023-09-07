@@ -16,6 +16,8 @@
 #include "wayland_surface.h"
 
 #include "wayland_objects_pool.h"
+#include "ui/rs_surface_extractor.h"
+#include "display_manager.h"
 
 namespace FT {
 namespace Wayland {
@@ -123,27 +125,20 @@ void WaylandSurface::AddCommitCallback(SurfaceCommitCallback callback)
     commitCallbacks_.push_back(std::move(callback));
 }
 
-void WaylandSurface::AddAttachCallback(SurfaceAttachCallback callback)
+void WaylandSurface::AddRectCallback(SurfaceRectCallback callback)
 {
-    attachCallbacks_.push_back(std::move(callback));
+    rectCallbacks_.push_back(std::move(callback));
 }
 
 void WaylandSurface::Attach(struct wl_resource *bufferResource, int32_t x, int32_t y)
 {
-    wl_shm_buffer *shm = wl_shm_buffer_get(bufferResource);
-    if (shm == nullptr) {
-        LOG_ERROR("wl_shm_buffer_get fail");
-        return;
+    if (new_.buffer != nullptr) {
+        wl_callback_send_done(new_.buffer, 0);
     }
 
-    wl_shm_buffer_begin_access(shm);
-
-    for (auto &cb : attachCallbacks_) {
-        cb(shm);
-    }
-
-    wl_shm_buffer_end_access(shm);
-    wl_callback_send_done(bufferResource, 0);
+    new_.buffer = bufferResource;
+    new_.offsetX = x;
+    new_.offsetY = y;
 }
 
 void WaylandSurface::Damage(int32_t x, int32_t y, int32_t width, int32_t height)
@@ -173,6 +168,12 @@ void WaylandSurface::SetInputRegion(struct wl_resource *regionResource)
 
 void WaylandSurface::Commit()
 {
+    if (window_ == nullptr) {
+        CreateWindow();
+    } else {
+        HandleCommit();
+    }
+
     for (auto &cb : commitCallbacks_) {
         cb();
     }
@@ -192,6 +193,123 @@ void WaylandSurface::DamageBuffer(int32_t x, int32_t y, int32_t width, int32_t h
 
 void WaylandSurface::Offset(int32_t x, int32_t y)
 {
+}
+
+void WaylandSurface::HandleCommit() {
+    if (new_.buffer != nullptr) {
+        wl_shm_buffer *shm = wl_shm_buffer_get(new_.buffer);
+        if (shm == nullptr) {
+            LOG_ERROR("wl_shm_buffer_get fail");
+            wl_callback_send_done(new_.buffer, 0);
+            return;
+        }
+
+        wl_shm_buffer_begin_access(shm);
+        CopyBuffer(shm);
+        wl_shm_buffer_end_access(shm);
+
+        wl_callback_send_done(new_.buffer, 0);
+        new_.buffer = nullptr;
+    }
+
+    old_ = new_;
+}
+
+void WaylandSurface::CreateWindow()
+{
+    OHOS::sptr<OHOS::Rosen::WindowOption> option(new OHOS::Rosen::WindowOption());
+    if (rect_.width == 0 || rect_.height == 0) {
+        InitWindowRect();
+    }
+    option->SetWindowRect({rect_.x, rect_.y, rect_.width, rect_.height});
+    option->SetWindowType(OHOS::Rosen::WindowType::APP_MAIN_WINDOW_BASE);
+    option->SetWindowMode(OHOS::Rosen::WindowMode::WINDOW_MODE_FLOATING);
+
+    static int count = 0;
+    std::string windowName = "WaylandWindow" + std::to_string(count++);
+    window_ = OHOS::Rosen::Window::Create(windowName, option);
+    if (window_ == nullptr) {
+        LOG_ERROR("Window::Create failed");
+        return;
+    }
+    window_->Show();
+
+    surfaceNode_ = window_->GetSurfaceNode();
+    if (surfaceNode_ == nullptr) {
+        LOG_ERROR("GetSurfaceNode failed");
+        return;
+    }
+
+    rsSurface_ = OHOS::Rosen::RSSurfaceExtractor::ExtractRSSurface(surfaceNode_);
+    if (rsSurface_ == nullptr) {
+        LOG_ERROR("ExtractRSSurface failed");
+        return;
+    }
+
+#ifdef ENABLE_GPU
+    renderContext_ = std::make_unique<OHOS::Rosen::RenderContext>();
+    renderContext_->InitializeEglContext();
+    rsSurface_->SetRenderContext(renderContext_.get());
+#endif
+}
+
+void WaylandSurface::CopyBuffer(struct wl_shm_buffer *shm)
+{
+    if (rsSurface_ == nullptr) {
+        LOG_ERROR("rsSurface_ is nullptr");
+        return;
+    }
+
+    SkColorType format = ShmFormatToSkia(wl_shm_buffer_get_format(shm));
+    if (format == SkColorType::kUnknown_SkColorType) {
+        LOG_ERROR("unsupported format %{public}d", wl_shm_buffer_get_format(shm));
+        return;
+    }
+
+    int32_t stride = wl_shm_buffer_get_stride(shm);
+    int32_t width = wl_shm_buffer_get_width(shm);
+    int32_t height = wl_shm_buffer_get_height(shm);
+    if (stride <= 0 || width <= 0 || height <= 0) {
+        LOG_ERROR("invalid, stride:%{public}d width:%{public}d height:%{public}d", stride, width, height);
+        return;
+    }
+
+    void *data = wl_shm_buffer_get_data(shm);
+    if (data == nullptr) {
+        LOG_ERROR("wl_shm_buffer_get_data fail");
+        return;
+    }
+
+    auto framePtr = rsSurface_->RequestFrame(width, height);
+    if (framePtr == nullptr) {
+        LOG_ERROR("RequestFrame failed");
+        return;
+    }
+
+    auto canvas = framePtr->GetCanvas();
+    if (canvas == nullptr) {
+        LOG_ERROR("GetCanvas failed");
+        return;
+    }
+    canvas->clear(SK_ColorTRANSPARENT);
+
+    SkImageInfo imageInfo = SkImageInfo::Make(width, height, format, kUnpremul_SkAlphaType);
+    SkPixmap srcPixmap(imageInfo, data, stride);
+    SkBitmap srcBitmap;
+    srcBitmap.installPixels(srcPixmap);
+    canvas->drawBitmap(srcBitmap, 0, 0);
+    rsSurface_->FlushFrame(framePtr);
+}
+
+void WaylandSurface::InitWindowRect()
+{
+    auto display = OHOS::Rosen::DisplayManager::GetInstance().GetDefaultDisplay();
+    rect_.width = display->GetWidth();
+    rect_.height = display->GetHeight();
+
+    for (auto &cb : rectCallbacks_) {
+        cb(rect_);
+    }
 }
 } // namespace Wayland
 } // namespace FT
