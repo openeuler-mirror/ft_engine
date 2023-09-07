@@ -143,6 +143,10 @@ void WaylandSurface::Attach(struct wl_resource *bufferResource, int32_t x, int32
 
 void WaylandSurface::Damage(int32_t x, int32_t y, int32_t width, int32_t height)
 {
+    new_.damage.x = x;
+    new_.damage.y = y;
+    new_.damage.width = static_cast<uint32_t>(width);
+    new_.damage.height = static_cast<uint32_t>(height);
 }
 
 void WaylandSurface::Frame(uint32_t callback)
@@ -181,18 +185,26 @@ void WaylandSurface::Commit()
 
 void WaylandSurface::SetBufferTransform(int32_t transform)
 {
+    new_.transform = static_cast<wl_output_transform>(transform);
 }
 
 void WaylandSurface::SetBufferScale(int32_t scale)
 {
+    new_.scale = scale;
 }
 
 void WaylandSurface::DamageBuffer(int32_t x, int32_t y, int32_t width, int32_t height)
 {
+    new_.damageBuffer.x = x;
+    new_.damageBuffer.y = y;
+    new_.damageBuffer.width = static_cast<uint32_t>(width);
+    new_.damageBuffer.height = static_cast<uint32_t>(height);
 }
 
 void WaylandSurface::Offset(int32_t x, int32_t y)
 {
+    new_.offsetX = x;
+    new_.offsetY = y;
 }
 
 void WaylandSurface::HandleCommit() {
@@ -209,10 +221,10 @@ void WaylandSurface::HandleCommit() {
         wl_shm_buffer_end_access(shm);
 
         wl_callback_send_done(new_.buffer, 0);
-        new_.buffer = nullptr;
     }
 
     old_ = new_;
+    new_.Reset();
 }
 
 void WaylandSurface::CreateWindow()
