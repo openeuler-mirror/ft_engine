@@ -27,6 +27,13 @@ struct Rect {
     int32_t y = 0;
     uint32_t width = 0;
     uint32_t height = 0;
+    void Reset()
+    {
+        x = 0;
+        y = 0;
+        width = 0;
+        height = 0;
+    }
 };
 
 using SurfaceCommitCallback = std::function<void()>;
@@ -40,6 +47,16 @@ struct SurfaceState {
     Rect damageBuffer;
     int32_t offsetX = 0;
     int32_t offsetY = 0;
+    void Reset()
+    {
+        buffer = nullptr;
+        damage.Reset();
+        transform = WL_OUTPUT_TRANSFORM_NORMAL;
+        scale = 0;
+        damageBuffer.Reset();
+        offsetX = 0;
+        offsetY = 0;
+    }
 };
 
 enum class SurfaceRole : uint32_t {
