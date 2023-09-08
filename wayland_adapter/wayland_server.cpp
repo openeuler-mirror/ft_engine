@@ -38,7 +38,7 @@ void WaylandServer::CreateGlobalObjects()
 {
     compositorGlobal_ = WaylandCompositor::Create(display_);
     xdgWmBaseGlobal_ = WaylandXdgWmBase::Create(display_);
-
+    outputGlobal_ = WaylandOutput::Create(display_);
     wl_display_add_shm_format(display_, WL_SHM_FORMAT_RGBA8888);
     wl_display_init_shm(display_);
 }
