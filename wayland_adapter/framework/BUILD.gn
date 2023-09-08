@@ -44,6 +44,7 @@ ft_source_set("wayland_framewok_sources") {
   }
 
   deps = [
+    "$window_manager_path/dm/ft_build:libdm",
     "$window_manager_path/wm/ft_build:libwm",
     "$display_server_root/rosen/modules/render_service_base/ft_build:librender_service_base",
     "$display_server_root/rosen/modules/render_service_client/ft_build:librender_service_client",

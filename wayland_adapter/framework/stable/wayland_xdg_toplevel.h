@@ -17,9 +17,6 @@
 
 #include <xdg-shell-server-protocol.h>
 #include "wayland_xdg_surface.h"
-#include "window.h"
-#include "ui/rs_surface_node.h"
-#include "render_context/render_context.h"
 
 namespace FT {
 namespace Wayland {
@@ -61,21 +58,17 @@ public:
     void Resize(uint32_t serial, uint32_t edges);
     void SendConfigure();
     void HandleCommit();
-    void HandleAttach(struct wl_shm_buffer *shm);
+    void SetRect(Rect rect)
+    {
+        rect_ = rect;
+    }
 
 private:
     WaylandXdgToplevel(const OHOS::sptr<WaylandXdgSurface> &xdgSurface, uint32_t id);
-    void CreateWindow();
     friend struct IWaylandXdgToplevel;
 
     OHOS::wptr<WaylandXdgSurface> xdgSurface_;
-    XdgSurfaceState pendingState_;
-#ifdef ENABLE_GPU
-    std::unique_ptr<OHOS::Rosen::RenderContext> renderContext_;
-#endif
-    OHOS::sptr<OHOS::Rosen::Window> window_;
-    std::shared_ptr<OHOS::Rosen::RSSurfaceNode> surfaceNode_;
-    std::shared_ptr<OHOS::Rosen::RSSurface> rsSurface_;
+    Rect rect_;
 };
 } // namespace Wayland
 } // namespace FT
