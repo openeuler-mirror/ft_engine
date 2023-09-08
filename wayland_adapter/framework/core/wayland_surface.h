@@ -16,9 +16,13 @@
 #pragma once
 
 #include <list>
-
 #include <wayland-server-protocol.h>
 #include "wayland_resource_object.h"
+#include "wayalnd_utils.h"
+
+#include "window.h"
+#include "ui/rs_surface_node.h"
+#include "render_context/render_context.h"
 
 namespace FT {
 namespace Wayland {
@@ -49,10 +53,8 @@ public:
         uint32_t version, uint32_t id);
     ~WaylandSurface() noexcept override;
 
-    using SurfaceCommitCallback = std::function<void()>;
     void AddCommitCallback(SurfaceCommitCallback callback);
-    using SurfaceAttachCallback = std::function<void(struct wl_shm_buffer *shm)>;
-    void AddAttachCallback(SurfaceAttachCallback callback);
+    void AddRectCallback(SurfaceRectCallback callback);
 
 private:
     WaylandSurface(struct wl_client *client, struct wl_resource *parent, uint32_t version, uint32_t id);
@@ -67,23 +69,24 @@ private:
     void SetBufferScale(int32_t scale);
     void DamageBuffer(int32_t x, int32_t y, int32_t width, int32_t height);
     void Offset(int32_t x, int32_t y);
-
-    class FrameCallback final : public WaylandResourceObject {
-    public:
-        static OHOS::sptr<FrameCallback> Create(struct wl_client *client, uint32_t version, uint32_t callback);
-        uint32_t Serial() const
-        {
-            return serial_;
-        }
-    private:
-        FrameCallback(struct wl_client *client, uint32_t version, uint32_t callback);
-        ~FrameCallback() noexcept override;
-        uint32_t serial_;
-    };
+    void HandleCommit();
+    void CreateWindow();
+    void CopyBuffer(struct wl_shm_buffer *shm);
+    void InitWindowRect();
 
     struct wl_resource *parent_ = nullptr;
     std::list<SurfaceCommitCallback> commitCallbacks_;
-    std::list<SurfaceAttachCallback> attachCallbacks_;
+    std::list<SurfaceRectCallback> rectCallbacks_;
+    Rect rect_;
+    SurfaceState old_;
+    SurfaceState new_;
+
+#ifdef ENABLE_GPU
+    std::unique_ptr<OHOS::Rosen::RenderContext> renderContext_;
+#endif
+    OHOS::sptr<OHOS::Rosen::Window> window_;
+    std::shared_ptr<OHOS::Rosen::RSSurfaceNode> surfaceNode_;
+    std::shared_ptr<OHOS::Rosen::RSSurface> rsSurface_;
 };
 } // namespace Wayland
 } // namespace FT
