@@ -16,7 +16,6 @@
 #include "wayland_xdg_toplevel.h"
 
 #include "wayland_objects_pool.h"
-#include "ui/rs_surface_extractor.h"
 
 namespace FT {
 namespace Wayland {
@@ -136,15 +135,10 @@ WaylandXdgToplevel::WaylandXdgToplevel(const OHOS::sptr<WaylandXdgSurface> &xdgS
 
 WaylandXdgToplevel::~WaylandXdgToplevel() noexcept
 {
-    if (window_ != nullptr) {
-        window_->Hide();
-        window_->Destroy();
-    }
 }
 
 void WaylandXdgToplevel::SetTitle(const char *title)
 {
-    pendingState_.title = title;
 }
 
 void WaylandXdgToplevel::Move(uint32_t serial)
@@ -157,7 +151,6 @@ void WaylandXdgToplevel::Resize(uint32_t serial, uint32_t edges)
 
 void WaylandXdgToplevel::SetAppId(const char *appId)
 {
-    pendingState_.appId = appId;
 }
 
 void WaylandXdgToplevel::SetMaxSize(int32_t width, int32_t height)
@@ -192,97 +185,13 @@ void WaylandXdgToplevel::SendConfigure()
 {
     struct wl_array states;
     wl_array_init(&states);
-    xdg_toplevel_send_configure(WlResource(), pendingState_.width, pendingState_.height, &states);
+    xdg_toplevel_send_configure(WlResource(), rect_.width, rect_.height, &states);
     wl_array_release(&states);
 }
 
 void WaylandXdgToplevel::HandleCommit()
 {
-    if (window_ == nullptr) {
-        CreateWindow();
-    }
     SendConfigure();
-}
-
-void WaylandXdgToplevel::HandleAttach(struct wl_shm_buffer *shm)
-{
-    if (rsSurface_ == nullptr) {
-        LOG_ERROR("rsSurface_ is nullptr");
-        return;
-    }
-
-    SkColorType format = ShmFormatToSkia(wl_shm_buffer_get_format(shm));
-    if (format == SkColorType::kUnknown_SkColorType) {
-        LOG_ERROR("unsupported format %{public}d", wl_shm_buffer_get_format(shm));
-        return;
-    }
-
-    int32_t stride = wl_shm_buffer_get_stride(shm);
-    int32_t width = wl_shm_buffer_get_width(shm);
-    int32_t height = wl_shm_buffer_get_height(shm);
-    if (stride <= 0 || width <= 0 || height <= 0) {
-        LOG_ERROR("invalid, stride:%{public}d width:%{public}d height:%{public}d", stride, width, height);
-        return;
-    }
-
-    void *data = wl_shm_buffer_get_data(shm);
-    if (data == nullptr) {
-        LOG_ERROR("wl_shm_buffer_get_data fail");
-        return;
-    }
-
-    auto framePtr = rsSurface_->RequestFrame(width, height);
-    if (framePtr == nullptr) {
-        LOG_ERROR("RequestFrame failed");
-        return;
-    }
-
-    auto canvas = framePtr->GetCanvas();
-    if (canvas == nullptr) {
-        LOG_ERROR("GetCanvas failed");
-        return;
-    }
-    canvas->clear(SK_ColorTRANSPARENT);
-
-    SkImageInfo imageInfo = SkImageInfo::Make(width, height, format, kUnpremul_SkAlphaType);
-    SkPixmap srcPixmap(imageInfo, data, stride);
-    SkBitmap srcBitmap;
-    srcBitmap.installPixels(srcPixmap);
-    canvas->drawBitmap(srcBitmap, 0, 0);
-    rsSurface_->FlushFrame(framePtr);
-}
-
-void WaylandXdgToplevel::CreateWindow()
-{
-    OHOS::sptr<OHOS::Rosen::WindowOption> option(new OHOS::Rosen::WindowOption());
-    option->SetWindowRect({0, 0, pendingState_.width, pendingState_.height});
-    option->SetWindowType(OHOS::Rosen::WindowType::APP_MAIN_WINDOW_BASE);
-    option->SetWindowMode(OHOS::Rosen::WindowMode::WINDOW_MODE_FLOATING);
-
-    window_ = OHOS::Rosen::Window::Create(pendingState_.appId, option);
-    if (window_ == nullptr) {
-        LOG_ERROR("Window::Create failed");
-        return;
-    }
-    window_->Show();
-
-    surfaceNode_ = window_->GetSurfaceNode();
-    if (surfaceNode_ == nullptr) {
-        LOG_ERROR("GetSurfaceNode failed");
-        return;
-    }
-
-    rsSurface_ = OHOS::Rosen::RSSurfaceExtractor::ExtractRSSurface(surfaceNode_);
-    if (rsSurface_ == nullptr) {
-        LOG_ERROR("ExtractRSSurface failed");
-        return;
-    }
-
-#ifdef ENABLE_GPU
-    renderContext_ = std::make_unique<OHOS::Rosen::RenderContext>();
-    renderContext_->InitializeEglContext();
-    rsSurface_->SetRenderContext(renderContext_.get());
-#endif
 }
 } // namespace Wayland
 } // namespace FT

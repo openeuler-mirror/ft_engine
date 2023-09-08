@@ -81,7 +81,7 @@ WaylandXdgSurface::WaylandXdgSurface(const OHOS::sptr<WaylandXdgWmObject> &xdgWm
       surface_(surface)
 {
     surface->AddCommitCallback([this]() { OnSurfaceCommit(); });
-    surface->AddAttachCallback([this](struct wl_shm_buffer *shm) { OnSurfaceAttach(shm); });
+    surface->AddRectCallback([this](Rect rect) { OnSurfaceRect(rect); });
 }
 
 WaylandXdgSurface::~WaylandXdgSurface() noexcept {}
@@ -94,7 +94,7 @@ void WaylandXdgSurface::GetToplevel(uint32_t id)
         return;
     }
 
-    role_ = XdgSurfaceRole::TOPLEVEL;
+    role_ = SurfaceRole::XDG_TOPLEVEL;
 }
 
 void WaylandXdgSurface::GetPopup(uint32_t id, struct wl_resource *parent, struct wl_resource *positioner)
@@ -111,33 +111,23 @@ void WaylandXdgSurface::AckConfigure(uint32_t serial)
 
 void WaylandXdgSurface::OnSurfaceCommit()
 {
-    switch (role_) {
-        case XdgSurfaceRole::TOPLEVEL: {
-            auto topLevel = toplevel_.promote();
-            if (topLevel != nullptr) {
-                topLevel->HandleCommit();
-            }
-            break;
+    if (role_ == SurfaceRole::XDG_TOPLEVEL) {
+        auto topLevel = toplevel_.promote();
+        if (topLevel != nullptr) {
+            topLevel->HandleCommit();
         }
-        default:
-            break;
     }
 
     xdg_surface_send_configure(WlResource(), wl_display_next_serial(WlDisplay()));
 }
 
-void WaylandXdgSurface::OnSurfaceAttach(struct wl_shm_buffer *shm)
+void WaylandXdgSurface::OnSurfaceRect(Rect rect)
 {
-    switch (role_) {
-        case XdgSurfaceRole::TOPLEVEL: {
-            auto topLevel = toplevel_.promote();
-            if (topLevel != nullptr) {
-                topLevel->HandleAttach(shm);
-            }
-            break;
+    if (role_ == SurfaceRole::XDG_TOPLEVEL) {
+        auto topLevel = toplevel_.promote();
+        if (topLevel != nullptr) {
+            topLevel->SetRect(rect);
         }
-        default:
-            break;
     }
 }
 } // namespace Wayland
