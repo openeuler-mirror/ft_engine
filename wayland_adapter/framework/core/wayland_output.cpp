@@ -20,7 +20,7 @@
 namespace FT {
 namespace Wayland {
 namespace {
-    constexpr HiLogLabel LABEL = {LOG_CORE, HILOG_DOMAIN_WAYLAND, "WaylandCompositor"};
+    constexpr HiLogLabel LABEL = {LOG_CORE, HILOG_DOMAIN_WAYLAND, "WaylandOutput"};
 }
 struct wl_output_interface IWaylandOutput::impl_ = {.release = &WaylandResourceObject::DefaultDestroyResource};
 
@@ -62,8 +62,9 @@ void WaylandOutput::Send(const OHOS::sptr<WaylandResourceObject> &output)
         if (dis == defaultDisplay) {
            flags = WL_OUTPUT_MODE_CURRENT | WL_OUTPUT_MODE_PREFERRED;
         }
+        constexpr int32_t rateFactor = 1000;
         wl_output_send_mode(output->WlResource(), flags, dis->GetWidth(), dis->GetHeight(),
-            dis->GetRefreshRate() * 1000);
+            dis->GetRefreshRate() * rateFactor);
     }
     wl_output_send_done(output->WlResource());
 }
