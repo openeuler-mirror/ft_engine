@@ -39,32 +39,6 @@ struct Rect {
 using SurfaceCommitCallback = std::function<void()>;
 using SurfaceRectCallback = std::function<void(Rect)>;
 
-struct SurfaceState {
-    struct wl_resource *buffer = nullptr;
-    Rect damage;
-    wl_output_transform transform = WL_OUTPUT_TRANSFORM_NORMAL;
-    int32_t scale = 0;
-    Rect damageBuffer;
-    int32_t offsetX = 0;
-    int32_t offsetY = 0;
-    void Reset()
-    {
-        buffer = nullptr;
-        damage.Reset();
-        transform = WL_OUTPUT_TRANSFORM_NORMAL;
-        scale = 0;
-        damageBuffer.Reset();
-        offsetX = 0;
-        offsetY = 0;
-    }
-};
-
-enum class SurfaceRole : uint32_t {
-    NONE = 0,
-    XDG_TOPLEVEL,
-    XDG_POPUP
-};
-
 class FrameCallback final : public WaylandResourceObject {
 public:
     static OHOS::sptr<FrameCallback> Create(struct wl_client *client, uint32_t version, uint32_t callback)
@@ -80,6 +54,32 @@ private:
         : WaylandResourceObject(client, &wl_callback_interface, version, callback, nullptr), serial_(callback) {}
     ~FrameCallback() noexcept override {}
     uint32_t serial_;
+};
+
+struct SurfaceState {
+    struct wl_resource *buffer = nullptr;
+    Rect damage;
+    wl_output_transform transform = WL_OUTPUT_TRANSFORM_NORMAL;
+    int32_t scale = 0;
+    Rect damageBuffer;
+    int32_t offsetX = 0;
+    int32_t offsetY = 0;
+    OHOS::sptr<FrameCallback> cb;
+    void Reset()
+    {
+        damage.Reset();
+        transform = WL_OUTPUT_TRANSFORM_NORMAL;
+        scale = 0;
+        damageBuffer.Reset();
+        offsetX = 0;
+        offsetY = 0;
+    }
+};
+
+enum class SurfaceRole : uint32_t {
+    NONE = 0,
+    XDG_TOPLEVEL,
+    XDG_POPUP
 };
 
 static SkColorType ShmFormatToSkia(const uint32_t& shmFormat)
