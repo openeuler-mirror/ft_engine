@@ -25,8 +25,6 @@ struct IWaylandOutput {
     static struct wl_output_interface impl_;
 };
 
-// using OutputBindCallback = std::function<void(const sptr<WaylandResourceObject> &outputResource)>;
-
 class WaylandOutput final : public WaylandGlobal {
 public:
     static OHOS::sptr<WaylandOutput> Create(struct wl_display *display);
@@ -37,7 +35,6 @@ private:
     WaylandOutput(struct wl_display *display);
     void Bind(struct wl_client *client, uint32_t version, uint32_t id) override;
 
-//     OutputBindCallback bindCb_ = nullptr;
 };
 
 class WaylandOutputObject final : public WaylandResourceObject {
