@@ -151,6 +151,11 @@ void WaylandSurface::Damage(int32_t x, int32_t y, int32_t width, int32_t height)
 
 void WaylandSurface::Frame(uint32_t callback)
 {
+    if (new_.cb != nullptr) {
+        LOG_WARN("duplicate frame request");
+        return;
+    }
+
     auto cb = FrameCallback::Create(WlClient(), WAYLAND_VERSION_MAJOR, callback);
     if (cb == nullptr) {
         LOG_ERROR("no memory");
@@ -158,8 +163,7 @@ void WaylandSurface::Frame(uint32_t callback)
     }
 
     WaylandObjectsPool::GetInstance().AddObject(ObjectId(cb->WlClient(), cb->Id()), cb);
-    wl_callback_send_done(cb->WlResource(), 0);
-    wl_resource_destroy(cb->WlResource());
+    new_.cb = cb;
 }
 
 void WaylandSurface::SetOpaqueRegion(struct wl_resource *regionResource)
@@ -221,6 +225,13 @@ void WaylandSurface::HandleCommit() {
         wl_shm_buffer_end_access(shm);
 
         wl_callback_send_done(new_.buffer, 0);
+        new_.buffer = nullptr;
+    }
+
+    if (new_.cb != nullptr) {
+        wl_callback_send_done(new_.cb->WlResource(), 0);
+        wl_resource_destroy(new_.cb->WlResource());
+        new_.cb = nullptr;
     }
 
     old_ = new_;
