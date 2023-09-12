@@ -17,7 +17,6 @@
 
 #include "wayland_objects_pool.h"
 #include "ui/rs_surface_extractor.h"
-#include "display_manager.h"
 
 namespace FT {
 namespace Wayland {
@@ -241,10 +240,6 @@ void WaylandSurface::HandleCommit() {
 void WaylandSurface::CreateWindow()
 {
     OHOS::sptr<OHOS::Rosen::WindowOption> option(new OHOS::Rosen::WindowOption());
-    if (rect_.width == 0 || rect_.height == 0) {
-        InitWindowRect();
-    }
-    option->SetWindowRect({rect_.x, rect_.y, rect_.width, rect_.height});
     option->SetWindowType(OHOS::Rosen::WindowType::APP_MAIN_WINDOW_BASE);
     option->SetWindowMode(OHOS::Rosen::WindowMode::WINDOW_MODE_FLOATING);
 
@@ -274,6 +269,14 @@ void WaylandSurface::CreateWindow()
     renderContext_->InitializeEglContext();
     rsSurface_->SetRenderContext(renderContext_.get());
 #endif
+
+    OHOS::Rosen::Rect rect = window_->GetRect();
+    rect_.width = rect.width_;
+    rect_.height = rect.height_;
+
+    for (auto &cb : rectCallbacks_) {
+        cb(rect_);
+    }
 }
 
 void WaylandSurface::CopyBuffer(struct wl_shm_buffer *shm)
@@ -322,17 +325,6 @@ void WaylandSurface::CopyBuffer(struct wl_shm_buffer *shm)
     srcBitmap.installPixels(srcPixmap);
     canvas->drawBitmap(srcBitmap, 0, 0);
     rsSurface_->FlushFrame(framePtr);
-}
-
-void WaylandSurface::InitWindowRect()
-{
-    auto display = OHOS::Rosen::DisplayManager::GetInstance().GetDefaultDisplay();
-    rect_.width = display->GetWidth();
-    rect_.height = display->GetHeight();
-
-    for (auto &cb : rectCallbacks_) {
-        cb(rect_);
-    }
 }
 } // namespace Wayland
 } // namespace FT
