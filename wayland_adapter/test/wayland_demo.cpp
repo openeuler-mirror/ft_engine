@@ -67,6 +67,7 @@ struct window {
     struct display *display;
     int32_t width, height;
     struct wl_surface *surface;
+    struct wl_region *region;
     struct xdg_surface *xdg_surface;
     struct xdg_toplevel *xdg_toplevel;
     struct buffer buffers[2];
@@ -234,6 +235,13 @@ static struct window *CreateWindow(struct display *display, int32_t width, int32
     } else {
         assert(0);
     }
+
+    // region test
+    pWindow->region = wl_compositor_create_region(display->compositor);
+    wl_region_add(pWindow->region, 0, 0, width, height);
+    wl_surface_set_opaque_region(pWindow->surface, pWindow->region);
+    wl_surface_set_input_region(pWindow->surface, pWindow->region);
+    wl_region_destroy(pWindow->region);
 
     return pWindow;
 }

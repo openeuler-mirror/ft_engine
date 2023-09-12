@@ -17,6 +17,7 @@
 
 #include "wayland_objects_pool.h"
 #include "ui/rs_surface_extractor.h"
+#include "wayland_region.h"
 
 namespace FT {
 namespace Wayland {
@@ -167,10 +168,25 @@ void WaylandSurface::Frame(uint32_t callback)
 
 void WaylandSurface::SetOpaqueRegion(struct wl_resource *regionResource)
 {
+    LOG_DEBUG("WaylandSurface::SetOpaqueRegion, ignore");
 }
 
 void WaylandSurface::SetInputRegion(struct wl_resource *regionResource)
 {
+    if (regionResource == nullptr) {
+        return;
+    }
+
+    auto region = CastFromResource<WaylandRegion>(regionResource);
+    if (region == nullptr) {
+        LOG_ERROR("failed to cast WaylandRegion from regionResource, maybe resource is not valid.");
+        return;
+    }
+
+    // input
+    Rect rect = region->GetRect();
+    LOG_DEBUG("SetInputRegion, rect: x %{public}d, y %{public}d, width %{public}d, height %{public}d.",
+        rect.x, rect.y, rect.width, rect.height);
 }
 
 void WaylandSurface::Commit()
