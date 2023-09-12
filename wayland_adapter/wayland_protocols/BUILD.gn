@@ -16,10 +16,11 @@ import("//config.gni")
 
 config("wayland_public_config") {
   include_dirs = [ "stable/xdg-shell" ]
+  include_dirs += [ "unstable" ]
 }
 
 ft_source_set("wayland_protocols_sources") {
   sources = [ "stable/xdg-shell/xdg-shell-protocol.c" ]
-
+  sources += [ "unstable/xdg-output-unstable-v1-protocol.c" ]
   public_configs = [ ":wayland_public_config" ]
 }
