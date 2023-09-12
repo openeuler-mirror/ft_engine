@@ -23,6 +23,7 @@
 #include "event_loop.h"
 #include "wayland_compositor.h"
 #include "wayland_xdg_wm_base.h"
+#include "wayland_output.h"
 
 namespace FT {
 namespace Wayland {
@@ -50,6 +51,7 @@ private:
     std::shared_ptr<EventLoop> loop_;
     OHOS::sptr<WaylandCompositor> compositorGlobal_;
     OHOS::sptr<WaylandXdgWmBase> xdgWmBaseGlobal_;
+    OHOS::sptr<WaylandOutput> outputGlobal_;
 };
 } // namespace Wayland
 } // namespace FT
