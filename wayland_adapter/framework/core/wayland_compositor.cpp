@@ -18,6 +18,7 @@
 #include "wayland_surface.h"
 #include "wayland_objects_pool.h"
 #include "version.h"
+#include "wayland_region.h"
 
 namespace FT {
 namespace Wayland {
@@ -82,6 +83,11 @@ void WaylandCompositorObject::CreateSurface(struct wl_client *client, struct wl_
 
 void WaylandCompositorObject::CreateRegion(struct wl_client *client, struct wl_resource *resource, uint32_t id)
 {
+    auto region = WaylandRegion::Create(client, resource, wl_resource_get_version(resource), id);
+    if (region == nullptr) {
+        LOG_ERROR("no memory");
+        return;
+    }
 }
 } // namespace Wayland
 } // namespace FT
