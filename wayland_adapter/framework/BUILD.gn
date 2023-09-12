@@ -29,6 +29,7 @@ ft_source_set("wayland_framewok_sources") {
     "core/wayland_surface.cpp",
     "core/wayland_pointer.cpp",
     "core/wayland_keyboard.cpp",
+    "core/wayland_output.cpp",
   ]
 
   sources += [
