@@ -85,7 +85,7 @@ class Builder:
                     if rst[0] == False : return False
                     rst = exec_sys_command(['sudo', 'cp', '-rf', lit[0], install_header_files_dir + lit[1]])
                     if rst[0] == False : return False
-
+            install_header_files.close()
         return True
 
     def launch_gn(self) -> bool:
