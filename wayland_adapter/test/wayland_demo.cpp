@@ -66,6 +66,7 @@ struct buffer {
     struct wl_buffer *buffer;
     void *shm_data;
     bool busy;
+    int32_t width, height;
 };
 
 struct window {
@@ -180,6 +181,8 @@ static int32_t CreateShmBuffer(struct display *display, struct buffer *buffer, i
 
     struct wl_shm_pool *pool = wl_shm_create_pool(display->shm, fd, size);
     buffer->buffer = wl_shm_pool_create_buffer(pool, 0, width, height, stride, format);
+    buffer->width = width;
+    buffer->height = height;
     wl_buffer_add_listener(buffer->buffer, &g_bufferListener, buffer);
     wl_shm_pool_destroy(pool);
     close(fd);
@@ -202,7 +205,15 @@ static void HandleXdgSurfaceConfigure(void *data, struct xdg_surface *surface, u
 struct xdg_surface_listener g_xdgSurfaceListener = {HandleXdgSurfaceConfigure};
 
 static void HandleXdgToplevelConfigure(void *data, struct xdg_toplevel *xdg_toplevel,
-    int32_t width, int32_t height, struct wl_array *state) {}
+    int32_t width, int32_t height, struct wl_array *state) {
+
+    struct window *window = static_cast<struct window *>(data);
+    if (window->width != width || window->height != height) {
+        fprintf(stderr, "HandleXdgToplevelConfigure, width:%d, height:%d\n", width, height);    
+        window->width = width;
+        window->height = height;
+    }
+}
 static void HandleXdgToplevelClose(void *data, struct xdg_toplevel *xdg_toplevel)
 {
     g_running = false;
@@ -286,6 +297,11 @@ static struct buffer *WindowNextBuffer(struct window *window)
         buffer = &window->buffers[1];
     } else {
         return nullptr;
+    }
+
+    if (buffer->buffer && (buffer->width != window->width || buffer->height != window->height)) {
+        wl_buffer_destroy(buffer->buffer);
+        buffer->buffer = nullptr;
     }
 
     if (!buffer->buffer) {

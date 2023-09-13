@@ -56,6 +56,8 @@ public:
     void AddCommitCallback(SurfaceCommitCallback callback);
     void AddRectCallback(SurfaceRectCallback callback);
     void StartMove();
+    void OnSizeChange(const OHOS::Rosen::Rect& rect, OHOS::Rosen::WindowSizeChangeReason reason);
+    void OnModeChange(OHOS::Rosen::WindowMode mode);
 
 private:
     WaylandSurface(struct wl_client *client, struct wl_resource *parent, uint32_t version, uint32_t id);
