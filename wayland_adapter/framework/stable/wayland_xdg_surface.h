@@ -41,6 +41,8 @@ public:
     WaylandXdgSurface(const OHOS::sptr<WaylandXdgWmObject> &xdgWm, const OHOS::sptr<WaylandSurface> &surface, uint32_t id);
     ~WaylandXdgSurface() noexcept override;
 
+    void StartMove();
+
 private:
     friend struct IWaylandXdgSurface;
 

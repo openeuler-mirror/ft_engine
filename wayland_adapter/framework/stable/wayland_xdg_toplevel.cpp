@@ -143,6 +143,7 @@ void WaylandXdgToplevel::SetTitle(const char *title)
 
 void WaylandXdgToplevel::Move(uint32_t serial)
 {
+    xdgSurface_->StartMove();
 }
 
 void WaylandXdgToplevel::Resize(uint32_t serial, uint32_t edges)

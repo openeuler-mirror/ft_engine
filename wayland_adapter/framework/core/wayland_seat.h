@@ -15,6 +15,7 @@
 
 #pragma once
 
+#include <thread>
 #include "wayland_global.h"
 #include "wayland_pointer.h"
 #include "wayland_keyboard.h"
@@ -28,16 +29,24 @@ struct IWaylandSeat {
     static struct wl_seat_interface impl_;
 };
 
+
+class WaylandSeatObject;
+
 class WaylandSeat final : public WaylandGlobal {
     friend struct IWaylandSeat;
 
 public:
     static OHOS::sptr<WaylandSeat> Create(struct wl_display *display);
+    static OHOS::sptr<WaylandSeat> GetWaylandSeatGlobal();
+    OHOS::sptr<WaylandPointer> GetPointerResource(struct wl_client *client);
     ~WaylandSeat() noexcept override;
 
 private:
     WaylandSeat(struct wl_display *display);
     void Bind(struct wl_client *client, uint32_t version, uint32_t id) override;
+    void UpdateCapabilities();
+    std::unordered_map<struct wl_client *, OHOS::sptr<WaylandSeatObject>> seatResourcesMap_;
+    std::unique_ptr<std::thread> thread_ = nullptr;
 };
 
 class WaylandSeatObject final : public WaylandResourceObject {
@@ -46,14 +55,15 @@ class WaylandSeatObject final : public WaylandResourceObject {
 public:
     WaylandSeatObject(struct wl_client *client, uint32_t version, uint32_t id);
     ~WaylandSeatObject() noexcept;
+    OHOS::sptr<WaylandPointer> GetChildPointer();
 
 private:
     void GetPointer(uint32_t id);
     void GetKeyboard(uint32_t id);
     void GetTouch(uint32_t id);
 
-    OHOS::wptr<WaylandPointer> pointer_;
-    OHOS::wptr<WaylandKeyboard> keyboard_;
+    OHOS::sptr<WaylandPointer> pointer_;
+    OHOS::sptr<WaylandKeyboard> keyboard_;
 };
 } // namespace Wayland
 } // namespace FT
