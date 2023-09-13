@@ -55,6 +55,7 @@ public:
 
     void AddCommitCallback(SurfaceCommitCallback callback);
     void AddRectCallback(SurfaceRectCallback callback);
+    void StartMove();
 
 private:
     WaylandSurface(struct wl_client *client, struct wl_resource *parent, uint32_t version, uint32_t id);

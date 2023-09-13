@@ -24,6 +24,7 @@
 #include "wayland_compositor.h"
 #include "wayland_xdg_wm_base.h"
 #include "wayland_output.h"
+#include "wayland_seat.h"
 
 namespace FT {
 namespace Wayland {
@@ -52,6 +53,7 @@ private:
     OHOS::sptr<WaylandCompositor> compositorGlobal_;
     OHOS::sptr<WaylandXdgWmBase> xdgWmBaseGlobal_;
     OHOS::sptr<WaylandOutput> outputGlobal_;
+	OHOS::sptr<WaylandSeat> seatGlobal_;
 };
 } // namespace Wayland
 } // namespace FT
