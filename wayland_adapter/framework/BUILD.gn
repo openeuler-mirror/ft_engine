@@ -19,6 +19,7 @@ config("wayland_framework_public_config") {
   include_dirs = [
     "core",
     "stable",
+    "unstable",
   ]
 }
 
@@ -39,6 +40,11 @@ ft_source_set("wayland_framewok_sources") {
     "stable/wayland_xdg_surface.cpp",
     "stable/wayland_xdg_toplevel.cpp",
     "stable/wayland_xdg_wm_base.cpp",
+  ]
+
+  sources += [
+    "unstable/wayland_zxdg_output_manager_v1.cpp",
+    "unstable/wayland_zxdg_output_v1.cpp",
   ]
 
   public_configs = [ ":wayland_framework_public_config" ]
