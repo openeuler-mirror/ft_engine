@@ -194,5 +194,18 @@ void WaylandXdgToplevel::HandleCommit()
 {
     SendConfigure();
 }
+
+void WaylandXdgToplevel::SetRect(Rect rect)
+{
+    rect_ = rect;
+
+    struct wl_array states;
+    uint32_t *s;
+    wl_array_init(&states);
+    s = static_cast<uint32_t *>(wl_array_add(&states, sizeof(uint32_t)));
+    *s = XDG_TOPLEVEL_STATE_RESIZING;
+    xdg_toplevel_send_configure(WlResource(), rect.width, rect.height, &states);
+    wl_array_release(&states);
+}
 } // namespace Wayland
 } // namespace FT
