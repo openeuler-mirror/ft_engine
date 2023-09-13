@@ -90,7 +90,7 @@ if [ ! -d ${FT_PREBUILD_DIR}/inc ]; then
 git clone https://gitee.com/yanansong/devel_inc.git ${FT_PREBUILD_DIR}/inc
 fi
 
-# copy include files to /usr/include. 
+# copy include files to /usr/include.
 cd ${FT_PREBUILD_DIR}/inc
 sudo cp -fr * /usr/local/include
 
@@ -105,6 +105,7 @@ cd ${PROJECT_DIR}
 # copy FT sa file to /usr/local/share/ft/
 sudo mkdir -p /usr/local/share/ft
 sudo cp -fr ${PROJECT_DIR}/etc/ft.xml /usr/local/share/ft/
+sudo cp -fr ${PROJECT_DIR}/etc/ft_wl.xml /usr/local/share/ft/
 sudo cp -fr ${PROJECT_DIR}/etc/icon   /usr/local/share/ft/
 sudo cp -fr ${PROJECT_DIR}/etc/desktop /usr/local/share/ft/
 
