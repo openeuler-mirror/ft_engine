@@ -24,6 +24,7 @@
 #include <sys/mman.h>
 #include <signal.h>
 #include <errno.h>
+#include <linux/input-event-codes.h>
 
 #include <securec.h>
 #include <wayland-client.h>
@@ -47,6 +48,7 @@
 
 constexpr int32_t WINDOW_WIDTH = 500;
 constexpr int32_t WINDOW_HEIGHT = 400;
+struct window;
 
 struct display {
     struct wl_display *display;
@@ -54,6 +56,9 @@ struct display {
     struct wl_compositor *compositor;
     struct xdg_wm_base *wm_base;
     struct wl_shm *shm;
+    struct wl_seat *seat;
+    struct wl_pointer *pointer;
+    struct window *window;
     bool has_rgba8888 = false;
 };
 
@@ -242,7 +247,7 @@ static struct window *CreateWindow(struct display *display, int32_t width, int32
     wl_surface_set_opaque_region(pWindow->surface, pWindow->region);
     wl_surface_set_input_region(pWindow->surface, pWindow->region);
     wl_region_destroy(pWindow->region);
-
+    display->window = pWindow;
     return pWindow;
 }
 
@@ -542,6 +547,87 @@ static void XdgWmBasePing(void *data, struct xdg_wm_base *shell, uint32_t serial
 
 static const struct xdg_wm_base_listener xdg_wm_base_listener = {XdgWmBasePing};
 
+void pointer_enter(void *data, struct wl_pointer *wl_pointer, uint32_t serial, struct wl_surface *surface, wl_fixed_t surface_x, wl_fixed_t surface_y)
+{
+    fprintf(stderr, "pointer_enter in, surface_x=%d, surface_y=%d\n", wl_fixed_to_int(surface_x), wl_fixed_to_int(surface_y));
+}
+
+void pointer_leave(void *data, struct wl_pointer *wl_pointer, uint32_t serial, struct wl_surface *surface)
+{
+    fprintf(stderr, "pointer_leave in\n");
+}
+
+void pointer_motion(void *data, struct wl_pointer *wl_pointer, uint32_t time, wl_fixed_t surface_x, wl_fixed_t surface_y)
+{
+    fprintf(stderr, "pointer_motion in, surface_x=%d, surface_y=%d\n", wl_fixed_to_int(surface_x), wl_fixed_to_int(surface_y));
+}
+
+void pointer_button(void *data, struct wl_pointer *wl_pointer, uint32_t serial, uint32_t time, uint32_t button, uint32_t state)
+{
+    struct display *d = static_cast<struct display *>(data);
+    fprintf(stderr, "pointer_button in, button=%d, state=%d\n", button, state);
+    if (button == BTN_LEFT && state == WL_POINTER_BUTTON_STATE_PRESSED) {
+        xdg_toplevel_move(d->window->xdg_toplevel, d->seat, serial);
+    }
+}
+
+void pointer_axis(void *data, struct wl_pointer *wl_pointer, uint32_t time, uint32_t axis, wl_fixed_t value)
+{
+    fprintf(stderr, "pointer_axis in\n");
+}
+
+void pointer_frame(void *data, struct wl_pointer *wl_pointer)
+{
+    fprintf(stderr, "pointer_frame in\n");
+}
+
+void pointer_axis_source(void *data, struct wl_pointer *wl_pointer, uint32_t axis_source)
+{
+    fprintf(stderr, "pointer_axis_source in\n");
+}
+
+void pointer_axis_stop(void *data, struct wl_pointer *wl_pointer, uint32_t time, uint32_t axis)
+{
+    fprintf(stderr, "pointer_axis_stop in\n");
+}
+
+void pointer_axis_discrete(void *data, struct wl_pointer *wl_pointer, uint32_t axis, int32_t discrete)
+{
+    fprintf(stderr, "pointer_axis_discrete in\n");
+}
+
+struct wl_pointer_listener pointer_listener = {
+    .enter = pointer_enter,
+    .leave = pointer_leave,
+    .motion = pointer_motion,
+    .button = pointer_button,
+    .axis = pointer_axis,
+    .frame = pointer_frame,
+    .axis_source = pointer_axis_source,
+    .axis_stop = pointer_axis_stop,
+    .axis_discrete = pointer_axis_discrete,
+};
+
+void wl_seat_capabilities(void *data, struct wl_seat *wl_seat, uint32_t capabilities)
+{
+    struct display *d = static_cast<struct display *>(data);
+    if (capabilities & WL_SEAT_CAPABILITY_POINTER) {
+        fprintf(stderr, "fangtian has a pointer, get it!\n");
+        d->pointer = wl_seat_get_pointer(d->seat);
+        wl_pointer_add_listener(d->pointer, &pointer_listener, d);
+    }
+    if (capabilities & WL_SEAT_CAPABILITY_KEYBOARD) {
+        fprintf(stderr, "fangtian has a keyboard\n");
+    }
+}
+
+void wl_seat_name(void *data, struct wl_seat *wl_seat, const char *name) {}
+
+struct wl_seat_listener seat_listener = {
+    wl_seat_capabilities,
+    wl_seat_name,
+};
+
 static void RegistryGlobal(void *data, struct wl_registry *registry,
     uint32_t id, const char *interface, uint32_t version)
 {
@@ -555,6 +641,9 @@ static void RegistryGlobal(void *data, struct wl_registry *registry,
     } else if (strcmp(interface, "wl_shm") == 0) {
         d->shm = (struct wl_shm *)wl_registry_bind(registry, id, &wl_shm_interface, 1);
         wl_shm_add_listener(d->shm, &shm_listener, d);
+    } else if (strcmp(interface, "wl_seat") == 0) {
+        d->seat = (struct wl_seat *)wl_registry_bind(registry, id, &wl_seat_interface, 1);
+        wl_seat_add_listener(d->seat, &seat_listener, d);
     }
 }
 
@@ -595,6 +684,7 @@ static struct display *CreateDisplay()
 
 static void DestroyDisplay(struct display *display)
 {
+    display->window = nullptr;
     if (display->shm) {
         wl_shm_destroy(display->shm);
     }
