@@ -13,7 +13,7 @@
  * limitations under the License.
  */
 
-#include <linux/input-event-codes.h>
+#include <linux/input.h>
 #include "wayland_surface.h"
 
 #include "wayland_objects_pool.h"
@@ -42,12 +42,26 @@ public:
 private:
     OHOS::sptr<WaylandSurface> wlSurface_ = nullptr;
     int32_t MapPointerActionButton(int32_t PointerActionButtonType) const;
+    int32_t MapKeyAction(int32_t keyAction) const;
     const std::map<uint32_t, int32_t> ptrActionMap_ = {
         {OHOS::MMI::PointerEvent::MOUSE_BUTTON_LEFT,   BTN_LEFT},
         {OHOS::MMI::PointerEvent::MOUSE_BUTTON_RIGHT,  BTN_RIGHT},
     };
-
+    const std::map<uint32_t, int32_t> keyActionMap_ = {
+        {OHOS::MMI::KeyEvent::KEY_ACTION_UP, WL_KEYBOARD_KEY_STATE_RELEASED},
+        {OHOS::MMI::KeyEvent::KEY_ACTION_DOWN, WL_KEYBOARD_KEY_STATE_PRESSED},
+    };
+    const int32_t INVALID_KEYACTION = -1;
 };
+
+int32_t InputEventConsumer::MapKeyAction(int32_t keyAction) const
+{
+    auto it = keyActionMap_.find(keyAction);
+    if (it == keyActionMap_.end()) {
+        return INVALID_KEYACTION;
+    }
+    return it->second;
+}
 
 int32_t InputEventConsumer::MapPointerActionButton(int32_t PointerActionButtonType) const
 {
@@ -60,6 +74,22 @@ int32_t InputEventConsumer::MapPointerActionButton(int32_t PointerActionButtonTy
 
 bool InputEventConsumer::OnInputEvent(const std::shared_ptr<OHOS::MMI::KeyEvent>& keyEvent) const
 {
+    OHOS::sptr<WaylandSeat> wlSeat = WaylandSeat::GetWaylandSeatGlobal();
+    if (wlSeat == nullptr) {
+        return false;
+    }
+    auto keyboard = wlSeat->GetKeyboardResource(wlSurface_->WlClient());
+    if (keyboard == nullptr) {
+        LOG_WARN("GetKeyboardResource fail");
+        return false;
+    }
+
+    int32_t keyAction = MapKeyAction(keyEvent->GetKeyAction());
+    if (keyAction == INVALID_KEYACTION) {
+        return false;
+    }
+
+    keyboard->OnKeyboardKey(keyEvent->GetKeyCode(), keyAction, keyEvent->GetActionTime());
     keyEvent->MarkProcessed();
     return true;
 }
@@ -83,6 +113,12 @@ bool InputEventConsumer::OnInputEvent(const std::shared_ptr<OHOS::MMI::PointerEv
         return false;
     }
 
+    auto keyboard = wlSeat->GetKeyboardResource(wlSurface_->WlClient());
+    if (keyboard == nullptr) {
+        LOG_WARN("GetKeyboardResource fail");
+        return false;
+    }
+
     OHOS::MMI::PointerEvent::PointerItem pointerItem;
     int32_t pointId = pointerEvent->GetPointerId();
     if (!pointerEvent->GetPointerItem(pointId, pointerItem)) {
@@ -92,8 +128,10 @@ bool InputEventConsumer::OnInputEvent(const std::shared_ptr<OHOS::MMI::PointerEv
 
     if (pointerEvent->GetPointerAction() ==  OHOS::MMI::PointerEvent::POINTER_ACTION_ENTER_WINDOW) {
         pointer->OnPointerEnter(pointerItem.GetDisplayX(), pointerItem.GetDisplayY(), wlSurface_->WlResource());
+        keyboard->OnKeyboardEnter(wlSurface_->WlResource());
     } else if (pointerEvent->GetPointerAction() ==  OHOS::MMI::PointerEvent::POINTER_ACTION_LEAVE_WINDOW) {
         pointer->OnPointerLeave(wlSurface_->WlResource());
+        keyboard->OnKeyboardLeave(wlSurface_->WlResource());
     } else if (pointerEvent->GetPointerAction() == OHOS::MMI::PointerEvent::POINTER_ACTION_BUTTON_DOWN ||
         pointerEvent->GetPointerAction() == OHOS::MMI::PointerEvent::POINTER_ACTION_BUTTON_UP) {
         int32_t buttonId = MapPointerActionButton(pointerEvent->GetButtonId());
