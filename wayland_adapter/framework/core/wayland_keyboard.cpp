@@ -40,6 +40,49 @@ OHOS::sptr<WaylandKeyboard> WaylandKeyboard::Create(struct wl_client *client, ui
     return keyboard;
 }
 
+void WaylandKeyboard::OnKeyboardKey(uint32_t key, int32_t state, uint32_t time)
+{
+    wl_resource *keyboard = WlResource();
+    if (keyboard == nullptr) {
+        return;
+    }
+    wl_display *display = WlDisplay();
+    if (display == nullptr) {
+        return;
+    }
+    uint32_t serial = wl_display_next_serial(display);
+    wl_keyboard_send_key(keyboard, serial, time, key, state);
+}
+
+void WaylandKeyboard::OnKeyboardEnter(struct wl_resource *surface_resource)
+{
+    wl_display *display = WlDisplay();
+    if (display == nullptr) {
+        return;
+    }
+    uint32_t serial = wl_display_next_serial(display);
+    wl_resource *keyboard = WlResource();
+    if (keyboard == nullptr) {
+        return;
+    }
+    struct wl_array keys = {};
+    wl_keyboard_send_enter(keyboard, serial, surface_resource, &keys);
+}
+
+void WaylandKeyboard::OnKeyboardLeave(struct wl_resource *surface_resource)
+{
+    wl_display *display = WlDisplay();
+    if (display == nullptr) {
+        return;
+    }
+    uint32_t serial = wl_display_next_serial(display);
+    wl_resource *keyboard = WlResource();
+    if (keyboard == nullptr) {
+        return;
+    }
+    wl_keyboard_send_leave(keyboard, serial, surface_resource);
+}
+
 WaylandKeyboard::WaylandKeyboard(struct wl_client *client, uint32_t version, uint32_t id)
     : WaylandResourceObject(client, &wl_keyboard_interface, version, id, &IWaylandKeyboard::impl_) {}
 
