@@ -53,6 +53,65 @@ WaylandPointer::WaylandPointer(struct wl_client *client, uint32_t version, uint3
 
 WaylandPointer::~WaylandPointer() noexcept {}
 
+
+void WaylandPointer::OnPointerButton(uint32_t time, uint32_t button, bool isPressed)
+{
+    wl_resource *pointer = WlResource();
+    if (pointer == nullptr) {
+        return;
+    }
+    wl_display *display = WlDisplay();
+    if (display == nullptr) {
+        return;
+    }
+    uint32_t serial = wl_display_next_serial(display);
+    uint32_t state = isPressed ? WL_POINTER_BUTTON_STATE_PRESSED : WL_POINTER_BUTTON_STATE_RELEASED;
+    wl_pointer_send_button(pointer, serial, time, button, state);
+}
+
+void WaylandPointer::OnPointerMotionAbsolute(uint32_t time, int32_t posX, int32_t posY)
+{
+    wl_fixed_t posFixedX = wl_fixed_from_int(posX);
+    wl_fixed_t posFixedY = wl_fixed_from_int(posY);
+    wl_resource *pointer = WlResource();
+    if (pointer == nullptr) {
+        return;
+    }
+
+    wl_pointer_send_motion(pointer, time, posFixedX, posFixedY);
+}
+
+void WaylandPointer::OnPointerLeave(struct wl_resource *surface_resource)
+{
+    LOG_WARN("WaylandPointer::OnPointerLeave in");
+    wl_display *display = WlDisplay();
+    if (display == nullptr) {
+        return;
+    }
+    uint32_t serial = wl_display_next_serial(display);
+    wl_resource *pointer = WlResource();
+    if (pointer == nullptr) {
+        return;
+    }
+    wl_pointer_send_leave(pointer, serial, surface_resource);
+}
+void WaylandPointer::OnPointerEnter(int32_t posX, int32_t posY, struct wl_resource *surface_resource)
+{
+    LOG_WARN("WaylandPointer::OnPointerEnter in");
+    wl_fixed_t posFixedX = wl_fixed_from_int(posX);
+    wl_fixed_t posFixedY = wl_fixed_from_int(posY);
+    wl_resource *pointer = WlResource();
+    if (pointer == nullptr) {
+        return;
+    }
+    wl_display *display = WlDisplay();
+    if (display == nullptr) {
+        return;
+    }
+    uint32_t serial = wl_display_next_serial(display);
+    wl_pointer_send_enter(pointer, serial, surface_resource, posFixedX, posFixedY);
+}
+
 void WaylandPointer::SetCursor(uint32_t serial, struct wl_resource *surface, int32_t hotsPotx, int32_t hotsPoty) {}
 } // namespace Wayland
 } // namespace FT

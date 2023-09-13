@@ -13,17 +13,100 @@
  * limitations under the License.
  */
 
+#include <linux/input-event-codes.h>
 #include "wayland_surface.h"
 
 #include "wayland_objects_pool.h"
 #include "ui/rs_surface_extractor.h"
 #include "wayland_region.h"
+#include "wayland_seat.h"
+#include "input_manager.h"
 
 namespace FT {
 namespace Wayland {
 namespace {
     constexpr HiLogLabel LABEL = {LOG_CORE, HILOG_DOMAIN_WAYLAND, "WaylandSurface"};
 }
+
+class InputEventConsumer : public OHOS::Rosen::IInputEventConsumer
+{
+public:
+    InputEventConsumer(OHOS::sptr<WaylandSurface> wlSurface)
+    {
+        wlSurface_ = wlSurface;
+    }
+
+    bool OnInputEvent(const std::shared_ptr<OHOS::MMI::KeyEvent>& keyEvent) const override;
+    bool OnInputEvent(const std::shared_ptr<OHOS::MMI::AxisEvent>& axisEvent) const override;
+    bool OnInputEvent(const std::shared_ptr<OHOS::MMI::PointerEvent>& pointerEvent) const override;
+private:
+    OHOS::sptr<WaylandSurface> wlSurface_ = nullptr;
+    int32_t MapPointerActionButton(int32_t PointerActionButtonType) const;
+    const std::map<uint32_t, int32_t> ptrActionMap_ = {
+        {OHOS::MMI::PointerEvent::MOUSE_BUTTON_LEFT,   BTN_LEFT},
+        {OHOS::MMI::PointerEvent::MOUSE_BUTTON_RIGHT,  BTN_RIGHT},
+    };
+
+};
+
+int32_t InputEventConsumer::MapPointerActionButton(int32_t PointerActionButtonType) const
+{
+    auto it = ptrActionMap_.find(PointerActionButtonType);
+    if (it == ptrActionMap_.end()) {
+        return OHOS::MMI::PointerEvent::BUTTON_NONE;
+    }
+    return it->second;
+}
+
+bool InputEventConsumer::OnInputEvent(const std::shared_ptr<OHOS::MMI::KeyEvent>& keyEvent) const
+{
+    keyEvent->MarkProcessed();
+    return true;
+}
+
+bool InputEventConsumer::OnInputEvent(const std::shared_ptr<OHOS::MMI::AxisEvent>& axisEvent) const
+{
+    axisEvent->MarkProcessed();
+    return true;
+}
+
+bool InputEventConsumer::OnInputEvent(const std::shared_ptr<OHOS::MMI::PointerEvent>& pointerEvent) const
+{
+    OHOS::sptr<WaylandSeat> wlSeat = WaylandSeat::GetWaylandSeatGlobal();
+    if (wlSeat == nullptr) {
+        return false;
+    }
+    pointerEvent->MarkProcessed();
+    auto pointer = wlSeat->GetPointerResource(wlSurface_->WlClient());
+    if (pointer == nullptr) {
+        LOG_WARN("GetPointerResource fail");
+        return false;
+    }
+
+    OHOS::MMI::PointerEvent::PointerItem pointerItem;
+    int32_t pointId = pointerEvent->GetPointerId();
+    if (!pointerEvent->GetPointerItem(pointId, pointerItem)) {
+        LOG_WARN("GetPointerItem fail");
+        return false;
+    }
+
+    if (pointerEvent->GetPointerAction() ==  OHOS::MMI::PointerEvent::POINTER_ACTION_ENTER_WINDOW) {
+        pointer->OnPointerEnter(pointerItem.GetDisplayX(), pointerItem.GetDisplayY(), wlSurface_->WlResource());
+    } else if (pointerEvent->GetPointerAction() ==  OHOS::MMI::PointerEvent::POINTER_ACTION_LEAVE_WINDOW) {
+        pointer->OnPointerLeave(wlSurface_->WlResource());
+    } else if (pointerEvent->GetPointerAction() == OHOS::MMI::PointerEvent::POINTER_ACTION_BUTTON_DOWN ||
+        pointerEvent->GetPointerAction() == OHOS::MMI::PointerEvent::POINTER_ACTION_BUTTON_UP) {
+        int32_t buttonId = MapPointerActionButton(pointerEvent->GetButtonId());
+        if (buttonId != OHOS::MMI::PointerEvent::BUTTON_NONE) {
+            pointer->OnPointerButton(pointerEvent->GetActionTime(), buttonId, pointerItem.IsPressed());
+        }
+    } else if (pointerEvent->GetPointerAction() == OHOS::MMI::PointerEvent::POINTER_ACTION_MOVE) {
+        pointer->OnPointerMotionAbsolute(
+            pointerEvent->GetActionTime(), pointerItem.GetDisplayX(), pointerItem.GetDisplayY());
+    }
+    return true;
+}
+
 
 struct wl_surface_interface IWaylandSurface::impl_ = {
     .destroy = &WaylandResourceObject::DefaultDestroyResource,
@@ -189,6 +272,13 @@ void WaylandSurface::SetInputRegion(struct wl_resource *regionResource)
         rect.x, rect.y, rect.width, rect.height);
 }
 
+void WaylandSurface::StartMove()
+{
+    if (window_ != nullptr) {
+        window_->StartMove();
+    }
+}
+
 void WaylandSurface::Commit()
 {
     if (window_ == nullptr) {
@@ -258,6 +348,7 @@ void WaylandSurface::CreateWindow()
     OHOS::sptr<OHOS::Rosen::WindowOption> option(new OHOS::Rosen::WindowOption());
     option->SetWindowType(OHOS::Rosen::WindowType::APP_MAIN_WINDOW_BASE);
     option->SetWindowMode(OHOS::Rosen::WindowMode::WINDOW_MODE_FLOATING);
+    option->SetMainHandlerAvailable(false);
 
     static int count = 0;
     std::string windowName = "WaylandWindow" + std::to_string(count++);
@@ -266,6 +357,8 @@ void WaylandSurface::CreateWindow()
         LOG_ERROR("Window::Create failed");
         return;
     }
+    auto listener = std::make_shared<InputEventConsumer>(this);
+    window_->SetInputEventConsumer(listener);
     window_->Show();
 
     surfaceNode_ = window_->GetSurfaceNode();

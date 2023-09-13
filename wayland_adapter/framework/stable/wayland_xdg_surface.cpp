@@ -109,6 +109,11 @@ void WaylandXdgSurface::AckConfigure(uint32_t serial)
 {
 }
 
+void WaylandXdgSurface::StartMove()
+{
+    surface_->StartMove();
+}
+
 void WaylandXdgSurface::OnSurfaceCommit()
 {
     if (role_ == SurfaceRole::XDG_TOPLEVEL) {
