@@ -41,6 +41,7 @@ WaylandResourceObject::WaylandResourceObject(struct wl_client *client, const str
     id_ = wl_resource_get_id(resource_);
     wl_resource_set_implementation(resource_, implementation_, this, &WaylandResourceObject::OnDestroy);
     name_ = std::string(interface_->name) + "_" + std::to_string(version_) + "_" + std::to_string(id_);
+    LOG_INFO("create WaylandResourceObject, name=%{public}s, id=%{public}d", name_.c_str(), id_);
 }
 
 WaylandResourceObject::~WaylandResourceObject() noexcept

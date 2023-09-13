@@ -13,16 +13,23 @@
  * limitations under the License.
  */
 
+#include <mutex>
 #include "wayland_seat.h"
 
 #include "wayland_objects_pool.h"
 #include "version.h"
+#include "input_manager.h"
+#include <struct_multimodal.h>
 
+using namespace OHOS::MMI;
 namespace FT {
 namespace Wayland {
 namespace {
     constexpr HiLogLabel LABEL = {LOG_CORE, HILOG_DOMAIN_WAYLAND, "WaylandSeat"};
 }
+
+static OHOS::sptr<WaylandSeat> wl_seat_global = nullptr;
+std::mutex wl_seat_global_mutex_;
 
 struct wl_seat_interface IWaylandSeat::impl_ = {
     .get_pointer = GetPointer,
@@ -50,18 +57,38 @@ void IWaylandSeat::GetTouch(struct wl_client *client, struct wl_resource *resour
 
 OHOS::sptr<WaylandSeat> WaylandSeat::Create(struct wl_display *display)
 {
+    std::lock_guard<std::mutex> lock(wl_seat_global_mutex_);
     if (display == nullptr) {
         LOG_ERROR("display is nullptr");
         return nullptr;
     }
 
-    return OHOS::sptr<WaylandSeat>(new WaylandSeat(display));
+    if (wl_seat_global != nullptr) {
+        return wl_seat_global;
+    }
+
+    wl_seat_global = OHOS::sptr<WaylandSeat>(new WaylandSeat(display));
+    return wl_seat_global;
+}
+
+OHOS::sptr<WaylandSeat> WaylandSeat::GetWaylandSeatGlobal()
+{
+    std::lock_guard<std::mutex> lock(wl_seat_global_mutex_);
+    return wl_seat_global;
 }
 
 WaylandSeat::WaylandSeat(struct wl_display *display)
     : WaylandGlobal(display, &wl_seat_interface, WL_SEAT_MAX_VERSION) {}
 
-WaylandSeat::~WaylandSeat() noexcept {}
+WaylandSeat::~WaylandSeat() noexcept
+{
+    if (thread_ != nullptr) {
+        if (thread_->joinable()) {
+            thread_->join();
+        }
+        thread_ = nullptr;
+    }
+}
 
 void WaylandSeat::Bind(struct wl_client *client, uint32_t version, uint32_t id)
 {
@@ -71,12 +98,92 @@ void WaylandSeat::Bind(struct wl_client *client, uint32_t version, uint32_t id)
         return;
     }
     WaylandObjectsPool::GetInstance().AddObject(ObjectId(object->WlClient(), object->Id()), object);
+    seatResourcesMap_[client] = object;
+
+    if (thread_ != nullptr) {
+        if (thread_->joinable()) {
+            thread_->join();
+        }
+        thread_ = nullptr;
+    }
+    thread_ = std::make_unique<std::thread>(&WaylandSeat::UpdateCapabilities, this);
+}
+
+OHOS::sptr<WaylandPointer> WaylandSeat::GetPointerResource(struct wl_client *client)
+{
+    if (seatResourcesMap_.count(client) == 0) {
+        return nullptr;
+    }
+
+    auto seatResource = seatResourcesMap_.at(client);
+    // Erase seat resource from map if it is destroyed.
+    if (seatResource == nullptr) {
+        seatResourcesMap_.erase(client);
+        return nullptr;
+    }
+    LOG_INFO("get seatResource name=%{public}s, id=%{public}d", seatResource->Name().c_str(), seatResource->Id());
+    return seatResource->GetChildPointer();
+}
+
+void WaylandSeat::UpdateCapabilities()
+{
+    LOG_INFO("UpdateCapabilities in");
+    uint32_t cap = 0;
+    int32_t DevNums = 0;
+    int32_t hasGetDevNums = 0;
+    bool isGetIds = false;
+    int32_t wait_count = 0;
+
+    auto GetDeviceCb = [&hasGetDevNums, &cap](std::shared_ptr<InputDevice> inputDevice) {
+        LOG_INFO("Get device success, id=%{public}d, name=%{public}s, type=%{public}d",
+            inputDevice->GetId(), inputDevice->GetName().c_str(), inputDevice->GetType());
+        if (inputDevice->GetType() == (int32_t)DEVICE_TYPE_MOUSE) {
+            cap |= WL_SEAT_CAPABILITY_POINTER;
+        } else if (inputDevice->GetType() == (int32_t)DEVICE_TYPE_KEYBOARD) {
+            cap |= WL_SEAT_CAPABILITY_KEYBOARD;
+        }
+        hasGetDevNums++;
+    };
+    auto GetDeviceIdsCb = [&DevNums, &isGetIds](std::vector<int32_t> ids) {
+        DevNums = ids.size();
+        isGetIds = true;
+    };
+    (void)InputManager::GetInstance()->GetDeviceIds(GetDeviceIdsCb);
+    while (!isGetIds && wait_count < 100) {
+        usleep(3 * 1000); // wait for GetDeviceIdsCb finish
+        wait_count++;
+    }
+
+    for (int32_t i = 0; i < DevNums; i++) {
+        InputManager::GetInstance()->GetDevice(i, GetDeviceCb);
+    }
+
+    wait_count = 0;
+    while (hasGetDevNums != DevNums && wait_count < 100) {
+        usleep(3 * 1000); // wait for GetDeviceCb finish
+        wait_count++;
+    }
+
+    for (auto iter = seatResourcesMap_.begin(); iter != seatResourcesMap_.end();) {
+        auto seatObj = iter->second;
+        if (seatObj == nullptr) {
+            iter = seatResourcesMap_.erase(iter);
+        } else {
+            wl_seat_send_capabilities(seatObj->WlResource(), cap);
+            ++iter;
+        }
+    }
 }
 
 WaylandSeatObject::WaylandSeatObject(struct wl_client *client, uint32_t version, uint32_t id)
     : WaylandResourceObject(client, &wl_seat_interface, version, id, &IWaylandSeat::impl_) {}
 
 WaylandSeatObject::~WaylandSeatObject() noexcept {}
+
+OHOS::sptr<WaylandPointer> WaylandSeatObject::GetChildPointer()
+{
+    return pointer_;
+}
 
 void WaylandSeatObject::GetPointer(uint32_t id)
 {
@@ -85,7 +192,6 @@ void WaylandSeatObject::GetPointer(uint32_t id)
         LOG_ERROR("no memory");
         return;
     }
-
     pointer_ = pointer;
 }
 
