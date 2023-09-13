@@ -58,10 +58,7 @@ public:
     void Resize(uint32_t serial, uint32_t edges);
     void SendConfigure();
     void HandleCommit();
-    void SetRect(Rect rect)
-    {
-        rect_ = rect;
-    }
+    void SetRect(Rect rect);
 
 private:
     WaylandXdgToplevel(const OHOS::sptr<WaylandXdgSurface> &xdgSurface, uint32_t id);
