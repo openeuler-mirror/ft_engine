@@ -83,7 +83,6 @@ void WaylandPointer::OnPointerMotionAbsolute(uint32_t time, int32_t posX, int32_
 
 void WaylandPointer::OnPointerLeave(struct wl_resource *surface_resource)
 {
-    LOG_WARN("WaylandPointer::OnPointerLeave in");
     wl_display *display = WlDisplay();
     if (display == nullptr) {
         return;
@@ -97,7 +96,6 @@ void WaylandPointer::OnPointerLeave(struct wl_resource *surface_resource)
 }
 void WaylandPointer::OnPointerEnter(int32_t posX, int32_t posY, struct wl_resource *surface_resource)
 {
-    LOG_WARN("WaylandPointer::OnPointerEnter in");
     wl_fixed_t posFixedX = wl_fixed_from_int(posX);
     wl_fixed_t posFixedY = wl_fixed_from_int(posY);
     wl_resource *pointer = WlResource();
