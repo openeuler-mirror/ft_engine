@@ -314,7 +314,7 @@ public:
             return;
         }
 
-        canvas_->clear(SK_ColorTRANSPARENT);
+        canvas_->clear(SK_ColorGRAY);
 
         {
             // draw circle
