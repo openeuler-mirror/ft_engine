@@ -197,6 +197,31 @@ OHOS::sptr<WaylandSurface> WaylandSurface::Create(struct wl_client *client,
     return surface;
 }
 
+class WaylandWindowListener : public OHOS::Rosen::IWindowChangeListener {
+public:
+    WaylandWindowListener(OHOS::sptr<WaylandSurface> wlSurface) : wlSurface_(wlSurface) {}
+    ~WaylandWindowListener() = default;
+    void OnSizeChange(OHOS::Rosen::Rect rect, OHOS::Rosen::WindowSizeChangeReason reason) override;
+    void OnModeChange(OHOS::Rosen::WindowMode mode) override;
+
+private:
+    OHOS::sptr<WaylandSurface> wlSurface_ = nullptr;
+};
+
+void WaylandWindowListener::OnSizeChange(OHOS::Rosen::Rect rect, OHOS::Rosen::WindowSizeChangeReason reason)
+{
+    if (wlSurface_ != nullptr) {
+        wlSurface_->OnSizeChange(rect, reason);
+    }
+}
+
+void WaylandWindowListener::OnModeChange(OHOS::Rosen::WindowMode mode)
+{
+    if (wlSurface_ != nullptr) {
+        wlSurface_->OnModeChange(mode);
+    }
+}
+
 WaylandSurface::WaylandSurface(struct wl_client *client, struct wl_resource *parent, uint32_t version, uint32_t id)
     : WaylandResourceObject(client, &wl_surface_interface, version, id, &IWaylandSurface::impl_),
       parent_(parent) {}
@@ -361,6 +386,9 @@ void WaylandSurface::CreateWindow()
     window_->SetInputEventConsumer(listener);
     window_->Show();
 
+    OHOS::sptr<WaylandWindowListener> waylandWindowListener = new WaylandWindowListener(this);
+    window_->RegisterWindowChangeListener(waylandWindowListener);
+
     surfaceNode_ = window_->GetSurfaceNode();
     if (surfaceNode_ == nullptr) {
         LOG_ERROR("GetSurfaceNode failed");
@@ -435,5 +463,22 @@ void WaylandSurface::CopyBuffer(struct wl_shm_buffer *shm)
     canvas->drawBitmap(srcBitmap, 0, 0);
     rsSurface_->FlushFrame(framePtr);
 }
+
+void WaylandSurface::OnSizeChange(const OHOS::Rosen::Rect& rect, OHOS::Rosen::WindowSizeChangeReason reason)
+{
+    rect_.x = rect.posX_;
+    rect_.y = rect.posY_;
+    rect_.width = rect.width_;
+    rect_.height = rect.height_;
+    for (auto &cb : rectCallbacks_) {
+        cb(rect_);
+    }
+}
+
+void WaylandSurface::OnModeChange(OHOS::Rosen::WindowMode mode)
+{
+    LOG_DEBUG("OnModeChange, window mode is %{public}d, ignore", mode);
+}
+
 } // namespace Wayland
 } // namespace FT
