@@ -121,7 +121,7 @@ OHOS::sptr<WaylandPointer> WaylandSeat::GetPointerResource(struct wl_client *cli
         seatResourcesMap_.erase(client);
         return nullptr;
     }
-    LOG_INFO("get seatResource name=%{public}s, id=%{public}d", seatResource->Name().c_str(), seatResource->Id());
+
     return seatResource->GetChildPointer();
 }
 
