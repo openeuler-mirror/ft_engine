@@ -86,7 +86,7 @@ void WaylandZxdgOutputManagerObject::GetZxdgOutput(struct wl_client *client, str
         LOG_ERROR("WaylandZxdgOutputManagerObject GetZxdgOutput failed.");
         return;
     }
-
+    Send(xdgOutput);
 }
 
 void WaylandZxdgOutputManagerObject::Send(const OHOS::sptr<WaylandZxdgOutputV1> &xdgOutput)
