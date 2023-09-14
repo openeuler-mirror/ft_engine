@@ -85,6 +85,8 @@ enum class SurfaceRole : uint32_t {
 static SkColorType ShmFormatToSkia(const uint32_t& shmFormat)
 {
     switch (shmFormat) {
+        case WL_SHM_FORMAT_ARGB8888:
+             return SkColorType::kBGRA_8888_SkColorType;
         case WL_SHM_FORMAT_RGBA8888:
             return SkColorType::kRGBA_8888_SkColorType;
         default:
