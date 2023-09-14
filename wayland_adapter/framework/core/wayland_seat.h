@@ -39,6 +39,7 @@ public:
     static OHOS::sptr<WaylandSeat> Create(struct wl_display *display);
     static OHOS::sptr<WaylandSeat> GetWaylandSeatGlobal();
     OHOS::sptr<WaylandPointer> GetPointerResource(struct wl_client *client);
+    OHOS::sptr<WaylandKeyboard> GetKeyboardResource(struct wl_client *client);
     ~WaylandSeat() noexcept override;
 
 private:
@@ -56,6 +57,7 @@ public:
     WaylandSeatObject(struct wl_client *client, uint32_t version, uint32_t id);
     ~WaylandSeatObject() noexcept;
     OHOS::sptr<WaylandPointer> GetChildPointer();
+    OHOS::sptr<WaylandKeyboard> GetChildKeyboard();
 
 private:
     void GetPointer(uint32_t id);

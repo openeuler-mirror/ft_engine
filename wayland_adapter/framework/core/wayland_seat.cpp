@@ -109,6 +109,22 @@ void WaylandSeat::Bind(struct wl_client *client, uint32_t version, uint32_t id)
     thread_ = std::make_unique<std::thread>(&WaylandSeat::UpdateCapabilities, this);
 }
 
+OHOS::sptr<WaylandKeyboard> WaylandSeat::GetKeyboardResource(struct wl_client *client)
+{
+    if (seatResourcesMap_.count(client) == 0) {
+        return nullptr;
+    }
+
+    auto seatResource = seatResourcesMap_.at(client);
+    // Erase seat resource from map if it is destroyed.
+    if (seatResource == nullptr) {
+        seatResourcesMap_.erase(client);
+        return nullptr;
+    }
+
+    return seatResource->GetChildKeyboard();
+}
+
 OHOS::sptr<WaylandPointer> WaylandSeat::GetPointerResource(struct wl_client *client)
 {
     if (seatResourcesMap_.count(client) == 0) {
@@ -183,6 +199,11 @@ WaylandSeatObject::~WaylandSeatObject() noexcept {}
 OHOS::sptr<WaylandPointer> WaylandSeatObject::GetChildPointer()
 {
     return pointer_;
+}
+
+OHOS::sptr<WaylandKeyboard> WaylandSeatObject::GetChildKeyboard()
+{
+    return keyboard_;
 }
 
 void WaylandSeatObject::GetPointer(uint32_t id)
