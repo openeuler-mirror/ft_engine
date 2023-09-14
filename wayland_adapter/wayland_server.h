@@ -26,6 +26,7 @@
 #include "wayland_output.h"
 #include "wayland_seat.h"
 #include "wayland_subcompositor.h"
+#include "wayland_zxdg_output_manager_v1.h"
 
 namespace FT {
 namespace Wayland {
@@ -56,6 +57,7 @@ private:
     OHOS::sptr<WaylandOutput> outputGlobal_;
 	OHOS::sptr<WaylandSeat> seatGlobal_;
     OHOS::sptr<WaylandSubCompositor> subCompositorGlobal_;
+    OHOS::sptr<WaylandZxdgOutputManagerV1> zxdgOutputMgrGlobal_;
 };
 } // namespace Wayland
 } // namespace FT
