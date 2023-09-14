@@ -24,7 +24,7 @@
 #include <sys/mman.h>
 #include <signal.h>
 #include <errno.h>
-#include <linux/input-event-codes.h>
+#include <linux/input.h>
 
 #include <securec.h>
 #include <wayland-client.h>
@@ -58,6 +58,7 @@ struct display {
     struct wl_shm *shm;
     struct wl_seat *seat;
     struct wl_pointer *pointer;
+    struct wl_keyboard *keyboard;
     struct window *window;
     bool has_rgba8888 = false;
 };
@@ -209,7 +210,7 @@ static void HandleXdgToplevelConfigure(void *data, struct xdg_toplevel *xdg_topl
 
     struct window *window = static_cast<struct window *>(data);
     if (window->width != width || window->height != height) {
-        fprintf(stderr, "HandleXdgToplevelConfigure, width:%d, height:%d\n", width, height);    
+        fprintf(stderr, "HandleXdgToplevelConfigure, width:%d, height:%d\n", width, height);
         window->width = width;
         window->height = height;
     }
@@ -624,6 +625,52 @@ struct wl_pointer_listener pointer_listener = {
     .axis_discrete = pointer_axis_discrete,
 };
 
+
+void keyboard_keymap(void *data, struct wl_keyboard *wl_keyboard, uint32_t format,
+    int32_t fd, uint32_t size)
+{
+
+}
+
+void keyboard_enter(void *data, struct wl_keyboard *wl_keyboard, uint32_t serial,
+    struct wl_surface *surface, struct wl_array *keys)
+{
+    fprintf(stderr, "keyboard_enter in\n");
+}
+
+void keyboard_leave(void *data, struct wl_keyboard *wl_keyboard, uint32_t serial,
+    struct wl_surface *surface)
+{
+    fprintf(stderr, "keyboard_leave in\n");
+}
+
+void keyboard_key(void *data, struct wl_keyboard *wl_keyboard, uint32_t serial,
+    uint32_t time, uint32_t key, uint32_t state)
+{
+    fprintf(stderr, "keyboard_key in, key=%u, state=%u\n", key, state);
+}
+
+void keyboard_modifiers(void *data, struct wl_keyboard *wl_keyboard, uint32_t serial,
+    uint32_t mods_depressed, uint32_t mods_latched, uint32_t mods_locked, uint32_t group)
+{
+
+}
+
+void keyboard_repeat_info(void *data, struct wl_keyboard *wl_keyboard,
+    int32_t rate, int32_t delay)
+{
+
+}
+
+struct wl_keyboard_listener keyboard_listener = {
+    .keymap = keyboard_keymap,
+    .enter = keyboard_enter,
+    .leave = keyboard_leave,
+    .key = keyboard_key,
+    .modifiers = keyboard_modifiers,
+    .repeat_info = keyboard_repeat_info,
+};
+
 void wl_seat_capabilities(void *data, struct wl_seat *wl_seat, uint32_t capabilities)
 {
     struct display *d = static_cast<struct display *>(data);
@@ -633,7 +680,9 @@ void wl_seat_capabilities(void *data, struct wl_seat *wl_seat, uint32_t capabili
         wl_pointer_add_listener(d->pointer, &pointer_listener, d);
     }
     if (capabilities & WL_SEAT_CAPABILITY_KEYBOARD) {
-        fprintf(stderr, "fangtian has a keyboard\n");
+        fprintf(stderr, "fangtian has a keyboard, get it\n");
+        d->keyboard = wl_seat_get_keyboard(d->seat);
+        wl_keyboard_add_listener(d->keyboard, &keyboard_listener, d);
     }
 }
 
