@@ -696,6 +696,7 @@ struct wl_seat_listener seat_listener = {
 static void RegistryGlobal(void *data, struct wl_registry *registry,
     uint32_t id, const char *interface, uint32_t version)
 {
+    fprintf(stderr, "RegistryGlobal %s\n", interface);
     struct display *d = static_cast<struct display *>(data);
 
     if (strcmp(interface, "wl_compositor") == 0) {
