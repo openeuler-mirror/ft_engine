@@ -114,6 +114,11 @@ void WaylandXdgSurface::StartMove()
     surface_->StartMove();
 }
 
+void WaylandXdgSurface::SetWindowMode(OHOS::Rosen::WindowMode mode)
+{
+    surface_->SetWindowMode(mode);
+}
+
 void WaylandXdgSurface::OnSurfaceCommit()
 {
     if (role_ == SurfaceRole::XDG_TOPLEVEL) {

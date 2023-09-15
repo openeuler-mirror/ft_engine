@@ -152,6 +152,9 @@ void WaylandXdgToplevel::Resize(uint32_t serial, uint32_t edges)
 
 void WaylandXdgToplevel::SetAppId(const char *appId)
 {
+    if (strstr(appId, "desktop") != nullptr) {
+        xdgSurface_->SetWindowMode(OHOS::Rosen::WindowMode::WINDOW_MODE_FULLSCREEN);
+    }
 }
 
 void WaylandXdgToplevel::SetMaxSize(int32_t width, int32_t height)
