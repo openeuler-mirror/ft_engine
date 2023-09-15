@@ -127,7 +127,7 @@ bool InputEventConsumer::OnInputEvent(const std::shared_ptr<OHOS::MMI::PointerEv
     }
 
     if (pointerEvent->GetPointerAction() ==  OHOS::MMI::PointerEvent::POINTER_ACTION_ENTER_WINDOW) {
-        pointer->OnPointerEnter(pointerItem.GetDisplayX(), pointerItem.GetDisplayY(), wlSurface_->WlResource());
+        pointer->OnPointerEnter(pointerItem.GetWindowX(), pointerItem.GetWindowY(), wlSurface_->WlResource());
         keyboard->OnKeyboardEnter(wlSurface_->WlResource());
     } else if (pointerEvent->GetPointerAction() ==  OHOS::MMI::PointerEvent::POINTER_ACTION_LEAVE_WINDOW) {
         pointer->OnPointerLeave(wlSurface_->WlResource());
@@ -140,7 +140,7 @@ bool InputEventConsumer::OnInputEvent(const std::shared_ptr<OHOS::MMI::PointerEv
         }
     } else if (pointerEvent->GetPointerAction() == OHOS::MMI::PointerEvent::POINTER_ACTION_MOVE) {
         pointer->OnPointerMotionAbsolute(
-            pointerEvent->GetActionTime(), pointerItem.GetDisplayX(), pointerItem.GetDisplayY());
+            pointerEvent->GetActionTime(), pointerItem.GetWindowX(), pointerItem.GetWindowY());
     }
     return true;
 }
