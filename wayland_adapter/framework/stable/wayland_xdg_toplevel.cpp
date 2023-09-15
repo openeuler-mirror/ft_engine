@@ -143,7 +143,10 @@ void WaylandXdgToplevel::SetTitle(const char *title)
 
 void WaylandXdgToplevel::Move(uint32_t serial)
 {
-    xdgSurface_->StartMove();
+    auto xdgSurface = xdgSurface_.promote();
+    if (xdgSurface != nullptr) {
+        xdgSurface->StartMove();
+    }
 }
 
 void WaylandXdgToplevel::Resize(uint32_t serial, uint32_t edges)
@@ -153,7 +156,10 @@ void WaylandXdgToplevel::Resize(uint32_t serial, uint32_t edges)
 void WaylandXdgToplevel::SetAppId(const char *appId)
 {
     if (strstr(appId, "desktop") != nullptr) {
-        xdgSurface_->SetWindowMode(OHOS::Rosen::WindowMode::WINDOW_MODE_FULLSCREEN);
+        auto xdgSurface = xdgSurface_.promote();
+        if (xdgSurface != nullptr) {
+            xdgSurface->SetWindowMode(OHOS::Rosen::WindowMode::WINDOW_MODE_FULLSCREEN);
+        }
     }
 }
 
