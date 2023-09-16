@@ -342,6 +342,11 @@ void WaylandSurface::StartMove()
     }
 }
 
+void WaylandSurface::SetWindowMode(OHOS::Rosen::WindowMode mode)
+{
+    mode_ = mode;
+}
+
 void WaylandSurface::Commit()
 {
     if (window_ == nullptr) {
@@ -410,7 +415,7 @@ void WaylandSurface::CreateWindow()
 {
     OHOS::sptr<OHOS::Rosen::WindowOption> option(new OHOS::Rosen::WindowOption());
     option->SetWindowType(OHOS::Rosen::WindowType::APP_MAIN_WINDOW_BASE);
-    option->SetWindowMode(OHOS::Rosen::WindowMode::WINDOW_MODE_FLOATING);
+    option->SetWindowMode(mode_);
     option->SetMainHandlerAvailable(false);
 
     static int count = 0;

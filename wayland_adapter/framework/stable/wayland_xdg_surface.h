@@ -42,6 +42,7 @@ public:
     ~WaylandXdgSurface() noexcept override;
 
     void StartMove();
+    void SetWindowMode(OHOS::Rosen::WindowMode mode);
 
 private:
     friend struct IWaylandXdgSurface;
