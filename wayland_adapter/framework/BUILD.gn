@@ -34,6 +34,10 @@ ft_source_set("wayland_framewok_sources") {
     "core/wayland_output.cpp",
     "core/wayland_subcompositor.cpp",
     "core/wayland_subsurface.cpp",
+    "core/wayland_data_device_manager.cpp",
+    "core/wayland_data_device.cpp",
+    "core/wayland_data_source.cpp",
+    "core/wayland_data_offer.cpp",
   ]
 
   sources += [

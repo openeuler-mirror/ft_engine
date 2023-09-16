@@ -42,6 +42,7 @@ void WaylandServer::CreateGlobalObjects()
     seatGlobal_ = WaylandSeat::Create(display_);
     subCompositorGlobal_ = WaylandSubCompositor::Create(display_);
     zxdgOutputMgrGlobal_ = WaylandZxdgOutputManagerV1::Create(display_);
+    dataDeviceManagerGlobal_ = WaylandDataDeviceManager::Create(display_);
     wl_display_add_shm_format(display_, WL_SHM_FORMAT_RGBA8888);
     wl_display_init_shm(display_);
 }
