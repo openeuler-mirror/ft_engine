@@ -120,24 +120,24 @@ sudo cp ${PROJECT_DIR}/window_manager/resources/config/other/window_manager_conf
 
 if [ ! -d ${PROJECT_DIR}/third_party/ft_flutter ]; then
 git clone https://gitee.com/openeuler/ft_flutter.git ${PROJECT_DIR}/third_party/ft_flutter
+fi
 cd ${PROJECT_DIR}/third_party/ft_flutter
 ./project_build/prebuild.sh
 ./build.sh $*
-fi
 
 if [ ! -d ${PROJECT_DIR}/third_party/ft_multimedia ]; then
 git clone https://gitee.com/openeuler/ft_multimedia.git ${PROJECT_DIR}/third_party/ft_multimedia
+fi
 cd ${PROJECT_DIR}/third_party/ft_multimedia
 ./build/prebuild.sh $*
 ./build.sh $*
-fi
 
 if [ ! -d ${PROJECT_DIR}/third_party/ft_mmi ]; then
 git clone https://gitee.com/openeuler/ft_mmi.git ${PROJECT_DIR}/third_party/ft_mmi
+fi
 cd ${PROJECT_DIR}/third_party/ft_mmi
 ./build/prebuild.sh
 ./build.sh $*
-fi
 
 cd ${PROJECT_DIR}
 echo -e "\033[32m[*] Pre-build Done. You need exec 'build.sh'.\033[0m"
