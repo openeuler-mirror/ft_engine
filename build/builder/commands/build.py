@@ -56,12 +56,14 @@ class Builder:
             if (exec_sys_command(['cp', os.path.join(self.build_output_dir, 'compile_commands.json'), self.project_dir])[0] == False):
                 return False
 
-        # Install librarys and binarys into specify dir
-        if self.args.install:
-            logger.info(f"Installing to {self.args.install}.")
-            common_output_dir = os.path.join(self.build_output_dir, 'common/common/')
-            output_files = [entry for entry in os.listdir(common_output_dir) if os.path.isfile(os.path.join(common_output_dir, entry))]
-            for output_file in output_files:
+        # Strip and install librarys and binarys into specify dir
+        logger.info(f"Installing to {self.args.install}.")
+        common_output_dir = os.path.join(self.build_output_dir, 'common/common/')
+        output_files = [entry for entry in os.listdir(common_output_dir) if os.path.isfile(os.path.join(common_output_dir, entry))]
+        for output_file in output_files:
+            if self.args.build_type.lower() == "release":
+                exec_sys_command(['strip', os.path.join(common_output_dir, output_file)])
+            if self.args.install:
                 if output_file.endswith('.so'):
                     # install dynamic librarys
                     rst = exec_sys_command(['sudo', 'cp', '-f', os.path.join(self.build_output_dir, 'common/common/', output_file), os.path.join(self.args.install, 'lib64')])
