@@ -159,6 +159,7 @@ void WaylandXdgToplevel::SetAppId(const char *appId)
         auto xdgSurface = xdgSurface_.promote();
         if (xdgSurface != nullptr) {
             xdgSurface->SetWindowMode(OHOS::Rosen::WindowMode::WINDOW_MODE_FULLSCREEN);
+            xdgSurface->SetWindowType(OHOS::Rosen::WindowType::WINDOW_TYPE_DESKTOP);
         }
     }
 }
