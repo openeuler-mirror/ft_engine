@@ -111,7 +111,18 @@ void WaylandXdgSurface::AckConfigure(uint32_t serial)
 
 void WaylandXdgSurface::StartMove()
 {
-    surface_->StartMove();
+    auto surface = surface_.promote();
+    if (surface != nullptr) {
+        surface->StartMove();
+    }
+}
+
+void WaylandXdgSurface::SetWindowMode(OHOS::Rosen::WindowMode mode)
+{
+    auto surface = surface_.promote();
+    if (surface != nullptr) {
+        surface->SetWindowMode(mode);
+    }
 }
 
 void WaylandXdgSurface::OnSurfaceCommit()

@@ -56,6 +56,7 @@ public:
     void AddCommitCallback(SurfaceCommitCallback callback);
     void AddRectCallback(SurfaceRectCallback callback);
     void StartMove();
+    void SetWindowMode(OHOS::Rosen::WindowMode mode);
     void OnSizeChange(const OHOS::Rosen::Rect& rect, OHOS::Rosen::WindowSizeChangeReason reason);
     void OnModeChange(OHOS::Rosen::WindowMode mode);
 
@@ -87,6 +88,7 @@ private:
     std::unique_ptr<OHOS::Rosen::RenderContext> renderContext_;
 #endif
     OHOS::sptr<OHOS::Rosen::Window> window_;
+    OHOS::Rosen::WindowMode mode_ = OHOS::Rosen::WindowMode::WINDOW_MODE_FLOATING;
     std::shared_ptr<OHOS::Rosen::RSSurfaceNode> surfaceNode_;
     std::shared_ptr<OHOS::Rosen::RSSurface> rsSurface_;
 };
