@@ -182,7 +182,7 @@ void WaylandSeat::UpdateCapabilities()
 
     for (auto iter = seatResourcesMap_.begin(); iter != seatResourcesMap_.end();) {
         auto seatObj = iter->second;
-        if (seatObj == nullptr) {
+        if (seatObj == nullptr || seatObj->WlResource() == nullptr) {
             iter = seatResourcesMap_.erase(iter);
         } else {
             wl_seat_send_capabilities(seatObj->WlResource(), cap);
