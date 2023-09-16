@@ -347,6 +347,11 @@ void WaylandSurface::SetWindowMode(OHOS::Rosen::WindowMode mode)
     mode_ = mode;
 }
 
+void WaylandSurface::SetWindowType(OHOS::Rosen::WindowType type)
+{
+    type_ = type;
+}
+
 void WaylandSurface::Commit()
 {
     if (window_ == nullptr) {
@@ -414,7 +419,7 @@ void WaylandSurface::HandleCommit() {
 void WaylandSurface::CreateWindow()
 {
     OHOS::sptr<OHOS::Rosen::WindowOption> option(new OHOS::Rosen::WindowOption());
-    option->SetWindowType(OHOS::Rosen::WindowType::APP_MAIN_WINDOW_BASE);
+    option->SetWindowType(type_);
     option->SetWindowMode(mode_);
     option->SetMainHandlerAvailable(false);
 
