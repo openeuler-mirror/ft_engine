@@ -147,7 +147,7 @@ OHOS::sptr<WaylandXdgToplevel> WaylandXdgToplevel::Create(const OHOS::sptr<Wayla
 WaylandXdgToplevel::WaylandXdgToplevel(const OHOS::sptr<WaylandXdgSurface> &xdgSurface, uint32_t id)
     : WaylandResourceObject(xdgSurface->WlClient(), &xdg_toplevel_interface, xdgSurface->Version(),
       id, &IWaylandXdgToplevel::impl_),
-      xdgSurface_(xdgSurface) 
+      xdgSurface_(xdgSurface)
 {
     LOG_DEBUG("enter");
 }

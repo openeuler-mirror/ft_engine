@@ -16,6 +16,8 @@
 #pragma once
 
 #include <list>
+#include <vector>
+#include <mutex>
 #include <wayland-server-protocol.h>
 #include "wayland_resource_object.h"
 #include "wayalnd_utils.h"
@@ -45,6 +47,7 @@ struct IWaylandSurface {
     static struct wl_surface_interface impl_;
 };
 
+
 class WaylandSurface final : public WaylandResourceObject {
     friend struct IWaylandSurface;
 
@@ -72,7 +75,12 @@ public:
     void UnSetFullscreen();
     void SetMinimized();
     void Close();
-    
+    void WithTopLevel(bool toplevel);
+    void AddChild(struct wl_resource *child, int32_t x, int32_t y);
+    void AddParent(struct wl_resource *parent);
+    void ProcessSrcBitmap(SkCanvas* canvas, int32_t x, int32_t y);
+    void TriggerInnerDraw();
+
 private:
     WaylandSurface(struct wl_client *client, struct wl_resource *parent, uint32_t version, uint32_t id);
 
@@ -109,6 +117,15 @@ private:
     std::shared_ptr<OHOS::Rosen::RSSurface> rsSurface_;
     std::string windowTitle_ = "unknow";
     bool maximized_ = false;
+    bool withTopLevel_ = false;
+    void *data_;
+    std::vector<struct SubSurfaceData> childs_;
+    struct wl_resource *parentSurfaceRes_ = nullptr;
+    std::mutex bitmapMutex_;
+    SkBitmap srcBitmap_;
 };
+
+
+
 } // namespace Wayland
 } // namespace FT
