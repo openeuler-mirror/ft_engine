@@ -24,7 +24,7 @@ namespace {
 }
 
 struct xdg_toplevel_interface IWaylandXdgToplevel::impl_ = {
-    .destroy = &WaylandResourceObject::DefaultDestroyResource,
+    .destroy = DestroyResource,
     .set_parent = SetParent,
     .set_title = SetTitle,
     .set_app_id = SetAppId,
@@ -116,6 +116,22 @@ void IWaylandXdgToplevel::SetMinimized(struct wl_client *client, struct wl_resou
         "IWaylandXdgToplevel::SetMinimized: failed to find object.", SetMinimized);
 }
 
+void IWaylandXdgToplevel::DestroyResource(struct wl_client *client, struct wl_resource *resource)
+{
+    CAST_OBJECT_AND_CALL_FUNC(WaylandXdgToplevel, resource,
+        "IWaylandXdgToplevel::DestroyResource: failed to find object.", DestroyResource, client, resource);
+}
+
+void WaylandXdgToplevel::DestroyResource(struct wl_client *client, struct wl_resource *resource)
+{
+    LOG_DEBUG("Window %{public}s.", windowTitle_.c_str());
+    auto xdgSurface = xdgSurface_.promote();
+    if (xdgSurface != nullptr) {
+        xdgSurface->Close();
+    }
+    WaylandResourceObject::DefaultDestroyResource(client, resource);
+}
+
 OHOS::sptr<WaylandXdgToplevel> WaylandXdgToplevel::Create(const OHOS::sptr<WaylandXdgSurface> &xdgSurface, uint32_t id)
 {
     if (xdgSurface == nullptr) {
@@ -131,14 +147,24 @@ OHOS::sptr<WaylandXdgToplevel> WaylandXdgToplevel::Create(const OHOS::sptr<Wayla
 WaylandXdgToplevel::WaylandXdgToplevel(const OHOS::sptr<WaylandXdgSurface> &xdgSurface, uint32_t id)
     : WaylandResourceObject(xdgSurface->WlClient(), &xdg_toplevel_interface, xdgSurface->Version(),
       id, &IWaylandXdgToplevel::impl_),
-      xdgSurface_(xdgSurface) {}
+      xdgSurface_(xdgSurface) 
+{
+    LOG_DEBUG("enter");
+}
 
 WaylandXdgToplevel::~WaylandXdgToplevel() noexcept
 {
+    LOG_DEBUG("exit : %{public}s.", windowTitle_.c_str());
 }
 
 void WaylandXdgToplevel::SetTitle(const char *title)
 {
+    LOG_DEBUG("Window %{public}s, set Title %{public}s.", windowTitle_.c_str(), title);
+    auto xdgSurface = xdgSurface_.promote();
+    if (xdgSurface != nullptr) {
+        xdgSurface->SetTitle(title);
+    }
+    windowTitle_ = title;
 }
 
 void WaylandXdgToplevel::Move(uint32_t serial)
@@ -151,10 +177,16 @@ void WaylandXdgToplevel::Move(uint32_t serial)
 
 void WaylandXdgToplevel::Resize(uint32_t serial, uint32_t edges)
 {
+    LOG_DEBUG("Window %{public}s.", windowTitle_.c_str());
+    auto xdgSurface = xdgSurface_.promote();
+    if (xdgSurface != nullptr) {
+        xdgSurface->Resize(serial, edges);
+    }
 }
 
 void WaylandXdgToplevel::SetAppId(const char *appId)
 {
+    LOG_DEBUG("Window %{public}s.", windowTitle_.c_str());
     if (strstr(appId, "desktop") != nullptr) {
         auto xdgSurface = xdgSurface_.promote();
         if (xdgSurface != nullptr) {
@@ -166,30 +198,65 @@ void WaylandXdgToplevel::SetAppId(const char *appId)
 
 void WaylandXdgToplevel::SetMaxSize(int32_t width, int32_t height)
 {
+    LOG_DEBUG("Window %{public}s.", windowTitle_.c_str());
+    auto xdgSurface = xdgSurface_.promote();
+    if (xdgSurface != nullptr) {
+        xdgSurface->SetMaxSize(width, height);
+    }
 }
 
 void WaylandXdgToplevel::SetMinSize(int32_t width, int32_t height)
 {
+    LOG_DEBUG("Window %{public}s.", windowTitle_.c_str());
+    auto xdgSurface = xdgSurface_.promote();
+    if (xdgSurface != nullptr) {
+        xdgSurface->SetMinSize(width, height);
+    }
 }
 
 void WaylandXdgToplevel::SetMaximized()
 {
+    LOG_DEBUG("Window %{public}s.", windowTitle_.c_str());
+    auto xdgSurface = xdgSurface_.promote();
+    if (xdgSurface != nullptr) {
+        xdgSurface->SetMaximized();
+    }
 }
 
 void WaylandXdgToplevel::UnSetMaximized()
 {
+    LOG_DEBUG("Window %{public}s.", windowTitle_.c_str());
+    auto xdgSurface = xdgSurface_.promote();
+    if (xdgSurface != nullptr) {
+        xdgSurface->UnSetMaximized();
+    }
 }
 
 void WaylandXdgToplevel::SetFullscreen()
 {
+    LOG_DEBUG("Window %{public}s.", windowTitle_.c_str());
+    auto xdgSurface = xdgSurface_.promote();
+    if (xdgSurface != nullptr) {
+        xdgSurface->SetFullscreen();
+    }
 }
 
 void WaylandXdgToplevel::UnSetFullscreen()
 {
+    LOG_DEBUG("Window %{public}s.", windowTitle_.c_str());
+    auto xdgSurface = xdgSurface_.promote();
+    if (xdgSurface != nullptr) {
+        xdgSurface->UnSetFullscreen();
+    }
 }
 
 void WaylandXdgToplevel::SetMinimized()
 {
+    LOG_DEBUG("Window %{public}s.", windowTitle_.c_str());
+    auto xdgSurface = xdgSurface_.promote();
+    if (xdgSurface != nullptr) {
+        xdgSurface->SetMinimized();
+    }
 }
 
 void WaylandXdgToplevel::SendConfigure()
@@ -207,6 +274,7 @@ void WaylandXdgToplevel::HandleCommit()
 
 void WaylandXdgToplevel::SetRect(Rect rect)
 {
+    LOG_DEBUG("Window %{public}s.", windowTitle_.c_str());
     rect_ = rect;
 
     struct wl_array states;

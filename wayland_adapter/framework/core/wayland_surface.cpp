@@ -430,6 +430,7 @@ void WaylandSurface::CreateWindow()
         LOG_ERROR("Window::Create failed");
         return;
     }
+    LOG_DEBUG("Window::Create success");
     auto listener = std::make_shared<InputEventConsumer>(this);
     window_->SetInputEventConsumer(listener);
     window_->Show();
@@ -528,5 +529,103 @@ void WaylandSurface::OnModeChange(OHOS::Rosen::WindowMode mode)
     LOG_DEBUG("OnModeChange, window mode is %{public}d, ignore", mode);
 }
 
+void WaylandSurface::SetTitle(const char *title)
+{
+    LOG_DEBUG("Window %{public}s, set Title %{public}s.", windowTitle_.c_str(), title);
+    windowTitle_ = title;
+    if (window_ == nullptr) {
+        LOG_ERROR("window_ is nullptr");
+        return;
+    }
+    window_->SetAPPWindowLabel(title);
+}
+
+void WaylandSurface::Resize(uint32_t serial, uint32_t edges)
+{
+    LOG_DEBUG("Window %{public}s.", windowTitle_.c_str());
+    if (window_ == nullptr) {
+        LOG_ERROR("window_ is nullptr");
+        return;
+    }
+    // window_->Resize(uint32_t width, uint32_t height);
+}
+
+void WaylandSurface::SetMaxSize(int32_t width, int32_t height)
+{
+    LOG_DEBUG("Window %{public}s.", windowTitle_.c_str());
+    if (window_ == nullptr) {
+        LOG_ERROR("window_ is nullptr");
+        return;
+    }
+}
+
+void WaylandSurface::SetMinSize(int32_t width, int32_t height)
+{
+    LOG_DEBUG("Window %{public}s.", windowTitle_.c_str());
+    if (window_ == nullptr) {
+        LOG_ERROR("window_ is nullptr");
+        return;
+    }
+}
+
+void WaylandSurface::SetMaximized()
+{
+    LOG_DEBUG("Window %{public}s.", windowTitle_.c_str());
+    if (window_ == nullptr) {
+        LOG_ERROR("window_ is nullptr");
+        return;
+    }
+    window_->SetFullScreen(true);
+}
+
+void WaylandSurface::UnSetMaximized()
+{
+    LOG_DEBUG("Window %{public}s.", windowTitle_.c_str());
+    if (window_ == nullptr) {
+        LOG_ERROR("window_ is nullptr");
+        return;
+    }
+    window_->SetFullScreen(false);
+}
+
+void WaylandSurface::SetFullscreen()
+{
+    LOG_DEBUG("Window %{public}s.", windowTitle_.c_str());
+    if (window_ == nullptr) {
+        LOG_ERROR("window_ is nullptr");
+        return;
+    }
+    window_->SetFullScreen(true);
+}
+
+void WaylandSurface::UnSetFullscreen()
+{
+    LOG_DEBUG("Window %{public}s.", windowTitle_.c_str());
+    if (window_ == nullptr) {
+        LOG_ERROR("window_ is nullptr");
+        return;
+    }
+    window_->SetFullScreen(false);
+}
+
+void WaylandSurface::SetMinimized()
+{
+    LOG_DEBUG("Window %{public}s.", windowTitle_.c_str());
+    if (window_ == nullptr) {
+        LOG_ERROR("window_ is nullptr");
+        return;
+    }
+    window_->Minimize();
+}
+
+void WaylandSurface::Close()
+{
+    LOG_DEBUG("Window %{public}s.", windowTitle_.c_str());
+    if (window_ == nullptr) {
+        LOG_ERROR("window_ is nullptr");
+        return;
+    }
+    window_->Close();
+}
 } // namespace Wayland
 } // namespace FT

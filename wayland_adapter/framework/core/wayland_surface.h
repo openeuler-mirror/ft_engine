@@ -61,6 +61,18 @@ public:
     void OnSizeChange(const OHOS::Rosen::Rect& rect, OHOS::Rosen::WindowSizeChangeReason reason);
     void OnModeChange(OHOS::Rosen::WindowMode mode);
 
+    // form xdgsruface
+    void SetTitle(const char *title);
+    void Resize(uint32_t serial, uint32_t edges);
+    void SetMaxSize(int32_t width, int32_t height);
+    void SetMinSize(int32_t width, int32_t height);
+    void SetMaximized();
+    void UnSetMaximized();
+    void SetFullscreen();
+    void UnSetFullscreen();
+    void SetMinimized();
+    void Close();
+    
 private:
     WaylandSurface(struct wl_client *client, struct wl_resource *parent, uint32_t version, uint32_t id);
 
@@ -93,6 +105,7 @@ private:
     OHOS::Rosen::WindowType type_ = OHOS::Rosen::WindowType::APP_WINDOW_BASE;
     std::shared_ptr<OHOS::Rosen::RSSurfaceNode> surfaceNode_;
     std::shared_ptr<OHOS::Rosen::RSSurface> rsSurface_;
+    std::string windowTitle_ = "unknow";
 };
 } // namespace Wayland
 } // namespace FT
