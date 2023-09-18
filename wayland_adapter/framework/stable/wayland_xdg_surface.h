@@ -45,6 +45,18 @@ public:
     void SetWindowMode(OHOS::Rosen::WindowMode mode);
     void SetWindowType(OHOS::Rosen::WindowType type);
 
+    // form toplevel
+    void SetTitle(const char *title);
+    void Resize(uint32_t serial, uint32_t edges);
+    void SetMaxSize(int32_t width, int32_t height);
+    void SetMinSize(int32_t width, int32_t height);
+    void SetMaximized();
+    void UnSetMaximized();
+    void SetFullscreen();
+    void UnSetFullscreen();
+    void SetMinimized();
+    void Close();
+
 private:
     friend struct IWaylandXdgSurface;
 
@@ -59,6 +71,7 @@ private:
     OHOS::wptr<WaylandXdgWmObject> xdgWm_;
     OHOS::wptr<WaylandSurface> surface_;
     OHOS::wptr<WaylandXdgToplevel> toplevel_;
+    std::string windowTitle_ = "unknow";
 };
 } // namespace Wayland
 } // namespace FT
