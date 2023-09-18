@@ -43,6 +43,7 @@ public:
 
     void StartMove();
     void SetWindowMode(OHOS::Rosen::WindowMode mode);
+    void SetWindowType(OHOS::Rosen::WindowType type);
 
 private:
     friend struct IWaylandXdgSurface;

@@ -125,6 +125,14 @@ void WaylandXdgSurface::SetWindowMode(OHOS::Rosen::WindowMode mode)
     }
 }
 
+void WaylandXdgSurface::SetWindowType(OHOS::Rosen::WindowType type)
+{
+    auto surface = surface_.promote();
+    if (surface != nullptr) {
+        surface->SetWindowType(type);
+    }
+}
+
 void WaylandXdgSurface::OnSurfaceCommit()
 {
     if (role_ == SurfaceRole::XDG_TOPLEVEL) {
