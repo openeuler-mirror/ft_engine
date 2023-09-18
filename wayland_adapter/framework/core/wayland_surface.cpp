@@ -575,7 +575,12 @@ void WaylandSurface::SetMaximized()
         LOG_ERROR("window_ is nullptr");
         return;
     }
-    window_->SetFullScreen(true);
+    if (maximized_) {
+        LOG_DEBUG("Window %{public}s already Maximized.", windowTitle_.c_str());
+        return UnSetMaximized();
+    }
+    window_->Maximize();
+    maximized_ = true;
 }
 
 void WaylandSurface::UnSetMaximized()
@@ -585,7 +590,8 @@ void WaylandSurface::UnSetMaximized()
         LOG_ERROR("window_ is nullptr");
         return;
     }
-    window_->SetFullScreen(false);
+    window_->Recover();
+    maximized_ = false;
 }
 
 void WaylandSurface::SetFullscreen()

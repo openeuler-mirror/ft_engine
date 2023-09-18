@@ -106,6 +106,7 @@ private:
     std::shared_ptr<OHOS::Rosen::RSSurfaceNode> surfaceNode_;
     std::shared_ptr<OHOS::Rosen::RSSurface> rsSurface_;
     std::string windowTitle_ = "unknow";
+    bool maximized_ = false;
 };
 } // namespace Wayland
 } // namespace FT
