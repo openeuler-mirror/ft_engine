@@ -354,6 +354,10 @@ void WaylandSurface::SetWindowType(OHOS::Rosen::WindowType type)
 
 void WaylandSurface::Commit()
 {
+    if (isPointerSurface_) {
+        return; // it is pointer surface, we do not handle commit!
+    }
+
     if (window_ == nullptr) {
         CreateWindow();
     } else {
@@ -416,8 +420,29 @@ void WaylandSurface::HandleCommit() {
     new_.Reset();
 }
 
+void WaylandSurface::CheckIsPointerSurface()
+{
+    OHOS::sptr<WaylandSeat> wlSeat = WaylandSeat::GetWaylandSeatGlobal();
+    if (wlSeat == nullptr) {
+        return;
+    }
+
+    auto pointer = wlSeat->GetPointerResource(WlClient());
+    if (pointer == nullptr) {
+        return;
+    }
+
+    isPointerSurface_ = pointer->IsCursorSurface(WlResource());
+    LOG_DEBUG("this surface Pointer Surface: %{public}d", isPointerSurface_);
+}
+
 void WaylandSurface::CreateWindow()
 {
+    CheckIsPointerSurface();
+    if (isPointerSurface_) {
+        return;
+    }
+
     OHOS::sptr<OHOS::Rosen::WindowOption> option(new OHOS::Rosen::WindowOption());
     option->SetWindowType(type_);
     option->SetWindowMode(mode_);
