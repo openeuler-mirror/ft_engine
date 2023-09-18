@@ -65,18 +65,18 @@ WaylandSubSurface::WaylandSubSurface(struct wl_client *client, uint32_t version,
     struct wl_resource *surface, struct wl_resource *parent)
     : WaylandResourceObject(client, &wl_subsurface_interface, version, id, &IWaylandSubSurface::impl_)
 {
-    parent_ = parent;
-    child_ = surface;
+    parentSurfaceRes_ = parent;
+    childSurfaceRes_ = surface;
 }
 
 void WaylandSubSurface::SetPosition(struct wl_resource *resource, int32_t x, int32_t y)
 {
     if ((positionX_ != x) || (positionY_ != y)) {
         LOG_INFO("SetPosition X:%{public}d, Y:%{public}d", x, y);
-        auto surfaceParent = CastFromResource<WaylandSurface>(parent_);
-        auto surfaceChild = CastFromResource<WaylandSurface>(child_);
-        surfaceParent->AddChild(child_, x, y);
-        surfaceChild->AddParent(parent_);
+        auto surfaceParent = CastFromResource<WaylandSurface>(parentSurfaceRes_);
+        auto surfaceChild = CastFromResource<WaylandSurface>(childSurfaceRes_);
+        surfaceParent->AddChild(childSurfaceRes_, x, y);
+        surfaceChild->AddParent(parentSurfaceRes_);
         positionX_ = x;
         positionY_ = y;
     }

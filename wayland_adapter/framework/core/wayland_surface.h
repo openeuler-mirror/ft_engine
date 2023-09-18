@@ -17,6 +17,7 @@
 
 #include <list>
 #include <vector>
+#include <map>
 #include <mutex>
 #include <wayland-server-protocol.h>
 #include "wayland_resource_object.h"
@@ -118,8 +119,7 @@ private:
     std::string windowTitle_ = "unknow";
     bool maximized_ = false;
     bool withTopLevel_ = false;
-    void *data_;
-    std::vector<struct SubSurfaceData> childs_;
+    std::map<wl_resource *, struct SubSurfaceData> childs_;
     struct wl_resource *parentSurfaceRes_ = nullptr;
     std::mutex bitmapMutex_;
     SkBitmap srcBitmap_;

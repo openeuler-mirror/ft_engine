@@ -683,11 +683,16 @@ void WaylandSurface::AddChild(struct wl_resource *child, int32_t x, int32_t y)
         LOG_ERROR("AddChild with nullptr resource");
         return;
     }
+    if (childs_.count(child) > 0) {
+        childs_[child].offsetX = x;
+        childs_[child].offsetX = y;
+        return;
+    }
     SubSurfaceData data;
     data.surface = child;
     data.offsetX = x;
     data.offsetY = y;
-    childs_.push_back(data);
+    childs_[child] = data;
     for (auto &cb : rectCallbacks_) {
         cb(rect_);
     }
@@ -724,7 +729,7 @@ void WaylandSurface::TriggerInnerCompose()
     }
     canvas->clear(SK_ColorTRANSPARENT);
     canvas->drawBitmap(srcBitmap_, 0, 0);
-    for (auto data : childs_) {
+    for (auto &&[childKey, data] : childs_) {
         if (data.surface == nullptr) {
             continue;
         }
