@@ -274,14 +274,15 @@ void WaylandXdgToplevel::HandleCommit()
 
 void WaylandXdgToplevel::SetRect(Rect rect)
 {
-    LOG_DEBUG("Window %{public}s.", windowTitle_.c_str());
     rect_ = rect;
-
     struct wl_array states;
     uint32_t *s;
     wl_array_init(&states);
+    wl_array_init(&states);
     s = static_cast<uint32_t *>(wl_array_add(&states, sizeof(uint32_t)));
     *s = XDG_TOPLEVEL_STATE_RESIZING;
+    s = static_cast<uint32_t *>(wl_array_add(&states, sizeof(uint32_t)));
+    *s = XDG_TOPLEVEL_STATE_ACTIVATED;
     xdg_toplevel_send_configure(WlResource(), rect.width, rect.height, &states);
     wl_array_release(&states);
 }

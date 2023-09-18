@@ -80,7 +80,6 @@ void WaylandSubSurface::SetPosition(struct wl_resource *resource, int32_t x, int
         positionX_ = x;
         positionY_ = y;
     }
-
 }
 
 WaylandSubSurface::~WaylandSubSurface() noexcept {}
