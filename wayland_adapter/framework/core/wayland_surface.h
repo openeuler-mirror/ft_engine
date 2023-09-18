@@ -79,7 +79,7 @@ public:
     void AddChild(struct wl_resource *child, int32_t x, int32_t y);
     void AddParent(struct wl_resource *parent);
     void ProcessSrcBitmap(SkCanvas* canvas, int32_t x, int32_t y);
-    void TriggerInnerDraw();
+    void TriggerInnerCompose();
 
 private:
     WaylandSurface(struct wl_client *client, struct wl_resource *parent, uint32_t version, uint32_t id);
@@ -123,6 +123,7 @@ private:
     struct wl_resource *parentSurfaceRes_ = nullptr;
     std::mutex bitmapMutex_;
     SkBitmap srcBitmap_;
+    std::vector<OHOS::sptr<FrameCallback>> pengindCb_;
 };
 
 
