@@ -21,6 +21,7 @@
 namespace FT {
 namespace Wayland {
 struct IWaylandXdgToplevel {
+    static void DestroyResource(struct wl_client *client, struct wl_resource *resource);
     static void SetParent(struct wl_client *client, struct wl_resource *resource, struct wl_resource *parent);
     static void SetTitle(struct wl_client *client, struct wl_resource *resource, const char *title);
     static void SetAppId(struct wl_client *client, struct wl_resource *resource, const char *app_id);
@@ -45,6 +46,7 @@ public:
     static OHOS::sptr<WaylandXdgToplevel> Create(const OHOS::sptr<WaylandXdgSurface> &xdgSurface, uint32_t id);
     ~WaylandXdgToplevel() noexcept override;
 
+    void DestroyResource(struct wl_client *client, struct wl_resource *resource);
     void SetTitle(const char *title);
     void SetAppId(const char *appId);
     void SetMaxSize(int32_t width, int32_t height);
@@ -65,6 +67,7 @@ private:
     friend struct IWaylandXdgToplevel;
 
     OHOS::wptr<WaylandXdgSurface> xdgSurface_;
+    std::string windowTitle_ = "unknow";
     Rect rect_;
 };
 } // namespace Wayland
