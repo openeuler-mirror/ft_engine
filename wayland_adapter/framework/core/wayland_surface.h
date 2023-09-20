@@ -89,6 +89,7 @@ private:
     void HandleCommit();
     void CreateWindow();
     void CopyBuffer(struct wl_shm_buffer *shm);
+    void CheckIsPointerSurface();
 
     struct wl_resource *parent_ = nullptr;
     std::list<SurfaceCommitCallback> commitCallbacks_;
@@ -96,6 +97,7 @@ private:
     Rect rect_;
     SurfaceState old_;
     SurfaceState new_;
+    bool isPointerSurface_ = false;
 
 #ifdef ENABLE_GPU
     std::unique_ptr<OHOS::Rosen::RenderContext> renderContext_;

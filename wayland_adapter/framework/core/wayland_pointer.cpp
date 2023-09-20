@@ -94,6 +94,7 @@ void WaylandPointer::OnPointerLeave(struct wl_resource *surface_resource)
     }
     wl_pointer_send_leave(pointer, serial, surface_resource);
 }
+
 void WaylandPointer::OnPointerEnter(int32_t posX, int32_t posY, struct wl_resource *surface_resource)
 {
     wl_fixed_t posFixedX = wl_fixed_from_int(posX);
@@ -110,6 +111,20 @@ void WaylandPointer::OnPointerEnter(int32_t posX, int32_t posY, struct wl_resour
     wl_pointer_send_enter(pointer, serial, surface_resource, posFixedX, posFixedY);
 }
 
-void WaylandPointer::SetCursor(uint32_t serial, struct wl_resource *surface, int32_t hotsPotx, int32_t hotsPoty) {}
+void WaylandPointer::SetCursor(uint32_t serial, struct wl_resource *surface, int32_t hotsPotx, int32_t hotsPoty)
+{
+    std::lock_guard<std::mutex> lock(mutex_);
+    cursorSurface_ = surface;
+}
+
+bool WaylandPointer::IsCursorSurface(struct wl_resource *surface)
+{
+    std::lock_guard<std::mutex> lock(mutex_);
+    if (cursorSurface_ == nullptr || surface == nullptr) {
+        return false;
+    }
+    return  cursorSurface_ == surface ? true : false;
+}
+
 } // namespace Wayland
 } // namespace FT

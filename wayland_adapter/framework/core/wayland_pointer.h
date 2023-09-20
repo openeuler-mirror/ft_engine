@@ -15,6 +15,7 @@
 
 #pragma once
 
+#include <mutex>
 #include "wayland_resource_object.h"
 
 namespace FT {
@@ -36,10 +37,13 @@ public:
     void OnPointerEnter(int32_t posX, int32_t posY, struct wl_resource *surface_resource);
     void OnPointerButton(uint32_t time, uint32_t button, bool isPressed);
     void OnPointerMotionAbsolute(uint32_t time, int32_t posX, int32_t posY);
+    bool IsCursorSurface(struct wl_resource *surface);
 
 private:
     WaylandPointer(struct wl_client *client, uint32_t version, uint32_t id);
     void SetCursor(uint32_t serial, struct wl_resource *surface, int32_t hotsPotx, int32_t hotsPoty);
+    struct wl_resource *cursorSurface_ = nullptr;
+    mutable std::mutex mutex_;
 };
 } // namespace Wayland
 } // namespace FT
