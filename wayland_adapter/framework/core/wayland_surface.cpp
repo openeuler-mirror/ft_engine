@@ -78,18 +78,17 @@ bool InputEventConsumer::OnInputEvent(const std::shared_ptr<OHOS::MMI::KeyEvent>
     if (wlSeat == nullptr) {
         return false;
     }
-    auto keyboard = wlSeat->GetKeyboardResource(wlSurface_->WlClient());
-    if (keyboard == nullptr) {
-        LOG_WARN("GetKeyboardResource fail");
-        return false;
-    }
 
+    std::list<OHOS::sptr<WaylandKeyboard>> keyboardList;
+    wlSeat->GetKeyboardResource(wlSurface_->WlClient(), keyboardList);
     int32_t keyAction = MapKeyAction(keyEvent->GetKeyAction());
     if (keyAction == INVALID_KEYACTION) {
         return false;
     }
 
-    keyboard->OnKeyboardKey(keyEvent->GetKeyCode(), keyAction, keyEvent->GetActionTime());
+    for (auto &keyboard : keyboardList) {
+        keyboard->OnKeyboardKey(keyEvent->GetKeyCode(), keyAction, keyEvent->GetActionTime());
+    }
     keyEvent->MarkProcessed();
     return true;
 }
@@ -107,17 +106,10 @@ bool InputEventConsumer::OnInputEvent(const std::shared_ptr<OHOS::MMI::PointerEv
         return false;
     }
     pointerEvent->MarkProcessed();
-    auto pointer = wlSeat->GetPointerResource(wlSurface_->WlClient());
-    if (pointer == nullptr) {
-        LOG_WARN("GetPointerResource fail");
-        return false;
-    }
-
-    auto keyboard = wlSeat->GetKeyboardResource(wlSurface_->WlClient());
-    if (keyboard == nullptr) {
-        LOG_WARN("GetKeyboardResource fail");
-        return false;
-    }
+    std::list<OHOS::sptr<WaylandPointer>> pointerList;
+    std::list<OHOS::sptr<WaylandKeyboard>> keyboardList;
+    wlSeat->GetPointerResource(wlSurface_->WlClient(), pointerList);
+    wlSeat->GetKeyboardResource(wlSurface_->WlClient(), keyboardList);
 
     OHOS::MMI::PointerEvent::PointerItem pointerItem;
     int32_t pointId = pointerEvent->GetPointerId();
@@ -127,20 +119,31 @@ bool InputEventConsumer::OnInputEvent(const std::shared_ptr<OHOS::MMI::PointerEv
     }
 
     if (pointerEvent->GetPointerAction() ==  OHOS::MMI::PointerEvent::POINTER_ACTION_ENTER_WINDOW) {
-        pointer->OnPointerEnter(pointerItem.GetWindowX(), pointerItem.GetWindowY(), wlSurface_->WlResource());
-        keyboard->OnKeyboardEnter(wlSurface_->WlResource());
+        for (auto &pointer : pointerList) {
+            pointer->OnPointerEnter(pointerItem.GetWindowX(), pointerItem.GetWindowY(), wlSurface_->WlResource());
+        }
+        for (auto &keyboard : keyboardList) {
+            keyboard->OnKeyboardEnter(wlSurface_->WlResource());
+        }
     } else if (pointerEvent->GetPointerAction() ==  OHOS::MMI::PointerEvent::POINTER_ACTION_LEAVE_WINDOW) {
-        pointer->OnPointerLeave(wlSurface_->WlResource());
-        keyboard->OnKeyboardLeave(wlSurface_->WlResource());
+        for (auto &pointer : pointerList) {
+            pointer->OnPointerLeave(wlSurface_->WlResource());
+        }
+        for (auto &keyboard : keyboardList) {
+            keyboard->OnKeyboardLeave(wlSurface_->WlResource());
+        }
     } else if (pointerEvent->GetPointerAction() == OHOS::MMI::PointerEvent::POINTER_ACTION_BUTTON_DOWN ||
         pointerEvent->GetPointerAction() == OHOS::MMI::PointerEvent::POINTER_ACTION_BUTTON_UP) {
         int32_t buttonId = MapPointerActionButton(pointerEvent->GetButtonId());
         if (buttonId != OHOS::MMI::PointerEvent::BUTTON_NONE) {
-            pointer->OnPointerButton(pointerEvent->GetActionTime(), buttonId, pointerItem.IsPressed());
+            for (auto &pointer : pointerList) {
+                pointer->OnPointerButton(pointerEvent->GetActionTime(), buttonId, pointerItem.IsPressed());
+            }
         }
     } else if (pointerEvent->GetPointerAction() == OHOS::MMI::PointerEvent::POINTER_ACTION_MOVE) {
-        pointer->OnPointerMotionAbsolute(
-            pointerEvent->GetActionTime(), pointerItem.GetWindowX(), pointerItem.GetWindowY());
+        for (auto &pointer : pointerList) {
+            pointer->OnPointerMotionAbsolute(pointerEvent->GetActionTime(), pointerItem.GetWindowX(), pointerItem.GetWindowY());
+        }
     }
     return true;
 }
@@ -427,12 +430,15 @@ void WaylandSurface::CheckIsPointerSurface()
         return;
     }
 
-    auto pointer = wlSeat->GetPointerResource(WlClient());
-    if (pointer == nullptr) {
-        return;
+    std::list<OHOS::sptr<WaylandPointer>> pointerList;
+    wlSeat->GetPointerResource(WlClient(), pointerList);
+    for (auto &pointer : pointerList) {
+        isPointerSurface_ = pointer->IsCursorSurface(WlResource());
+        if (isPointerSurface_) {
+            break;
+        }
     }
 
-    isPointerSurface_ = pointer->IsCursorSurface(WlResource());
     LOG_DEBUG("this surface Pointer Surface: %{public}d", isPointerSurface_);
 }
 

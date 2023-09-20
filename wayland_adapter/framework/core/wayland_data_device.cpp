@@ -123,8 +123,11 @@ int32_t WaylandDataDevice::PointerStartDrag(
     }
     auto seatResource = CastFromResource<WaylandSeatObject>((seatResource_));
     if (seatResource) {
-        auto keyboard = seatResource->GetChildKeyboard();
-        wl_keyboard_send_leave(keyboard->WlResource(), serial, iconSurface->WlResource());
+        std::list<OHOS::sptr<WaylandKeyboard>> KeyboardList;
+        seatResource->GetChildKeyboard(KeyboardList);
+        for (auto& keyboardResourceItem : KeyboardList) {
+            wl_keyboard_send_leave(keyboardResourceItem->WlResource(), serial, iconSurface->WlResource());
+        }
     }
 
     return 0;
