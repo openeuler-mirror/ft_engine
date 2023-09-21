@@ -17,6 +17,7 @@
 
 #include "version.h"
 #include "wayland_objects_pool.h"
+#include "wayland_keycode_trans.h"
 
 namespace FT {
 namespace Wayland {
@@ -40,7 +41,7 @@ OHOS::sptr<WaylandKeyboard> WaylandKeyboard::Create(struct wl_client *client, ui
     return keyboard;
 }
 
-void WaylandKeyboard::OnKeyboardKey(uint32_t key, int32_t state, uint32_t time)
+void WaylandKeyboard::OnKeyboardKey(int32_t key, int32_t state, uint32_t time)
 {
     wl_resource *keyboard = WlResource();
     if (keyboard == nullptr) {
@@ -51,7 +52,12 @@ void WaylandKeyboard::OnKeyboardKey(uint32_t key, int32_t state, uint32_t time)
         return;
     }
     uint32_t serial = wl_display_next_serial(display);
-    wl_keyboard_send_key(keyboard, serial, time, key, state);
+    int32_t newKey = TransferKeyValue(key);
+    if (newKey == -1) {
+        LOG_ERROR("unknow keycode: %{public}u", key);
+        return;
+    }
+    wl_keyboard_send_key(keyboard, serial, time, newKey, state);
 }
 
 void WaylandKeyboard::OnKeyboardEnter(struct wl_resource *surface_resource)

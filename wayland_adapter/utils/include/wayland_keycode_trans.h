@@ -15,28 +15,8 @@
 
 #pragma once
 
-#include "wayland_resource_object.h"
-
 namespace FT {
 namespace Wayland {
-struct IWaylandKeyboard {
-    static struct wl_keyboard_interface impl_;
-};
-
-class WaylandKeyboard final : public WaylandResourceObject {
-    friend struct IWaylandKeyboard;
-
-public:
-    static OHOS::sptr<WaylandKeyboard> Create(struct wl_client *client, uint32_t version, uint32_t id);
-    ~WaylandKeyboard() noexcept override;
-
-    void OnKeyboardKey(int32_t key, int32_t state, uint32_t time);
-    void OnKeyboardEnter(struct wl_resource *surface_resource);
-    void OnKeyboardLeave(struct wl_resource *surface_resource);
-
-
-private:
-    WaylandKeyboard(struct wl_client *client, uint32_t version, uint32_t id);
-};
+    int32_t TransferKeyValue(int32_t keyValueOfInput);
 } // namespace Wayland
 } // namespace FT
