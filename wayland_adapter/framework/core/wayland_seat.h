@@ -16,6 +16,7 @@
 #pragma once
 
 #include <thread>
+#include <list>
 #include "wayland_global.h"
 #include "wayland_pointer.h"
 #include "wayland_keyboard.h"
@@ -38,15 +39,15 @@ class WaylandSeat final : public WaylandGlobal {
 public:
     static OHOS::sptr<WaylandSeat> Create(struct wl_display *display);
     static OHOS::sptr<WaylandSeat> GetWaylandSeatGlobal();
-    OHOS::sptr<WaylandPointer> GetPointerResource(struct wl_client *client);
-    OHOS::sptr<WaylandKeyboard> GetKeyboardResource(struct wl_client *client);
+    void GetPointerResource(struct wl_client *client, std::list<OHOS::sptr<WaylandPointer>> &list);
+    void GetKeyboardResource(struct wl_client *client, std::list<OHOS::sptr<WaylandKeyboard>> &list);
     ~WaylandSeat() noexcept override;
 
 private:
     WaylandSeat(struct wl_display *display);
     void Bind(struct wl_client *client, uint32_t version, uint32_t id) override;
-    void UpdateCapabilities();
-    std::unordered_map<struct wl_client *, OHOS::sptr<WaylandSeatObject>> seatResourcesMap_;
+    static void UpdateCapabilities(struct wl_resource *resource);
+    std::unordered_map<struct wl_client *, std::list<OHOS::sptr<WaylandSeatObject>>> seatResourcesMap_;
     std::unique_ptr<std::thread> thread_ = nullptr;
 };
 
@@ -56,16 +57,15 @@ class WaylandSeatObject final : public WaylandResourceObject {
 public:
     WaylandSeatObject(struct wl_client *client, uint32_t version, uint32_t id);
     ~WaylandSeatObject() noexcept;
-    OHOS::sptr<WaylandPointer> GetChildPointer();
-    OHOS::sptr<WaylandKeyboard> GetChildKeyboard();
+    void GetChildPointer(std::list<OHOS::sptr<WaylandPointer>> &list);
+    void GetChildKeyboard(std::list<OHOS::sptr<WaylandKeyboard>> &list);
 
 private:
     void GetPointer(uint32_t id);
     void GetKeyboard(uint32_t id);
     void GetTouch(uint32_t id);
-
-    OHOS::sptr<WaylandPointer> pointer_;
-    OHOS::sptr<WaylandKeyboard> keyboard_;
+    std::unordered_map<struct wl_client *, std::list<OHOS::sptr<WaylandPointer>>> pointerResourcesMap_;
+    std::unordered_map<struct wl_client *, std::list<OHOS::sptr<WaylandKeyboard>>> keyboardResourcesMap_;
 };
 } // namespace Wayland
 } // namespace FT
