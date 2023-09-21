@@ -98,7 +98,7 @@ void WaylandSeat::Bind(struct wl_client *client, uint32_t version, uint32_t id)
         return;
     }
     WaylandObjectsPool::GetInstance().AddObject(ObjectId(object->WlClient(), object->Id()), object);
-    seatResourcesMap_[client] = object;
+    seatResourcesMap_[client].emplace_back(object);
 
     if (thread_ != nullptr) {
         if (thread_->joinable()) {
@@ -106,42 +106,56 @@ void WaylandSeat::Bind(struct wl_client *client, uint32_t version, uint32_t id)
         }
         thread_ = nullptr;
     }
-    thread_ = std::make_unique<std::thread>(&WaylandSeat::UpdateCapabilities, this);
+    thread_ = std::make_unique<std::thread>(&WaylandSeat::UpdateCapabilities, object->WlResource());
 }
 
-OHOS::sptr<WaylandKeyboard> WaylandSeat::GetKeyboardResource(struct wl_client *client)
+void WaylandSeat::GetKeyboardResource(struct wl_client *client, std::list<OHOS::sptr<WaylandKeyboard>>& list)
 {
-    if (seatResourcesMap_.count(client) == 0) {
-        return nullptr;
+    auto iter = seatResourcesMap_.find(client);
+    if (iter == seatResourcesMap_.end()) {
+        return;
     }
 
-    auto seatResource = seatResourcesMap_.at(client);
-    // Erase seat resource from map if it is destroyed.
-    if (seatResource == nullptr) {
-        seatResourcesMap_.erase(client);
-        return nullptr;
+    /* A wl_client object maybe has many seatResourceObjects, each seatResourceObject maybe has many keyboardResourceObjects
+     * so we need get all keyboardResourceObjects in this wl_client object.
+     */
+    auto seatList = iter->second;
+    for (auto& seatResourceItem : seatList) {
+        std::list<OHOS::sptr<WaylandKeyboard>> KeyboardList;
+        seatResourceItem->GetChildKeyboard(KeyboardList);
+        if (KeyboardList.empty()) {
+            continue;
+        }
+        for (auto& keyboardResourceItem : KeyboardList) {
+            list.emplace_back(keyboardResourceItem);
+        }
     }
-
-    return seatResource->GetChildKeyboard();
 }
 
-OHOS::sptr<WaylandPointer> WaylandSeat::GetPointerResource(struct wl_client *client)
+void WaylandSeat::GetPointerResource(struct wl_client *client, std::list<OHOS::sptr<WaylandPointer>>& list)
 {
-    if (seatResourcesMap_.count(client) == 0) {
-        return nullptr;
+    auto iter = seatResourcesMap_.find(client);
+    if (iter == seatResourcesMap_.end()) {
+        return;
     }
 
-    auto seatResource = seatResourcesMap_.at(client);
-    // Erase seat resource from map if it is destroyed.
-    if (seatResource == nullptr) {
-        seatResourcesMap_.erase(client);
-        return nullptr;
+    /* A wl_client object maybe has many seatResourceObjects, each seatResourceObject maybe has many pointerResourceObjects
+     * so we need get all pointerResourceObjects in this wl_client object.
+     */
+    auto seatList = iter->second;
+    for (auto& seatResourceItem : seatList) {
+        std::list<OHOS::sptr<WaylandPointer>> pointerList;
+        seatResourceItem->GetChildPointer(pointerList);
+        if (pointerList.empty()) {
+            continue;
+        }
+        for (auto& pointerResourceItem : pointerList) {
+            list.emplace_back(pointerResourceItem);
+        }
     }
-
-    return seatResource->GetChildPointer();
 }
 
-void WaylandSeat::UpdateCapabilities()
+void WaylandSeat::UpdateCapabilities(struct wl_resource *resource)
 {
     LOG_INFO("UpdateCapabilities in");
     uint32_t cap = 0;
@@ -179,16 +193,7 @@ void WaylandSeat::UpdateCapabilities()
         usleep(3 * 1000); // wait for GetDeviceCb finish
         wait_count++;
     }
-
-    for (auto iter = seatResourcesMap_.begin(); iter != seatResourcesMap_.end();) {
-        auto seatObj = iter->second;
-        if (seatObj == nullptr || seatObj->WlResource() == nullptr) {
-            iter = seatResourcesMap_.erase(iter);
-        } else {
-            wl_seat_send_capabilities(seatObj->WlResource(), cap);
-            ++iter;
-        }
-    }
+    wl_seat_send_capabilities(resource, cap);
 }
 
 WaylandSeatObject::WaylandSeatObject(struct wl_client *client, uint32_t version, uint32_t id)
@@ -196,14 +201,23 @@ WaylandSeatObject::WaylandSeatObject(struct wl_client *client, uint32_t version,
 
 WaylandSeatObject::~WaylandSeatObject() noexcept {}
 
-OHOS::sptr<WaylandPointer> WaylandSeatObject::GetChildPointer()
+
+void WaylandSeatObject::GetChildPointer(std::list<OHOS::sptr<WaylandPointer>> &list)
 {
-    return pointer_;
+    auto iter = pointerResourcesMap_.find(WlClient());
+    if (iter == pointerResourcesMap_.end()) {
+        return;
+    }
+    list = iter->second;
 }
 
-OHOS::sptr<WaylandKeyboard> WaylandSeatObject::GetChildKeyboard()
+void WaylandSeatObject::GetChildKeyboard(std::list<OHOS::sptr<WaylandKeyboard>> &list)
 {
-    return keyboard_;
+    auto iter = keyboardResourcesMap_.find(WlClient());
+    if (iter == keyboardResourcesMap_.end()) {
+        return;
+    }
+    list = iter->second;
 }
 
 void WaylandSeatObject::GetPointer(uint32_t id)
@@ -213,7 +227,8 @@ void WaylandSeatObject::GetPointer(uint32_t id)
         LOG_ERROR("no memory");
         return;
     }
-    pointer_ = pointer;
+
+    pointerResourcesMap_[WlClient()].emplace_back(pointer);
 }
 
 void WaylandSeatObject::GetKeyboard(uint32_t id)
@@ -223,8 +238,7 @@ void WaylandSeatObject::GetKeyboard(uint32_t id)
         LOG_ERROR("no memory");
         return;
     }
-
-    keyboard_ = keyboard;
+    keyboardResourcesMap_[WlClient()].emplace_back(keyboard);
 }
 
 void WaylandSeatObject::GetTouch(uint32_t id)

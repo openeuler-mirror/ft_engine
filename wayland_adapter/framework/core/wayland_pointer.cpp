@@ -93,6 +93,7 @@ void WaylandPointer::OnPointerLeave(struct wl_resource *surface_resource)
         return;
     }
     wl_pointer_send_leave(pointer, serial, surface_resource);
+    wl_pointer_send_frame(pointer);
 }
 
 void WaylandPointer::OnPointerEnter(int32_t posX, int32_t posY, struct wl_resource *surface_resource)
@@ -109,6 +110,7 @@ void WaylandPointer::OnPointerEnter(int32_t posX, int32_t posY, struct wl_resour
     }
     uint32_t serial = wl_display_next_serial(display);
     wl_pointer_send_enter(pointer, serial, surface_resource, posFixedX, posFixedY);
+    wl_pointer_send_frame(pointer);
 }
 
 void WaylandPointer::SetCursor(uint32_t serial, struct wl_resource *surface, int32_t hotsPotx, int32_t hotsPoty)
