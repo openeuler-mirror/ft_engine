@@ -26,6 +26,7 @@ namespace FT {
 namespace Wayland {
 namespace {
     constexpr HiLogLabel LABEL = {LOG_CORE, HILOG_DOMAIN_WAYLAND, "WaylandSurface"};
+    constexpr uint32_t US_TO_MS = 1000;
 }
 
 class InputEventConsumer : public OHOS::Rosen::IInputEventConsumer
@@ -87,7 +88,7 @@ bool InputEventConsumer::OnInputEvent(const std::shared_ptr<OHOS::MMI::KeyEvent>
     }
 
     for (auto &keyboard : keyboardList) {
-        keyboard->OnKeyboardKey(keyEvent->GetKeyCode(), keyAction, keyEvent->GetActionTime());
+        keyboard->OnKeyboardKey(keyEvent->GetKeyCode(), keyAction, keyEvent->GetActionTime() / US_TO_MS);
     }
     keyEvent->MarkProcessed();
     return true;
@@ -137,12 +138,12 @@ bool InputEventConsumer::OnInputEvent(const std::shared_ptr<OHOS::MMI::PointerEv
         int32_t buttonId = MapPointerActionButton(pointerEvent->GetButtonId());
         if (buttonId != OHOS::MMI::PointerEvent::BUTTON_NONE) {
             for (auto &pointer : pointerList) {
-                pointer->OnPointerButton(pointerEvent->GetActionTime(), buttonId, pointerItem.IsPressed());
+                pointer->OnPointerButton(pointerEvent->GetActionTime() / US_TO_MS, buttonId, pointerItem.IsPressed());
             }
         }
     } else if (pointerEvent->GetPointerAction() == OHOS::MMI::PointerEvent::POINTER_ACTION_MOVE) {
         for (auto &pointer : pointerList) {
-            pointer->OnPointerMotionAbsolute(pointerEvent->GetActionTime(), pointerItem.GetWindowX(), pointerItem.GetWindowY());
+            pointer->OnPointerMotionAbsolute(pointerEvent->GetActionTime() / US_TO_MS, pointerItem.GetWindowX(), pointerItem.GetWindowY());
         }
     }
     return true;
