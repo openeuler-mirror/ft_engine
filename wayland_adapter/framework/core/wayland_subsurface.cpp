@@ -16,6 +16,7 @@
 #include "wayland_subsurface.h"
 
 #include "wayland_objects_pool.h"
+#include "wayland_surface.h"
 
 namespace FT {
 namespace Wayland {
@@ -32,7 +33,11 @@ struct wl_subsurface_interface IWaylandSubSurface::impl_ = {
     .set_desync = IWaylandSubSurface::SetDesync,
 };
 
-void IWaylandSubSurface::SetPosition(struct wl_client *client, struct wl_resource *resource, int32_t x, int32_t y) {}
+void IWaylandSubSurface::SetPosition(struct wl_client *client, struct wl_resource *resource, int32_t x, int32_t y)
+{
+    CAST_OBJECT_AND_CALL_FUNC(WaylandSubSurface, resource,
+    "IWaylandSubSurface::SetPosition: failed to find object.", SetPosition, resource, x, y);
+}
 
 void IWaylandSubSurface::PlaceAbove(struct wl_client *client, struct wl_resource *resource,
     struct wl_resource *sibling) {}
@@ -58,7 +63,24 @@ OHOS::sptr<WaylandSubSurface> WaylandSubSurface::Create(struct wl_client *client
 
 WaylandSubSurface::WaylandSubSurface(struct wl_client *client, uint32_t version, uint32_t id,
     struct wl_resource *surface, struct wl_resource *parent)
-    : WaylandResourceObject(client, &wl_subsurface_interface, version, id, &IWaylandSubSurface::impl_) {}
+    : WaylandResourceObject(client, &wl_subsurface_interface, version, id, &IWaylandSubSurface::impl_)
+{
+    parentSurfaceRes_ = parent;
+    childSurfaceRes_ = surface;
+}
+
+void WaylandSubSurface::SetPosition(struct wl_resource *resource, int32_t x, int32_t y)
+{
+    if ((positionX_ != x) || (positionY_ != y)) {
+        LOG_INFO("SetPosition X:%{public}d, Y:%{public}d", x, y);
+        auto surfaceParent = CastFromResource<WaylandSurface>(parentSurfaceRes_);
+        auto surfaceChild = CastFromResource<WaylandSurface>(childSurfaceRes_);
+        surfaceParent->AddChild(childSurfaceRes_, x, y);
+        surfaceChild->AddParent(parentSurfaceRes_);
+        positionX_ = x;
+        positionY_ = y;
+    }
+}
 
 WaylandSubSurface::~WaylandSubSurface() noexcept {}
 } // namespace Wayland
