@@ -306,9 +306,10 @@ void WaylandSurface::Damage(int32_t x, int32_t y, int32_t width, int32_t height)
 
 void WaylandSurface::Frame(uint32_t callback)
 {
+    bool pending = false;
     if (new_.cb != nullptr) {
+        pending = true;
         LOG_WARN("duplicate frame request");
-        return;
     }
 
     auto cb = FrameCallback::Create(WlClient(), WAYLAND_VERSION_MAJOR, callback);
@@ -318,6 +319,10 @@ void WaylandSurface::Frame(uint32_t callback)
     }
 
     WaylandObjectsPool::GetInstance().AddObject(ObjectId(cb->WlClient(), cb->Id()), cb);
+    if (pending) {
+        pengindCb_.push_back(cb);
+        return;
+    }
     new_.cb = cb;
 }
 
@@ -367,15 +372,21 @@ void WaylandSurface::Commit()
         return; // it is pointer surface, we do not handle commit!
     }
 
-    if (window_ == nullptr) {
+    if (withTopLevel_ && (window_ == nullptr)) {
         CreateWindow();
-    } else {
+        LOG_DEBUG("CreateWindow");
+
+    }
+    {
         HandleCommit();
+        LOG_DEBUG("withTopLevel_ %{public}d", withTopLevel_);
     }
 
     for (auto &cb : commitCallbacks_) {
         cb();
     }
+
+
 }
 
 void WaylandSurface::SetBufferTransform(int32_t transform)
@@ -423,6 +434,11 @@ void WaylandSurface::HandleCommit() {
         wl_callback_send_done(new_.cb->WlResource(), 0);
         wl_resource_destroy(new_.cb->WlResource());
         new_.cb = nullptr;
+        for (auto &cb : pengindCb_) {
+            wl_callback_send_done(cb->WlResource(), 0);
+            wl_resource_destroy(cb->WlResource());
+        }
+        pengindCb_.clear();
     }
 
     old_ = new_;
@@ -504,11 +520,6 @@ void WaylandSurface::CreateWindow()
 
 void WaylandSurface::CopyBuffer(struct wl_shm_buffer *shm)
 {
-    if (rsSurface_ == nullptr) {
-        LOG_ERROR("rsSurface_ is nullptr");
-        return;
-    }
-
     SkColorType format = ShmFormatToSkia(wl_shm_buffer_get_format(shm));
     if (format == SkColorType::kUnknown_SkColorType) {
         LOG_ERROR("unsupported format %{public}d", wl_shm_buffer_get_format(shm));
@@ -528,26 +539,22 @@ void WaylandSurface::CopyBuffer(struct wl_shm_buffer *shm)
         LOG_ERROR("wl_shm_buffer_get_data fail");
         return;
     }
-
-    auto framePtr = rsSurface_->RequestFrame(width, height);
-    if (framePtr == nullptr) {
-        LOG_ERROR("RequestFrame failed");
-        return;
-    }
-
-    auto canvas = framePtr->GetCanvas();
-    if (canvas == nullptr) {
-        LOG_ERROR("GetCanvas failed");
-        return;
-    }
-    canvas->clear(SK_ColorTRANSPARENT);
-
     SkImageInfo imageInfo = SkImageInfo::Make(width, height, format, kUnpremul_SkAlphaType);
     SkPixmap srcPixmap(imageInfo, data, stride);
-    SkBitmap srcBitmap;
-    srcBitmap.installPixels(srcPixmap);
-    canvas->drawBitmap(srcBitmap, 0, 0);
-    rsSurface_->FlushFrame(framePtr);
+    {
+        std::lock_guard<std::mutex> lg(bitmapMutex_);
+        srcBitmap_.installPixels(srcPixmap);
+    }
+
+    if (!withTopLevel_) {
+        auto surfaceParent = CastFromResource<WaylandSurface>(parentSurfaceRes_);
+        if (parentSurfaceRes_ != nullptr) {
+            surfaceParent->TriggerInnerCompose();
+        }
+        LOG_DEBUG("return because without toplevel");
+        return;
+    }
+    TriggerInnerCompose();
 }
 
 void WaylandSurface::OnSizeChange(const OHOS::Rosen::Rect& rect, OHOS::Rosen::WindowSizeChangeReason reason)
@@ -670,5 +677,74 @@ void WaylandSurface::Close()
     }
     window_->Close();
 }
+
+void WaylandSurface::WithTopLevel(bool toplevel)
+{
+    withTopLevel_ = toplevel;
+}
+
+void WaylandSurface::AddChild(struct wl_resource *child, int32_t x, int32_t y)
+{
+    if (child == nullptr) {
+        LOG_ERROR("AddChild with nullptr resource");
+        return;
+    }
+    if (childs_.count(child) > 0) {
+        childs_[child].offsetX = x;
+        childs_[child].offsetX = y;
+        return;
+    }
+    SubSurfaceData data;
+    data.surface = child;
+    data.offsetX = x;
+    data.offsetY = y;
+    childs_[child] = data;
+    for (auto &cb : rectCallbacks_) {
+        cb(rect_);
+    }
+}
+
+void WaylandSurface::AddParent(struct wl_resource *parent)
+{
+    parentSurfaceRes_ = parent;
+}
+
+void WaylandSurface::ProcessSrcBitmap(SkCanvas* canvas, int32_t x, int32_t y)
+{
+    std::lock_guard<std::mutex> lg(bitmapMutex_);
+    canvas->drawBitmap(srcBitmap_, x, y);
+    LOG_DEBUG("draw child offsetx %{public}d, offsety %{public}d,", x, y);
+}
+
+void WaylandSurface::TriggerInnerCompose()
+{
+    if (rsSurface_ == nullptr) {
+        LOG_ERROR("rsSurface_ is nullptr");
+        return;
+    }
+    auto framePtr = rsSurface_->RequestFrame(srcBitmap_.width(), srcBitmap_.height());
+    if (framePtr == nullptr) {
+        LOG_ERROR("RequestFrame failed");
+        return;
+    }
+
+    auto canvas = framePtr->GetCanvas();
+    if (canvas == nullptr) {
+        LOG_ERROR("GetCanvas failed");
+        return;
+    }
+    canvas->clear(SK_ColorTRANSPARENT);
+    canvas->drawBitmap(srcBitmap_, 0, 0);
+    for (auto &&[childKey, data] : childs_) {
+        if (data.surface == nullptr) {
+            continue;
+        }
+        LOG_DEBUG("Draw Child");
+        auto surfaceChild = CastFromResource<WaylandSurface>(data.surface);
+        surfaceChild->ProcessSrcBitmap(canvas, data.offsetX, data.offsetY);
+    }
+    rsSurface_->FlushFrame(framePtr);
+}
+
 } // namespace Wayland
 } // namespace FT

@@ -93,5 +93,12 @@ static SkColorType ShmFormatToSkia(const uint32_t& shmFormat)
             return SkColorType::kUnknown_SkColorType;
     }
 }
+
+struct SubSurfaceData {
+    struct wl_resource *surface = nullptr;
+    int32_t offsetX = 0;
+    int32_t offsetY = 0;
+};
+
 } // namespace Wayland
 } // namespace FT

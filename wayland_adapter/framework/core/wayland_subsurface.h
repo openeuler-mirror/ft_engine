@@ -33,10 +33,16 @@ public:
     static OHOS::sptr<WaylandSubSurface> Create(struct wl_client *client, uint32_t version, uint32_t id,
         struct wl_resource *surface, struct wl_resource *parent);
     ~WaylandSubSurface() noexcept override;
+    void SetPosition(struct wl_resource *resource, int32_t x, int32_t y);
 
 private:
     WaylandSubSurface(struct wl_client *client, uint32_t version, uint32_t id,
         struct wl_resource *surface, struct wl_resource *parent);
+
+    struct wl_resource *parentSurfaceRes_;
+    struct wl_resource *childSurfaceRes_;
+    int32_t positionX_ = -1;
+    int32_t positionY_ = -1;
 };
 } // namespace Wayland
 } // namespace FT
