@@ -231,10 +231,15 @@ OHOS::sptr<WaylandSurface> WaylandSurface::Create(struct wl_client *client,
     struct wl_resource *parent, uint32_t version, uint32_t id)
 {
     if (client == nullptr) {
+        LOG_ERROR("Invalid client parameter");
         return nullptr;
     }
 
     auto surface = OHOS::sptr<WaylandSurface>(new WaylandSurface(client, parent, version, id));
+    if (surface == nullptr) {
+        LOG_ERROR("Failed to create WaylandSurface");
+        return nullptr;
+    }
     WaylandObjectsPool::GetInstance().AddObject(ObjectId(surface->WlClient(), surface->Id()), surface);
     return surface;
 }
