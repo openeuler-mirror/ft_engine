@@ -67,6 +67,7 @@ void WaylandPointer::OnPointerButton(uint32_t time, uint32_t button, bool isPres
     uint32_t serial = wl_display_next_serial(display);
     uint32_t state = isPressed ? WL_POINTER_BUTTON_STATE_PRESSED : WL_POINTER_BUTTON_STATE_RELEASED;
     wl_pointer_send_button(pointer, serial, time, button, state);
+    wl_pointer_send_frame(pointer);
 }
 
 void WaylandPointer::OnPointerMotionAbsolute(uint32_t time, int32_t posX, int32_t posY)
@@ -79,6 +80,7 @@ void WaylandPointer::OnPointerMotionAbsolute(uint32_t time, int32_t posX, int32_
     }
 
     wl_pointer_send_motion(pointer, time, posFixedX, posFixedY);
+    wl_pointer_send_frame(pointer);
 }
 
 void WaylandPointer::OnPointerLeave(struct wl_resource *surface_resource)
