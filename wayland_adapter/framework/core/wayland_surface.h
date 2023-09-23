@@ -107,6 +107,8 @@ private:
     SurfaceState old_;
     SurfaceState new_;
     bool isPointerSurface_ = false;
+    Rect inputRect_;
+    Rect opaqueRect_;
 
 #ifdef ENABLE_GPU
     std::unique_ptr<OHOS::Rosen::RenderContext> renderContext_;
@@ -116,8 +118,7 @@ private:
     OHOS::Rosen::WindowType type_ = OHOS::Rosen::WindowType::APP_WINDOW_BASE;
     std::shared_ptr<OHOS::Rosen::RSSurfaceNode> surfaceNode_;
     std::shared_ptr<OHOS::Rosen::RSSurface> rsSurface_;
-    std::string windowTitle_ = "unknow";
-    bool maximized_ = false;
+    std::string windowTitle_;
     bool withTopLevel_ = false;
     std::map<wl_resource *, struct SubSurfaceData> childs_;
     struct wl_resource *parentSurfaceRes_ = nullptr;

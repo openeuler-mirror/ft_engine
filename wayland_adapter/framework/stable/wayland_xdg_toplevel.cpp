@@ -149,7 +149,8 @@ WaylandXdgToplevel::WaylandXdgToplevel(const OHOS::sptr<WaylandXdgSurface> &xdgS
       id, &IWaylandXdgToplevel::impl_),
       xdgSurface_(xdgSurface)
 {
-    LOG_DEBUG("enter");
+    windowTitle_ = std::to_string((long)((void *)this)) + std::string("-Untitled");
+    LOG_DEBUG("enter : %{public}s.", windowTitle_.c_str());
 }
 
 WaylandXdgToplevel::~WaylandXdgToplevel() noexcept
@@ -160,11 +161,11 @@ WaylandXdgToplevel::~WaylandXdgToplevel() noexcept
 void WaylandXdgToplevel::SetTitle(const char *title)
 {
     LOG_DEBUG("Window %{public}s, set Title %{public}s.", windowTitle_.c_str(), title);
+    windowTitle_ = std::to_string((long)((void *)this)) + std::string("-") + std::string(title);
     auto xdgSurface = xdgSurface_.promote();
     if (xdgSurface != nullptr) {
         xdgSurface->SetTitle(title);
     }
-    windowTitle_ = title;
 }
 
 void WaylandXdgToplevel::Move(uint32_t serial)
@@ -217,6 +218,11 @@ void WaylandXdgToplevel::SetMinSize(int32_t width, int32_t height)
 void WaylandXdgToplevel::SetMaximized()
 {
     LOG_DEBUG("Window %{public}s.", windowTitle_.c_str());
+    if (state_.maximized) {
+        LOG_DEBUG("Window %{public}s already Maximized.", windowTitle_.c_str());
+        return UnSetMaximized();
+    }
+    state_.maximized = true;
     auto xdgSurface = xdgSurface_.promote();
     if (xdgSurface != nullptr) {
         xdgSurface->SetMaximized();
@@ -226,6 +232,7 @@ void WaylandXdgToplevel::SetMaximized()
 void WaylandXdgToplevel::UnSetMaximized()
 {
     LOG_DEBUG("Window %{public}s.", windowTitle_.c_str());
+    state_.maximized = false;
     auto xdgSurface = xdgSurface_.promote();
     if (xdgSurface != nullptr) {
         xdgSurface->UnSetMaximized();
@@ -235,6 +242,7 @@ void WaylandXdgToplevel::UnSetMaximized()
 void WaylandXdgToplevel::SetFullscreen()
 {
     LOG_DEBUG("Window %{public}s.", windowTitle_.c_str());
+    state_.fullscreen = true;
     auto xdgSurface = xdgSurface_.promote();
     if (xdgSurface != nullptr) {
         xdgSurface->SetFullscreen();
@@ -244,6 +252,7 @@ void WaylandXdgToplevel::SetFullscreen()
 void WaylandXdgToplevel::UnSetFullscreen()
 {
     LOG_DEBUG("Window %{public}s.", windowTitle_.c_str());
+    state_.fullscreen = false;
     auto xdgSurface = xdgSurface_.promote();
     if (xdgSurface != nullptr) {
         xdgSurface->UnSetFullscreen();
@@ -253,6 +262,7 @@ void WaylandXdgToplevel::UnSetFullscreen()
 void WaylandXdgToplevel::SetMinimized()
 {
     LOG_DEBUG("Window %{public}s.", windowTitle_.c_str());
+    state_.minimized = true;
     auto xdgSurface = xdgSurface_.promote();
     if (xdgSurface != nullptr) {
         xdgSurface->SetMinimized();
@@ -261,10 +271,7 @@ void WaylandXdgToplevel::SetMinimized()
 
 void WaylandXdgToplevel::SendConfigure()
 {
-    struct wl_array states;
-    wl_array_init(&states);
-    xdg_toplevel_send_configure(WlResource(), rect_.width, rect_.height, &states);
-    wl_array_release(&states);
+    SetRect(rect_);
 }
 
 void WaylandXdgToplevel::HandleCommit()
@@ -278,9 +285,18 @@ void WaylandXdgToplevel::SetRect(Rect rect)
     struct wl_array states;
     uint32_t *s;
     wl_array_init(&states);
-    wl_array_init(&states);
-    s = static_cast<uint32_t *>(wl_array_add(&states, sizeof(uint32_t)));
-    *s = XDG_TOPLEVEL_STATE_RESIZING;
+    if (state_.maximized) {
+        s = static_cast<uint32_t *>(wl_array_add(&states, sizeof(uint32_t)));
+        *s = XDG_TOPLEVEL_STATE_MAXIMIZED;
+    }
+    if (state_.fullscreen) {
+        s = static_cast<uint32_t *>(wl_array_add(&states, sizeof(uint32_t)));
+        *s = XDG_TOPLEVEL_STATE_FULLSCREEN;
+    }
+    if (state_.resizing) {
+        s = static_cast<uint32_t *>(wl_array_add(&states, sizeof(uint32_t)));
+        *s = XDG_TOPLEVEL_STATE_RESIZING;
+    }
     s = static_cast<uint32_t *>(wl_array_add(&states, sizeof(uint32_t)));
     *s = XDG_TOPLEVEL_STATE_ACTIVATED;
     xdg_toplevel_send_configure(WlResource(), rect.width, rect.height, &states);
