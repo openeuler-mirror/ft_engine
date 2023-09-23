@@ -19,6 +19,7 @@
 #include "wayland_resource_object.h"
 #include "wayland_surface.h"
 #include "wayalnd_utils.h"
+#include "wayland_xdg_popup.h"
 
 namespace FT {
 namespace Wayland {
@@ -71,6 +72,7 @@ private:
     OHOS::wptr<WaylandXdgWmObject> xdgWm_;
     OHOS::wptr<WaylandSurface> surface_;
     OHOS::wptr<WaylandXdgToplevel> toplevel_;
+    OHOS::wptr<WaylandXdgPopup> popUp_;
     std::string windowTitle_ = "unknow";
 };
 } // namespace Wayland
