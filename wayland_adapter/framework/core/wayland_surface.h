@@ -125,8 +125,5 @@ private:
     SkBitmap srcBitmap_;
     std::vector<OHOS::sptr<FrameCallback>> pengindCb_;
 };
-
-
-
 } // namespace Wayland
 } // namespace FT

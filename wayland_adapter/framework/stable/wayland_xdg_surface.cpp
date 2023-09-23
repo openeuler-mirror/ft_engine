@@ -102,6 +102,26 @@ void WaylandXdgSurface::GetToplevel(uint32_t id)
 void WaylandXdgSurface::GetPopup(uint32_t id, struct wl_resource *parent, struct wl_resource *positioner)
 {
     LOG_DEBUG("Window %{public}s.", windowTitle_.c_str());
+    auto parentXdgSurface = CastFromResource<WaylandXdgSurface>(parent);
+    if (parentXdgSurface == nullptr) {
+        LOG_ERROR("parentXdgSurface is nullptr.");
+        return;
+    }
+
+    auto xdgPositioner = CastFromResource<WaylandXdgPositioner>(positioner);
+    if (xdgPositioner == nullptr) {
+        LOG_ERROR("xdgPositioner is nullptr.");
+        return;
+    }
+
+    auto popUp = WaylandXdgPopup::Create(this, parentXdgSurface, xdgPositioner, id);
+    if (popUp == nullptr) {
+        LOG_ERROR("no memory");
+        return;
+    }
+    popUp_ = popUp;
+    popUp_->UpdateSize(0, 0, xdgPositioner->GetSize().width, xdgPositioner->GetSize().height);
+    role_ = SurfaceRole::XDG_POPUP;
 }
 
 void WaylandXdgSurface::SetWindowGeometry(int32_t x, int32_t y, int32_t width, int32_t height)
