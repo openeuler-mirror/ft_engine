@@ -17,6 +17,7 @@
 
 #include "wayland_objects_pool.h"
 #include "wayland_xdg_surface.h"
+#include "wayland_xdg_positioner.h"
 #include "version.h"
 
 namespace FT {
@@ -72,6 +73,16 @@ WaylandXdgWmObject::~WaylandXdgWmObject() noexcept {}
 
 void WaylandXdgWmObject::CreatePositioner(struct wl_client *client, uint32_t id)
 {
+    if (client != client_) {
+        LOG_WARN("client conflict");
+        return;
+    }
+
+    auto xdgPositioner = WaylandXdgPositioner::Create(client, Version(), id);
+    if (xdgPositioner == nullptr) {
+        LOG_ERROR("no memory");
+        return;
+    }
 }
 
 void WaylandXdgWmObject::GetXdgSurface(struct wl_client *client, struct wl_resource *xdgWmBaseResource,
