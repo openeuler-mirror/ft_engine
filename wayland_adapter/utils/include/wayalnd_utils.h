@@ -36,6 +36,26 @@ struct Rect {
     }
 };
 
+struct Offset {
+    int32_t x = 0;
+    int32_t y = 0;
+    void Reset()
+    {
+        x = 0;
+        y = 0;
+    }
+};
+
+struct Size {
+    uint32_t width = 0;
+    uint32_t height = 0;
+    void Reset()
+    {
+        width = 0;
+        height = 0;
+    }
+};
+
 using SurfaceCommitCallback = std::function<void()>;
 using SurfaceRectCallback = std::function<void(Rect)>;
 
