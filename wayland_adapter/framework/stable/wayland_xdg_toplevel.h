@@ -69,6 +69,13 @@ private:
     OHOS::wptr<WaylandXdgSurface> xdgSurface_;
     std::string windowTitle_ = "unknow";
     Rect rect_;
+
+    struct {
+        bool maximized = false;
+        bool minimized = false;
+        bool fullscreen = false;
+        bool resizing = true;
+    }state_;
 };
 } // namespace Wayland
 } // namespace FT
