@@ -82,9 +82,14 @@ WaylandXdgSurface::WaylandXdgSurface(const OHOS::sptr<WaylandXdgWmObject> &xdgWm
 {
     surface->AddCommitCallback([this]() { OnSurfaceCommit(); });
     surface->AddRectCallback([this](Rect rect) { OnSurfaceRect(rect); });
+    windowTitle_ = std::to_string((long)((void *)this)) + std::string("-Untitled");
+    LOG_DEBUG("enter : %{public}s.", windowTitle_.c_str());
 }
 
-WaylandXdgSurface::~WaylandXdgSurface() noexcept {}
+WaylandXdgSurface::~WaylandXdgSurface() noexcept
+{
+    LOG_DEBUG("exit : %{public}s.", windowTitle_.c_str());
+}
 
 void WaylandXdgSurface::GetToplevel(uint32_t id)
 {
@@ -186,11 +191,11 @@ void WaylandXdgSurface::OnSurfaceRect(Rect rect)
 void WaylandXdgSurface::SetTitle(const char *title)
 {
     LOG_DEBUG("Window %{public}s, set Title %{public}s.", windowTitle_.c_str(), title);
+    windowTitle_ = std::to_string((long)((void *)this)) + std::string("-") + std::string(title);
     auto surface = surface_.promote();
     if (surface != nullptr) {
         surface->SetTitle(title);
     }
-    windowTitle_ = title;
 }
 
 void WaylandXdgSurface::Resize(uint32_t serial, uint32_t edges)
