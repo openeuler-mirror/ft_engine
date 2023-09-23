@@ -414,6 +414,14 @@ void WaylandSurface::Offset(int32_t x, int32_t y)
 }
 
 void WaylandSurface::HandleCommit() {
+    int32_t timeMs = 0;
+    struct timespec ts = { 0, 0 };
+    if (clock_gettime(CLOCK_MONOTONIC, &ts) == 0) {
+        timeMs = (ts.tv_sec * 1000) + (ts.tv_nsec / 1000000);
+    } else {
+        LOG_ERROR("failed to clock_gettime");
+    }
+
     if (new_.buffer != nullptr) {
         wl_shm_buffer *shm = wl_shm_buffer_get(new_.buffer);
         if (shm == nullptr) {
@@ -426,16 +434,16 @@ void WaylandSurface::HandleCommit() {
         CopyBuffer(shm);
         wl_shm_buffer_end_access(shm);
 
-        wl_callback_send_done(new_.buffer, 0);
+        wl_callback_send_done(new_.buffer, timeMs);
         new_.buffer = nullptr;
     }
 
     if (new_.cb != nullptr) {
-        wl_callback_send_done(new_.cb->WlResource(), 0);
+        wl_callback_send_done(new_.cb->WlResource(), timeMs);
         wl_resource_destroy(new_.cb->WlResource());
         new_.cb = nullptr;
         for (auto &cb : pengindCb_) {
-            wl_callback_send_done(cb->WlResource(), 0);
+            wl_callback_send_done(cb->WlResource(), timeMs);
             wl_resource_destroy(cb->WlResource());
         }
         pengindCb_.clear();
