@@ -271,9 +271,16 @@ void WaylandWindowListener::OnModeChange(OHOS::Rosen::WindowMode mode)
 
 WaylandSurface::WaylandSurface(struct wl_client *client, struct wl_resource *parent, uint32_t version, uint32_t id)
     : WaylandResourceObject(client, &wl_surface_interface, version, id, &IWaylandSurface::impl_),
-      parent_(parent) {}
+      parent_(parent)
+{
+    windowTitle_ = std::to_string((long)((void *)this)) + std::string("-Untitled");
+    LOG_DEBUG("enter : %{public}s.", windowTitle_.c_str());
+}
 
-WaylandSurface::~WaylandSurface() noexcept {}
+WaylandSurface::~WaylandSurface() noexcept
+{
+    LOG_DEBUG("exit : %{public}s.", windowTitle_.c_str());
+}
 
 void WaylandSurface::AddCommitCallback(SurfaceCommitCallback callback)
 {
@@ -328,12 +335,26 @@ void WaylandSurface::Frame(uint32_t callback)
 
 void WaylandSurface::SetOpaqueRegion(struct wl_resource *regionResource)
 {
-    LOG_DEBUG("WaylandSurface::SetOpaqueRegion, ignore");
+    if (regionResource == nullptr) {
+        LOG_ERROR("regionResource is nullptr");
+        return;
+    }
+
+    auto region = CastFromResource<WaylandRegion>(regionResource);
+    if (region == nullptr) {
+        LOG_ERROR("failed to cast WaylandRegion from regionResource, maybe resource is not valid.");
+        return;
+    }
+
+    opaqueRect_ = region->GetRect();
+    LOG_DEBUG("%{public}s SetOpaqueRegion, rect: x %{public}d, y %{public}d, width %{public}d, height %{public}d.",
+        windowTitle_.c_str(), opaqueRect_.x, opaqueRect_.y, opaqueRect_.width, opaqueRect_.height);
 }
 
 void WaylandSurface::SetInputRegion(struct wl_resource *regionResource)
 {
     if (regionResource == nullptr) {
+        LOG_ERROR("regionResource is nullptr");
         return;
     }
 
@@ -344,9 +365,9 @@ void WaylandSurface::SetInputRegion(struct wl_resource *regionResource)
     }
 
     // input
-    Rect rect = region->GetRect();
+    inputRect_ = region->GetRect();
     LOG_DEBUG("SetInputRegion, rect: x %{public}d, y %{public}d, width %{public}d, height %{public}d.",
-        rect.x, rect.y, rect.width, rect.height);
+        inputRect_.x, inputRect_.y, inputRect_.width, inputRect_.height);
 }
 
 void WaylandSurface::StartMove()
@@ -385,8 +406,6 @@ void WaylandSurface::Commit()
     for (auto &cb : commitCallbacks_) {
         cb();
     }
-
-
 }
 
 void WaylandSurface::SetBufferTransform(int32_t transform)
@@ -491,7 +510,7 @@ void WaylandSurface::CreateWindow()
         LOG_ERROR("Window::Create failed");
         return;
     }
-    LOG_DEBUG("Window::Create success");
+    LOG_DEBUG("Window::Create success, Title %{public}s.", windowTitle_.c_str());
     auto listener = std::make_shared<InputEventConsumer>(this);
     window_->SetInputEventConsumer(listener);
     window_->Show();
@@ -584,7 +603,7 @@ void WaylandSurface::OnModeChange(OHOS::Rosen::WindowMode mode)
 void WaylandSurface::SetTitle(const char *title)
 {
     LOG_DEBUG("Window %{public}s, set Title %{public}s.", windowTitle_.c_str(), title);
-    windowTitle_ = title;
+    windowTitle_ = std::to_string((long)((void *)this)) + std::string("-") + std::string(title);
     if (window_ == nullptr) {
         LOG_ERROR("window_ is nullptr");
         return;
@@ -599,7 +618,6 @@ void WaylandSurface::Resize(uint32_t serial, uint32_t edges)
         LOG_ERROR("window_ is nullptr");
         return;
     }
-    // window_->Resize(uint32_t width, uint32_t height);
 }
 
 void WaylandSurface::SetMaxSize(int32_t width, int32_t height)
@@ -627,12 +645,7 @@ void WaylandSurface::SetMaximized()
         LOG_ERROR("window_ is nullptr");
         return;
     }
-    if (maximized_) {
-        LOG_DEBUG("Window %{public}s already Maximized.", windowTitle_.c_str());
-        return UnSetMaximized();
-    }
     window_->Maximize();
-    maximized_ = true;
 }
 
 void WaylandSurface::UnSetMaximized()
@@ -643,7 +656,6 @@ void WaylandSurface::UnSetMaximized()
         return;
     }
     window_->Recover();
-    maximized_ = false;
 }
 
 void WaylandSurface::SetFullscreen()
@@ -699,7 +711,7 @@ void WaylandSurface::AddChild(struct wl_resource *child, int32_t x, int32_t y)
     }
     if (childs_.count(child) > 0) {
         childs_[child].offsetX = x;
-        childs_[child].offsetX = y;
+        childs_[child].offsetY = y;
         return;
     }
     SubSurfaceData data;
