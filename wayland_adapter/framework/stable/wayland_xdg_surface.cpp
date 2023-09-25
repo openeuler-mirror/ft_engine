@@ -131,6 +131,13 @@ void WaylandXdgSurface::GetPopup(uint32_t id, struct wl_resource *parent, struct
 
 void WaylandXdgSurface::SetWindowGeometry(int32_t x, int32_t y, int32_t width, int32_t height)
 {
+    LOG_DEBUG("Window %{public}s. x:%{public}d y:%{public}d width:%{public}d height:%{public}d",
+        windowTitle_.c_str(), x, y, width, height);
+    auto surface = surface_.promote();
+    if (surface != nullptr) {
+        Rect rect = {x, y, (uint32_t)width, (uint32_t)height};
+        surface->SetWindowGeometry(rect);
+    }
 }
 
 void WaylandXdgSurface::AckConfigure(uint32_t serial)

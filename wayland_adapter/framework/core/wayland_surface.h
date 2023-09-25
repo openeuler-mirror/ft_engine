@@ -76,6 +76,8 @@ public:
     void UnSetFullscreen();
     void SetMinimized();
     void Close();
+    void SetWindowGeometry(Rect rect);
+
     void WithTopLevel(bool toplevel);
     void AddChild(struct wl_resource *child, int32_t x, int32_t y);
     void AddParent(struct wl_resource *parent);
@@ -104,6 +106,7 @@ private:
     std::list<SurfaceCommitCallback> commitCallbacks_;
     std::list<SurfaceRectCallback> rectCallbacks_;
     Rect rect_;
+    Rect geometryRect_ = {0};
     SurfaceState old_;
     SurfaceState new_;
     bool isPointerSurface_ = false;
