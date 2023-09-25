@@ -61,6 +61,7 @@ struct WindowOptionExt {
     bool maximizeAfterShow = false;
     bool fullscreenAfterShow = false;
     bool minimizeAfterShow = false;
+    std::string title;
 };
 
 using SurfaceCommitCallback = std::function<void()>;
