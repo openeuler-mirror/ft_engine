@@ -119,6 +119,11 @@ bool InputEventConsumer::OnInputEvent(const std::shared_ptr<OHOS::MMI::PointerEv
         return false;
     }
 
+    Rect rect = wlSurface_->GetWindowGeometry();
+    if (rect.x >= 0 && rect.y >= 0 && rect.width > 0 && rect.height > 0) {
+        pointerItem.SetWindowX(pointerItem.GetWindowX() + rect.x);
+        pointerItem.SetWindowY(pointerItem.GetWindowY() + rect.y);
+    }
     if (pointerEvent->GetPointerAction() ==  OHOS::MMI::PointerEvent::POINTER_ACTION_ENTER_WINDOW) {
         for (auto &pointer : pointerList) {
             pointer->OnPointerEnter(pointerItem.GetWindowX(), pointerItem.GetWindowY(), wlSurface_->WlResource());
@@ -393,10 +398,9 @@ void WaylandSurface::Commit()
         return; // it is pointer surface, we do not handle commit!
     }
 
-    if (withTopLevel_ && (window_ == nullptr)) {
-        CreateWindow();
-        LOG_DEBUG("CreateWindow");
-
+    if (!WindowValid()) {
+        LOG_ERROR("window is invalid");
+        return;
     }
     {
         HandleCommit();
@@ -489,6 +493,17 @@ void WaylandSurface::CheckIsPointerSurface()
     }
 
     LOG_DEBUG("this surface Pointer Surface: %{public}d", isPointerSurface_);
+}
+
+bool WaylandSurface::WindowValid()
+{
+    if (!withTopLevel_) {
+        return true;
+    }
+    if (window_ == nullptr) {
+        CreateWindow();
+    }
+    return window_ != nullptr;
 }
 
 void WaylandSurface::CreateWindow()
@@ -604,8 +619,8 @@ void WaylandSurface::SetTitle(const char *title)
 {
     LOG_DEBUG("Window %{public}s, set Title %{public}s.", windowTitle_.c_str(), title);
     windowTitle_ = std::to_string((long)((void *)this)) + std::string("-") + std::string(title);
-    if (window_ == nullptr) {
-        LOG_ERROR("window_ is nullptr");
+    if (!WindowValid()) {
+        LOG_ERROR("window is invalid");
         return;
     }
     window_->SetAPPWindowLabel(title);
@@ -614,8 +629,8 @@ void WaylandSurface::SetTitle(const char *title)
 void WaylandSurface::Resize(uint32_t serial, uint32_t edges)
 {
     LOG_DEBUG("Window %{public}s.", windowTitle_.c_str());
-    if (window_ == nullptr) {
-        LOG_ERROR("window_ is nullptr");
+    if (!WindowValid()) {
+        LOG_ERROR("window is invalid");
         return;
     }
 }
@@ -623,8 +638,8 @@ void WaylandSurface::Resize(uint32_t serial, uint32_t edges)
 void WaylandSurface::SetMaxSize(int32_t width, int32_t height)
 {
     LOG_DEBUG("Window %{public}s.", windowTitle_.c_str());
-    if (window_ == nullptr) {
-        LOG_ERROR("window_ is nullptr");
+    if (!WindowValid()) {
+        LOG_ERROR("window is invalid");
         return;
     }
 }
@@ -632,8 +647,8 @@ void WaylandSurface::SetMaxSize(int32_t width, int32_t height)
 void WaylandSurface::SetMinSize(int32_t width, int32_t height)
 {
     LOG_DEBUG("Window %{public}s.", windowTitle_.c_str());
-    if (window_ == nullptr) {
-        LOG_ERROR("window_ is nullptr");
+    if (!WindowValid()) {
+        LOG_ERROR("window is invalid");
         return;
     }
 }
@@ -641,8 +656,8 @@ void WaylandSurface::SetMinSize(int32_t width, int32_t height)
 void WaylandSurface::SetMaximized()
 {
     LOG_DEBUG("Window %{public}s.", windowTitle_.c_str());
-    if (window_ == nullptr) {
-        LOG_ERROR("window_ is nullptr");
+    if (!WindowValid()) {
+        LOG_ERROR("window is invalid");
         return;
     }
     window_->Maximize();
@@ -651,8 +666,8 @@ void WaylandSurface::SetMaximized()
 void WaylandSurface::UnSetMaximized()
 {
     LOG_DEBUG("Window %{public}s.", windowTitle_.c_str());
-    if (window_ == nullptr) {
-        LOG_ERROR("window_ is nullptr");
+    if (!WindowValid()) {
+        LOG_ERROR("window is invalid");
         return;
     }
     window_->Recover();
@@ -661,8 +676,8 @@ void WaylandSurface::UnSetMaximized()
 void WaylandSurface::SetFullscreen()
 {
     LOG_DEBUG("Window %{public}s.", windowTitle_.c_str());
-    if (window_ == nullptr) {
-        LOG_ERROR("window_ is nullptr");
+    if (!WindowValid()) {
+        LOG_ERROR("window is invalid");
         return;
     }
     window_->SetFullScreen(true);
@@ -671,8 +686,8 @@ void WaylandSurface::SetFullscreen()
 void WaylandSurface::UnSetFullscreen()
 {
     LOG_DEBUG("Window %{public}s.", windowTitle_.c_str());
-    if (window_ == nullptr) {
-        LOG_ERROR("window_ is nullptr");
+    if (!WindowValid()) {
+        LOG_ERROR("window is invalid");
         return;
     }
     window_->SetFullScreen(false);
@@ -681,8 +696,8 @@ void WaylandSurface::UnSetFullscreen()
 void WaylandSurface::SetMinimized()
 {
     LOG_DEBUG("Window %{public}s.", windowTitle_.c_str());
-    if (window_ == nullptr) {
-        LOG_ERROR("window_ is nullptr");
+    if (!WindowValid()) {
+        LOG_ERROR("window is invalid");
         return;
     }
     window_->Minimize();
@@ -691,11 +706,23 @@ void WaylandSurface::SetMinimized()
 void WaylandSurface::Close()
 {
     LOG_DEBUG("Window %{public}s.", windowTitle_.c_str());
-    if (window_ == nullptr) {
-        LOG_ERROR("window_ is nullptr");
+    if (!WindowValid()) {
+        LOG_ERROR("window is invalid");
         return;
     }
     window_->Close();
+}
+
+void WaylandSurface::SetWindowGeometry(Rect rect)
+{
+    LOG_DEBUG("Window %{public}s. x:%{public}d y:%{public}d width:%{public}d height:%{public}d",
+        windowTitle_.c_str(), rect.x, rect.y, rect.width, rect.height);
+    geometryRect_ = rect;
+}
+
+Rect WaylandSurface::GetWindowGeometry()
+{
+    return geometryRect_;
 }
 
 void WaylandSurface::WithTopLevel(bool toplevel)
@@ -742,7 +769,18 @@ void WaylandSurface::TriggerInnerCompose()
         LOG_ERROR("rsSurface_ is nullptr");
         return;
     }
-    auto framePtr = rsSurface_->RequestFrame(srcBitmap_.width(), srcBitmap_.height());
+    uint32_t width;
+    uint32_t height;
+    bool vailedGeometry = (geometryRect_.x >= 0 && geometryRect_.y >= 0 &&
+                           geometryRect_.width > 0 && geometryRect_.height > 0);
+    if (vailedGeometry) {
+        width = geometryRect_.width;
+        height = geometryRect_.height;
+    } else {
+        width = srcBitmap_.width();
+        height = srcBitmap_.height();
+    }
+    auto framePtr = rsSurface_->RequestFrame(width, height);
     if (framePtr == nullptr) {
         LOG_ERROR("RequestFrame failed");
         return;
@@ -754,14 +792,28 @@ void WaylandSurface::TriggerInnerCompose()
         return;
     }
     canvas->clear(SK_ColorTRANSPARENT);
-    canvas->drawBitmap(srcBitmap_, 0, 0);
+    if (vailedGeometry) {
+        SkPaint paint;
+        paint.setAntiAlias(true);
+        paint.setStyle(SkPaint::kFill_Style);
+        canvas->drawBitmapRect(srcBitmap_,
+            SkRect::MakeXYWH(geometryRect_.x, geometryRect_.y, geometryRect_.width, geometryRect_.height),
+            SkRect::MakeXYWH(0, 0, geometryRect_.width, geometryRect_.height),
+            &paint);
+    } else {
+        canvas->drawBitmap(srcBitmap_, 0, 0);
+    }
     for (auto &&[childKey, data] : childs_) {
         if (data.surface == nullptr) {
             continue;
         }
         LOG_DEBUG("Draw Child");
         auto surfaceChild = CastFromResource<WaylandSurface>(data.surface);
-        surfaceChild->ProcessSrcBitmap(canvas, data.offsetX, data.offsetY);
+        if (vailedGeometry) {
+            surfaceChild->ProcessSrcBitmap(canvas, data.offsetX - geometryRect_.x, data.offsetY - geometryRect_.y);
+        } else {
+            surfaceChild->ProcessSrcBitmap(canvas, data.offsetX, data.offsetY);
+        }
     }
     rsSurface_->FlushFrame(framePtr);
 }
