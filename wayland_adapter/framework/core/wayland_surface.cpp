@@ -769,6 +769,11 @@ void WaylandSurface::TriggerInnerCompose()
         LOG_ERROR("rsSurface_ is nullptr");
         return;
     }
+
+    if (srcBitmap_.width() == 0 || srcBitmap_.height() == 0) {
+        LOG_DEBUG("srcBitmap_ is nullptr");
+        return;
+    }
     uint32_t width;
     uint32_t height;
     bool vailedGeometry = (geometryRect_.x >= 0 && geometryRect_.y >= 0 &&
