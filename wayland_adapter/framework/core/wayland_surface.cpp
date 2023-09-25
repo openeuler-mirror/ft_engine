@@ -698,6 +698,13 @@ void WaylandSurface::Close()
     window_->Close();
 }
 
+void WaylandSurface::SetWindowGeometry(Rect rect)
+{
+    LOG_DEBUG("Window %{public}s. x:%{public}d y:%{public}d width:%{public}d height:%{public}d",
+        windowTitle_.c_str(), rect.x, rect.y, rect.width, rect.height);
+    geometryRect_ = rect;
+}
+
 void WaylandSurface::WithTopLevel(bool toplevel)
 {
     withTopLevel_ = toplevel;
@@ -742,7 +749,18 @@ void WaylandSurface::TriggerInnerCompose()
         LOG_ERROR("rsSurface_ is nullptr");
         return;
     }
-    auto framePtr = rsSurface_->RequestFrame(srcBitmap_.width(), srcBitmap_.height());
+    uint32_t width;
+    uint32_t height;
+    bool vailedGeometry = (geometryRect_.x >= 0 && geometryRect_.y >= 0 && \
+                           geometryRect_.width > 0 && geometryRect_.height > 0);
+    if (vailedGeometry) {
+        width = geometryRect_.width;
+        height = geometryRect_.height;
+    } else {
+        width = srcBitmap_.width();
+        height = srcBitmap_.height();
+    }
+    auto framePtr = rsSurface_->RequestFrame(width, height);
     if (framePtr == nullptr) {
         LOG_ERROR("RequestFrame failed");
         return;
@@ -754,14 +772,28 @@ void WaylandSurface::TriggerInnerCompose()
         return;
     }
     canvas->clear(SK_ColorTRANSPARENT);
-    canvas->drawBitmap(srcBitmap_, 0, 0);
+    if (vailedGeometry) {
+        SkPaint paint;
+        paint.setAntiAlias(true);
+        paint.setStyle(SkPaint::kFill_Style);
+        canvas->drawBitmapRect(srcBitmap_,
+            SkRect::MakeXYWH(geometryRect_.x, geometryRect_.y, geometryRect_.width, geometryRect_.height),
+            SkRect::MakeXYWH(0, 0, geometryRect_.width, geometryRect_.height),
+            &paint);
+    } else {
+        canvas->drawBitmap(srcBitmap_, 0, 0);
+    }
     for (auto &&[childKey, data] : childs_) {
         if (data.surface == nullptr) {
             continue;
         }
         LOG_DEBUG("Draw Child");
         auto surfaceChild = CastFromResource<WaylandSurface>(data.surface);
-        surfaceChild->ProcessSrcBitmap(canvas, data.offsetX, data.offsetY);
+        if (vailedGeometry) {
+            surfaceChild->ProcessSrcBitmap(canvas, data.offsetX - geometryRect_.x, data.offsetY - geometryRect_.y);
+        } else {
+            surfaceChild->ProcessSrcBitmap(canvas, data.offsetX, data.offsetY);
+        }
     }
     rsSurface_->FlushFrame(framePtr);
 }
