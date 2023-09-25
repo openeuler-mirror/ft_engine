@@ -97,7 +97,6 @@ private:
     void CreateWindow();
     void CopyBuffer(struct wl_shm_buffer *shm);
     void CheckIsPointerSurface();
-    bool WindowValid();
 
     struct wl_resource *parent_ = nullptr;
     std::list<SurfaceCommitCallback> commitCallbacks_;

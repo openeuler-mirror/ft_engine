@@ -390,10 +390,10 @@ void WaylandSurface::Commit()
         return; // it is pointer surface, we do not handle commit!
     }
 
-    if (!WindowValid()) {
-        LOG_ERROR("window is invalid");
-        return;
+    if (window_ == nullptr) {
+        CreateWindow();
     }
+
     {
         HandleCommit();
         LOG_DEBUG("withTopLevel_ %{public}d", withTopLevel_);
@@ -485,17 +485,6 @@ void WaylandSurface::CheckIsPointerSurface()
     }
 
     LOG_DEBUG("this surface Pointer Surface: %{public}d", isPointerSurface_);
-}
-
-bool WaylandSurface::WindowValid()
-{
-    if (!withTopLevel_) {
-        return true;
-    }
-    if (window_ == nullptr) {
-        CreateWindow();
-    }
-    return window_ != nullptr;
 }
 
 void WaylandSurface::CreateWindow()
