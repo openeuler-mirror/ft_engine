@@ -76,6 +76,9 @@ public:
     void UnSetFullscreen();
     void SetMinimized();
     void Close();
+    void SetWindowGeometry(Rect rect);
+    Rect GetWindowGeometry();
+
     void WithTopLevel(bool toplevel);
     void AddChild(struct wl_resource *child, int32_t x, int32_t y);
     void AddParent(struct wl_resource *parent);
@@ -99,11 +102,13 @@ private:
     void CreateWindow();
     void CopyBuffer(struct wl_shm_buffer *shm);
     void CheckIsPointerSurface();
+    bool WindowValid();
 
     struct wl_resource *parent_ = nullptr;
     std::list<SurfaceCommitCallback> commitCallbacks_;
     std::list<SurfaceRectCallback> rectCallbacks_;
     Rect rect_;
+    Rect geometryRect_ = {0};
     SurfaceState old_;
     SurfaceState new_;
     bool isPointerSurface_ = false;
