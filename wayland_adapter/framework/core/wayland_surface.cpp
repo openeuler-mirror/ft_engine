@@ -279,6 +279,11 @@ WaylandSurface::WaylandSurface(struct wl_client *client, struct wl_resource *par
       parent_(parent)
 {
     windowTitle_ = std::to_string((long)((void *)this)) + std::string("-Untitled");
+    windowOptionExt_ = std::make_shared<WindowOptionExt>();
+    windowOption_ = new OHOS::Rosen::WindowOption();
+    windowOption_->SetWindowType(OHOS::Rosen::WindowType::APP_WINDOW_BASE);
+    windowOption_->SetWindowMode(OHOS::Rosen::WindowMode::WINDOW_MODE_FLOATING);
+    windowOption_->SetMainHandlerAvailable(false);
     LOG_DEBUG("enter : %{public}s.", windowTitle_.c_str());
 }
 
@@ -295,6 +300,11 @@ void WaylandSurface::AddCommitCallback(SurfaceCommitCallback callback)
 void WaylandSurface::AddRectCallback(SurfaceRectCallback callback)
 {
     rectCallbacks_.push_back(std::move(callback));
+}
+
+void WaylandSurface::AddWindowCreateCallback(WindowCreateCallback callback)
+{
+    windowCreatebacks_.push_back(std::move(callback));
 }
 
 void WaylandSurface::Attach(struct wl_resource *bufferResource, int32_t x, int32_t y)
@@ -351,9 +361,9 @@ void WaylandSurface::SetOpaqueRegion(struct wl_resource *regionResource)
         return;
     }
 
-    opaqueRect_ = region->GetRect();
-    LOG_DEBUG("%{public}s SetOpaqueRegion, rect: x %{public}d, y %{public}d, width %{public}d, height %{public}d.",
-        windowTitle_.c_str(), opaqueRect_.x, opaqueRect_.y, opaqueRect_.width, opaqueRect_.height);
+    new_.opaqueRegion = region->GetRect();
+    LOG_DEBUG("SetOpaqueRegion, rect: x %{public}d, y %{public}d, width %{public}d, height %{public}d.",
+        new_.opaqueRegion.x, new_.opaqueRegion.y, new_.opaqueRegion.width, new_.opaqueRegion.height);
 }
 
 void WaylandSurface::SetInputRegion(struct wl_resource *regionResource)
@@ -369,27 +379,9 @@ void WaylandSurface::SetInputRegion(struct wl_resource *regionResource)
         return;
     }
 
-    // input
-    inputRect_ = region->GetRect();
+    new_.inputRegion = region->GetRect();
     LOG_DEBUG("SetInputRegion, rect: x %{public}d, y %{public}d, width %{public}d, height %{public}d.",
-        inputRect_.x, inputRect_.y, inputRect_.width, inputRect_.height);
-}
-
-void WaylandSurface::StartMove()
-{
-    if (window_ != nullptr) {
-        window_->StartMove();
-    }
-}
-
-void WaylandSurface::SetWindowMode(OHOS::Rosen::WindowMode mode)
-{
-    mode_ = mode;
-}
-
-void WaylandSurface::SetWindowType(OHOS::Rosen::WindowType type)
-{
-    type_ = type;
+        new_.inputRegion.x, new_.inputRegion.y, new_.inputRegion.width, new_.inputRegion.height);
 }
 
 void WaylandSurface::Commit()
@@ -513,14 +505,9 @@ void WaylandSurface::CreateWindow()
         return;
     }
 
-    OHOS::sptr<OHOS::Rosen::WindowOption> option(new OHOS::Rosen::WindowOption());
-    option->SetWindowType(type_);
-    option->SetWindowMode(mode_);
-    option->SetMainHandlerAvailable(false);
-
     static int count = 0;
     std::string windowName = "WaylandWindow" + std::to_string(count++);
-    window_ = OHOS::Rosen::Window::Create(windowName, option);
+    window_ = OHOS::Rosen::Window::Create(windowName, windowOption_);
     if (window_ == nullptr) {
         LOG_ERROR("Window::Create failed");
         return;
@@ -551,6 +538,10 @@ void WaylandSurface::CreateWindow()
     rsSurface_->SetRenderContext(renderContext_.get());
 #endif
 
+    for (auto &cb : windowCreatebacks_) {
+        cb(window_);
+    }
+
     OHOS::Rosen::Rect rect = window_->GetRect();
     rect_.width = rect.width_;
     rect_.height = rect.height_;
@@ -558,6 +549,14 @@ void WaylandSurface::CreateWindow()
     for (auto &cb : rectCallbacks_) {
         cb(rect_);
     }
+
+    // if (windowOptionExt_->maximizeAfterShow) {
+    //     window_->Maximize();
+    // } else if (windowOptionExt_->fullscreenAfterShow) {
+    //     window_->SetFullScreen(true);
+    // } else if (windowOptionExt_->minimizeAfterShow) {
+    //     window_->Minimize();
+    // }
 }
 
 void WaylandSurface::CopyBuffer(struct wl_shm_buffer *shm)
@@ -613,104 +612,6 @@ void WaylandSurface::OnSizeChange(const OHOS::Rosen::Rect& rect, OHOS::Rosen::Wi
 void WaylandSurface::OnModeChange(OHOS::Rosen::WindowMode mode)
 {
     LOG_DEBUG("OnModeChange, window mode is %{public}d, ignore", mode);
-}
-
-void WaylandSurface::SetTitle(const char *title)
-{
-    LOG_DEBUG("Window %{public}s, set Title %{public}s.", windowTitle_.c_str(), title);
-    windowTitle_ = std::to_string((long)((void *)this)) + std::string("-") + std::string(title);
-    if (!WindowValid()) {
-        LOG_ERROR("window is invalid");
-        return;
-    }
-    window_->SetAPPWindowLabel(title);
-}
-
-void WaylandSurface::Resize(uint32_t serial, uint32_t edges)
-{
-    LOG_DEBUG("Window %{public}s.", windowTitle_.c_str());
-    if (!WindowValid()) {
-        LOG_ERROR("window is invalid");
-        return;
-    }
-}
-
-void WaylandSurface::SetMaxSize(int32_t width, int32_t height)
-{
-    LOG_DEBUG("Window %{public}s.", windowTitle_.c_str());
-    if (!WindowValid()) {
-        LOG_ERROR("window is invalid");
-        return;
-    }
-}
-
-void WaylandSurface::SetMinSize(int32_t width, int32_t height)
-{
-    LOG_DEBUG("Window %{public}s.", windowTitle_.c_str());
-    if (!WindowValid()) {
-        LOG_ERROR("window is invalid");
-        return;
-    }
-}
-
-void WaylandSurface::SetMaximized()
-{
-    LOG_DEBUG("Window %{public}s.", windowTitle_.c_str());
-    if (!WindowValid()) {
-        LOG_ERROR("window is invalid");
-        return;
-    }
-    window_->Maximize();
-}
-
-void WaylandSurface::UnSetMaximized()
-{
-    LOG_DEBUG("Window %{public}s.", windowTitle_.c_str());
-    if (!WindowValid()) {
-        LOG_ERROR("window is invalid");
-        return;
-    }
-    window_->Recover();
-}
-
-void WaylandSurface::SetFullscreen()
-{
-    LOG_DEBUG("Window %{public}s.", windowTitle_.c_str());
-    if (!WindowValid()) {
-        LOG_ERROR("window is invalid");
-        return;
-    }
-    window_->SetFullScreen(true);
-}
-
-void WaylandSurface::UnSetFullscreen()
-{
-    LOG_DEBUG("Window %{public}s.", windowTitle_.c_str());
-    if (!WindowValid()) {
-        LOG_ERROR("window is invalid");
-        return;
-    }
-    window_->SetFullScreen(false);
-}
-
-void WaylandSurface::SetMinimized()
-{
-    LOG_DEBUG("Window %{public}s.", windowTitle_.c_str());
-    if (!WindowValid()) {
-        LOG_ERROR("window is invalid");
-        return;
-    }
-    window_->Minimize();
-}
-
-void WaylandSurface::Close()
-{
-    LOG_DEBUG("Window %{public}s.", windowTitle_.c_str());
-    if (!WindowValid()) {
-        LOG_ERROR("window is invalid");
-        return;
-    }
-    window_->Close();
 }
 
 void WaylandSurface::SetWindowGeometry(Rect rect)
