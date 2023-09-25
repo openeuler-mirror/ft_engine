@@ -125,14 +125,11 @@ void IWaylandXdgToplevel::DestroyResource(struct wl_client *client, struct wl_re
 void WaylandXdgToplevel::DestroyResource(struct wl_client *client, struct wl_resource *resource)
 {
     LOG_DEBUG("Window %{public}s.", windowTitle_.c_str());
-    auto xdgSurface = xdgSurface_.promote();
-    if (xdgSurface != nullptr) {
-        xdgSurface->Close();
-    }
     WaylandResourceObject::DefaultDestroyResource(client, resource);
 }
 
-OHOS::sptr<WaylandXdgToplevel> WaylandXdgToplevel::Create(const OHOS::sptr<WaylandXdgSurface> &xdgSurface, uint32_t id)
+OHOS::sptr<WaylandXdgToplevel> WaylandXdgToplevel::Create(const OHOS::sptr<WaylandXdgSurface> &xdgSurface, uint32_t id,
+    OHOS::sptr<OHOS::Rosen::WindowOption> windowOption, std::shared_ptr<WindowOptionExt> windowOptionExt)
 {
     if (xdgSurface == nullptr) {
         LOG_WARN("xdgSurface is nullptr");
@@ -141,6 +138,9 @@ OHOS::sptr<WaylandXdgToplevel> WaylandXdgToplevel::Create(const OHOS::sptr<Wayla
 
     auto xdgTopLevel = OHOS::sptr<WaylandXdgToplevel>(new WaylandXdgToplevel(xdgSurface, id));
     WaylandObjectsPool::GetInstance().AddObject(ObjectId(xdgTopLevel->WlClient(), xdgTopLevel->Id()), xdgTopLevel);
+    xdgTopLevel->windowOption_ = windowOption;
+    xdgTopLevel->windowOptionExt_ = windowOptionExt;
+
     return xdgTopLevel;
 }
 
@@ -162,57 +162,40 @@ void WaylandXdgToplevel::SetTitle(const char *title)
 {
     LOG_DEBUG("Window %{public}s, set Title %{public}s.", windowTitle_.c_str(), title);
     windowTitle_ = std::to_string((long)((void *)this)) + std::string("-") + std::string(title);
-    auto xdgSurface = xdgSurface_.promote();
-    if (xdgSurface != nullptr) {
-        xdgSurface->SetTitle(title);
+    if (window_ != nullptr) {
+        window_->SetAPPWindowLabel(title);
     }
 }
 
 void WaylandXdgToplevel::Move(uint32_t serial)
 {
-    auto xdgSurface = xdgSurface_.promote();
-    if (xdgSurface != nullptr) {
-        xdgSurface->StartMove();
+    if (window_ != nullptr) {
+        window_->StartMove();
     }
 }
 
 void WaylandXdgToplevel::Resize(uint32_t serial, uint32_t edges)
 {
     LOG_DEBUG("Window %{public}s.", windowTitle_.c_str());
-    auto xdgSurface = xdgSurface_.promote();
-    if (xdgSurface != nullptr) {
-        xdgSurface->Resize(serial, edges);
-    }
 }
 
 void WaylandXdgToplevel::SetAppId(const char *appId)
 {
     LOG_DEBUG("Window %{public}s.", windowTitle_.c_str());
-    if (strstr(appId, "desktop") != nullptr) {
-        auto xdgSurface = xdgSurface_.promote();
-        if (xdgSurface != nullptr) {
-            xdgSurface->SetWindowMode(OHOS::Rosen::WindowMode::WINDOW_MODE_FULLSCREEN);
-            xdgSurface->SetWindowType(OHOS::Rosen::WindowType::WINDOW_TYPE_DESKTOP);
-        }
+    if (strstr(appId, "desktop") != nullptr && windowOption_ != nullptr) {
+        windowOption_->SetWindowMode(OHOS::Rosen::WindowMode::WINDOW_MODE_FULLSCREEN);
+        windowOption_->SetWindowType(OHOS::Rosen::WindowType::WINDOW_TYPE_DESKTOP);
     }
 }
 
 void WaylandXdgToplevel::SetMaxSize(int32_t width, int32_t height)
 {
     LOG_DEBUG("Window %{public}s.", windowTitle_.c_str());
-    auto xdgSurface = xdgSurface_.promote();
-    if (xdgSurface != nullptr) {
-        xdgSurface->SetMaxSize(width, height);
-    }
 }
 
 void WaylandXdgToplevel::SetMinSize(int32_t width, int32_t height)
 {
     LOG_DEBUG("Window %{public}s.", windowTitle_.c_str());
-    auto xdgSurface = xdgSurface_.promote();
-    if (xdgSurface != nullptr) {
-        xdgSurface->SetMinSize(width, height);
-    }
 }
 
 void WaylandXdgToplevel::SetMaximized()
@@ -223,9 +206,12 @@ void WaylandXdgToplevel::SetMaximized()
         return UnSetMaximized();
     }
     state_.maximized = true;
-    auto xdgSurface = xdgSurface_.promote();
-    if (xdgSurface != nullptr) {
-        xdgSurface->SetMaximized();
+    if (window_ != nullptr) {
+        window_->Maximize();
+    } else {
+        windowOptionExt_->maximizeAfterShow = true;
+        windowOptionExt_->fullscreenAfterShow = false;
+        windowOptionExt_->minimizeAfterShow = false;
     }
 }
 
@@ -233,9 +219,8 @@ void WaylandXdgToplevel::UnSetMaximized()
 {
     LOG_DEBUG("Window %{public}s.", windowTitle_.c_str());
     state_.maximized = false;
-    auto xdgSurface = xdgSurface_.promote();
-    if (xdgSurface != nullptr) {
-        xdgSurface->UnSetMaximized();
+    if (window_ != nullptr) {
+        window_->Recover();
     }
 }
 
@@ -243,9 +228,12 @@ void WaylandXdgToplevel::SetFullscreen()
 {
     LOG_DEBUG("Window %{public}s.", windowTitle_.c_str());
     state_.fullscreen = true;
-    auto xdgSurface = xdgSurface_.promote();
-    if (xdgSurface != nullptr) {
-        xdgSurface->SetFullscreen();
+    if (window_ != nullptr) {
+        window_->SetFullScreen(true);
+    } else {
+        windowOptionExt_->maximizeAfterShow = false;
+        windowOptionExt_->fullscreenAfterShow = true;
+        windowOptionExt_->minimizeAfterShow = false;
     }
 }
 
@@ -253,9 +241,8 @@ void WaylandXdgToplevel::UnSetFullscreen()
 {
     LOG_DEBUG("Window %{public}s.", windowTitle_.c_str());
     state_.fullscreen = false;
-    auto xdgSurface = xdgSurface_.promote();
-    if (xdgSurface != nullptr) {
-        xdgSurface->UnSetFullscreen();
+    if (window_ != nullptr) {
+        window_->SetFullScreen(false);
     }
 }
 
@@ -263,9 +250,12 @@ void WaylandXdgToplevel::SetMinimized()
 {
     LOG_DEBUG("Window %{public}s.", windowTitle_.c_str());
     state_.minimized = true;
-    auto xdgSurface = xdgSurface_.promote();
-    if (xdgSurface != nullptr) {
-        xdgSurface->SetMinimized();
+    if (window_ != nullptr) {
+        window_->Minimize();
+    } else {
+        windowOptionExt_->maximizeAfterShow = false;
+        windowOptionExt_->fullscreenAfterShow = false;
+        windowOptionExt_->minimizeAfterShow = true;
     }
 }
 
@@ -301,6 +291,11 @@ void WaylandXdgToplevel::SetRect(Rect rect)
     *s = XDG_TOPLEVEL_STATE_ACTIVATED;
     xdg_toplevel_send_configure(WlResource(), rect.width, rect.height, &states);
     wl_array_release(&states);
+}
+
+void WaylandXdgToplevel::SetWindow(OHOS::sptr<OHOS::Rosen::Window> window)
+{
+    window_ = window;
 }
 } // namespace Wayland
 } // namespace FT
