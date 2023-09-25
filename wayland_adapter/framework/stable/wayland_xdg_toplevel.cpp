@@ -164,6 +164,8 @@ void WaylandXdgToplevel::SetTitle(const char *title)
     windowTitle_ = std::to_string((long)((void *)this)) + std::string("-") + std::string(title);
     if (window_ != nullptr) {
         window_->SetAPPWindowLabel(title);
+    } else {
+        windowOptionExt_->title = title;
     }
 }
 

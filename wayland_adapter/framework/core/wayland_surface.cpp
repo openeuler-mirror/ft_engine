@@ -504,6 +504,7 @@ void WaylandSurface::CreateWindow()
     LOG_DEBUG("Window::Create success, Title %{public}s.", windowTitle_.c_str());
     auto listener = std::make_shared<InputEventConsumer>(this);
     window_->SetInputEventConsumer(listener);
+    window_->SetAPPWindowLabel(windowOptionExt_->title);
     window_->Show();
 
     OHOS::sptr<WaylandWindowListener> waylandWindowListener = new WaylandWindowListener(this);
