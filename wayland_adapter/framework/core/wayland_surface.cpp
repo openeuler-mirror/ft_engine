@@ -550,13 +550,13 @@ void WaylandSurface::CreateWindow()
         cb(rect_);
     }
 
-    // if (windowOptionExt_->maximizeAfterShow) {
-    //     window_->Maximize();
-    // } else if (windowOptionExt_->fullscreenAfterShow) {
-    //     window_->SetFullScreen(true);
-    // } else if (windowOptionExt_->minimizeAfterShow) {
-    //     window_->Minimize();
-    // }
+    if (windowOptionExt_->maximizeAfterShow) {
+        window_->Maximize();
+    } else if (windowOptionExt_->fullscreenAfterShow) {
+        window_->SetFullScreen(true);
+    } else if (windowOptionExt_->minimizeAfterShow) {
+        window_->Minimize();
+    }
 }
 
 void WaylandSurface::CopyBuffer(struct wl_shm_buffer *shm)
