@@ -77,6 +77,7 @@ public:
     void SetMinimized();
     void Close();
     void SetWindowGeometry(Rect rect);
+    Rect GetWindowGeometry();
 
     void WithTopLevel(bool toplevel);
     void AddChild(struct wl_resource *child, int32_t x, int32_t y);
@@ -101,6 +102,7 @@ private:
     void CreateWindow();
     void CopyBuffer(struct wl_shm_buffer *shm);
     void CheckIsPointerSurface();
+    bool WindowValid();
 
     struct wl_resource *parent_ = nullptr;
     std::list<SurfaceCommitCallback> commitCallbacks_;
