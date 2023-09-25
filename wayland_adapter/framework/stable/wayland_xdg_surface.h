@@ -42,22 +42,6 @@ public:
     WaylandXdgSurface(const OHOS::sptr<WaylandXdgWmObject> &xdgWm, const OHOS::sptr<WaylandSurface> &surface, uint32_t id);
     ~WaylandXdgSurface() noexcept override;
 
-    void StartMove();
-    void SetWindowMode(OHOS::Rosen::WindowMode mode);
-    void SetWindowType(OHOS::Rosen::WindowType type);
-
-    // form toplevel
-    void SetTitle(const char *title);
-    void Resize(uint32_t serial, uint32_t edges);
-    void SetMaxSize(int32_t width, int32_t height);
-    void SetMinSize(int32_t width, int32_t height);
-    void SetMaximized();
-    void UnSetMaximized();
-    void SetFullscreen();
-    void UnSetFullscreen();
-    void SetMinimized();
-    void Close();
-
 private:
     friend struct IWaylandXdgSurface;
 
@@ -67,6 +51,7 @@ private:
     void AckConfigure(uint32_t serial);
     void OnSurfaceCommit();
     void OnSurfaceRect(Rect rect);
+    void OnWindowCreate(OHOS::sptr<OHOS::Rosen::Window> window);
 
     SurfaceRole role_ = SurfaceRole::NONE;
     OHOS::wptr<WaylandXdgWmObject> xdgWm_;
@@ -74,6 +59,9 @@ private:
     OHOS::wptr<WaylandXdgToplevel> toplevel_;
     OHOS::wptr<WaylandXdgPopup> popUp_;
     std::string windowTitle_ = "unknow";
+    OHOS::sptr<OHOS::Rosen::Window> window_;
+    OHOS::sptr<OHOS::Rosen::WindowOption> windowOption_;
+    std::shared_ptr<WindowOptionExt> windowOptionExt_;
 };
 } // namespace Wayland
 } // namespace FT

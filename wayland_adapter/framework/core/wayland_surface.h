@@ -23,7 +23,6 @@
 #include "wayland_resource_object.h"
 #include "wayalnd_utils.h"
 
-#include "window.h"
 #include "ui/rs_surface_node.h"
 #include "render_context/render_context.h"
 
@@ -59,23 +58,11 @@ public:
 
     void AddCommitCallback(SurfaceCommitCallback callback);
     void AddRectCallback(SurfaceRectCallback callback);
-    void StartMove();
-    void SetWindowMode(OHOS::Rosen::WindowMode mode);
-    void SetWindowType(OHOS::Rosen::WindowType type);
+    void AddWindowCreateCallback(WindowCreateCallback callback);
     void OnSizeChange(const OHOS::Rosen::Rect& rect, OHOS::Rosen::WindowSizeChangeReason reason);
     void OnModeChange(OHOS::Rosen::WindowMode mode);
 
     // form xdgsruface
-    void SetTitle(const char *title);
-    void Resize(uint32_t serial, uint32_t edges);
-    void SetMaxSize(int32_t width, int32_t height);
-    void SetMinSize(int32_t width, int32_t height);
-    void SetMaximized();
-    void UnSetMaximized();
-    void SetFullscreen();
-    void UnSetFullscreen();
-    void SetMinimized();
-    void Close();
     void SetWindowGeometry(Rect rect);
     Rect GetWindowGeometry();
 
@@ -84,6 +71,14 @@ public:
     void AddParent(struct wl_resource *parent);
     void ProcessSrcBitmap(SkCanvas* canvas, int32_t x, int32_t y);
     void TriggerInnerCompose();
+    OHOS::sptr<OHOS::Rosen::WindowOption> GetWindowOption()
+    {
+        return windowOption_;
+    }
+    std::shared_ptr<WindowOptionExt> GetWindowOptionExt()
+    {
+        return windowOptionExt_;
+    }
 
 private:
     WaylandSurface(struct wl_client *client, struct wl_resource *parent, uint32_t version, uint32_t id);
@@ -107,20 +102,19 @@ private:
     struct wl_resource *parent_ = nullptr;
     std::list<SurfaceCommitCallback> commitCallbacks_;
     std::list<SurfaceRectCallback> rectCallbacks_;
+    std::list<WindowCreateCallback> windowCreatebacks_;
     Rect rect_;
     Rect geometryRect_ = {0};
     SurfaceState old_;
     SurfaceState new_;
     bool isPointerSurface_ = false;
-    Rect inputRect_;
-    Rect opaqueRect_;
 
 #ifdef ENABLE_GPU
     std::unique_ptr<OHOS::Rosen::RenderContext> renderContext_;
 #endif
     OHOS::sptr<OHOS::Rosen::Window> window_;
-    OHOS::Rosen::WindowMode mode_ = OHOS::Rosen::WindowMode::WINDOW_MODE_FLOATING;
-    OHOS::Rosen::WindowType type_ = OHOS::Rosen::WindowType::APP_WINDOW_BASE;
+    OHOS::sptr<OHOS::Rosen::WindowOption> windowOption_;
+    std::shared_ptr<WindowOptionExt> windowOptionExt_;
     std::shared_ptr<OHOS::Rosen::RSSurfaceNode> surfaceNode_;
     std::shared_ptr<OHOS::Rosen::RSSurface> rsSurface_;
     std::string windowTitle_;

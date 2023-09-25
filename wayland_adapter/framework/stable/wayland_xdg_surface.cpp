@@ -70,6 +70,9 @@ OHOS::sptr<WaylandXdgSurface> WaylandXdgSurface::Create(const OHOS::sptr<Wayland
 
     auto xdgSurface = OHOS::sptr<WaylandXdgSurface>(new WaylandXdgSurface(xdgWm, surface, id));
     WaylandObjectsPool::GetInstance().AddObject(ObjectId(xdgSurface->WlClient(), xdgSurface->Id()), xdgSurface);
+    xdgSurface->windowOption_ = surface->GetWindowOption();
+    xdgSurface->windowOptionExt_ = surface->GetWindowOptionExt();
+
     return xdgSurface;
 }
 
@@ -82,6 +85,7 @@ WaylandXdgSurface::WaylandXdgSurface(const OHOS::sptr<WaylandXdgWmObject> &xdgWm
 {
     surface->AddCommitCallback([this]() { OnSurfaceCommit(); });
     surface->AddRectCallback([this](Rect rect) { OnSurfaceRect(rect); });
+    surface->AddWindowCreateCallback([this](OHOS::sptr<OHOS::Rosen::Window> window) { OnWindowCreate(window); });
     windowTitle_ = std::to_string((long)((void *)this)) + std::string("-Untitled");
     LOG_DEBUG("enter : %{public}s.", windowTitle_.c_str());
 }
@@ -89,12 +93,15 @@ WaylandXdgSurface::WaylandXdgSurface(const OHOS::sptr<WaylandXdgWmObject> &xdgWm
 WaylandXdgSurface::~WaylandXdgSurface() noexcept
 {
     LOG_DEBUG("exit : %{public}s.", windowTitle_.c_str());
+    if (window_ != nullptr) {
+        window_->Close();
+    }
 }
 
 void WaylandXdgSurface::GetToplevel(uint32_t id)
 {
     LOG_DEBUG("Window %{public}s.", windowTitle_.c_str());
-    toplevel_ = WaylandXdgToplevel::Create(this, id);
+    toplevel_ = WaylandXdgToplevel::Create(this, id, windowOption_, windowOptionExt_);
     if (toplevel_ == nullptr) {
         LOG_ERROR("no memory");
         return;
@@ -144,33 +151,6 @@ void WaylandXdgSurface::AckConfigure(uint32_t serial)
 {
 }
 
-void WaylandXdgSurface::StartMove()
-{
-    LOG_DEBUG("Window %{public}s.", windowTitle_.c_str());
-    auto surface = surface_.promote();
-    if (surface != nullptr) {
-        surface->StartMove();
-    }
-}
-
-void WaylandXdgSurface::SetWindowMode(OHOS::Rosen::WindowMode mode)
-{
-    LOG_DEBUG("Window %{public}s.", windowTitle_.c_str());
-    auto surface = surface_.promote();
-    if (surface != nullptr) {
-        surface->SetWindowMode(mode);
-    }
-}
-
-void WaylandXdgSurface::SetWindowType(OHOS::Rosen::WindowType type)
-{
-    LOG_DEBUG("Window %{public}s.", windowTitle_.c_str());
-    auto surface = surface_.promote();
-    if (surface != nullptr) {
-        surface->SetWindowType(type);
-    }
-}
-
 void WaylandXdgSurface::OnSurfaceCommit()
 {
     if (role_ == SurfaceRole::XDG_TOPLEVEL) {
@@ -195,94 +175,14 @@ void WaylandXdgSurface::OnSurfaceRect(Rect rect)
     }
 }
 
-void WaylandXdgSurface::SetTitle(const char *title)
+void WaylandXdgSurface::OnWindowCreate(OHOS::sptr<OHOS::Rosen::Window> window)
 {
-    LOG_DEBUG("Window %{public}s, set Title %{public}s.", windowTitle_.c_str(), title);
-    windowTitle_ = std::to_string((long)((void *)this)) + std::string("-") + std::string(title);
-    auto surface = surface_.promote();
-    if (surface != nullptr) {
-        surface->SetTitle(title);
-    }
-}
-
-void WaylandXdgSurface::Resize(uint32_t serial, uint32_t edges)
-{
-    LOG_DEBUG("Window %{public}s.", windowTitle_.c_str());
-    auto surface = surface_.promote();
-    if (surface != nullptr) {
-        surface->Resize(serial, edges);
-    }
-}
-
-void WaylandXdgSurface::SetMaxSize(int32_t width, int32_t height)
-{
-    LOG_DEBUG("Window %{public}s.", windowTitle_.c_str());
-    auto surface = surface_.promote();
-    if (surface != nullptr) {
-        surface->SetMaxSize(width, height);
-    }
-}
-
-void WaylandXdgSurface::SetMinSize(int32_t width, int32_t height)
-{
-    LOG_DEBUG("Window %{public}s.", windowTitle_.c_str());
-    auto surface = surface_.promote();
-    if (surface != nullptr) {
-        surface->SetMinSize(width, height);
-    }
-}
-
-void WaylandXdgSurface::SetMaximized()
-{
-    LOG_DEBUG("Window %{public}s.", windowTitle_.c_str());
-    auto surface = surface_.promote();
-    if (surface != nullptr) {
-        surface->SetMaximized();
-    }
-}
-
-void WaylandXdgSurface::UnSetMaximized()
-{
-    LOG_DEBUG("Window %{public}s.", windowTitle_.c_str());
-    auto surface = surface_.promote();
-    if (surface != nullptr) {
-        surface->UnSetMaximized();
-    }
-}
-
-void WaylandXdgSurface::SetFullscreen()
-{
-    LOG_DEBUG("Window %{public}s.", windowTitle_.c_str());
-    auto surface = surface_.promote();
-    if (surface != nullptr) {
-        surface->SetFullscreen();
-    }
-}
-
-void WaylandXdgSurface::UnSetFullscreen()
-{
-    LOG_DEBUG("Window %{public}s.", windowTitle_.c_str());
-    auto surface = surface_.promote();
-    if (surface != nullptr) {
-        surface->UnSetFullscreen();
-    }
-}
-
-void WaylandXdgSurface::SetMinimized()
-{
-    LOG_DEBUG("Window %{public}s.", windowTitle_.c_str());
-    auto surface = surface_.promote();
-    if (surface != nullptr) {
-        surface->SetMinimized();
-    }
-}
-
-void WaylandXdgSurface::Close()
-{
-    LOG_DEBUG("Window %{public}s.", windowTitle_.c_str());
-    auto surface = surface_.promote();
-    if (surface != nullptr) {
-        surface->Close();
+    window_ = window;
+    if (role_ == SurfaceRole::XDG_TOPLEVEL) {
+        auto topLevel = toplevel_.promote();
+        if (topLevel != nullptr) {
+            topLevel->SetWindow(window);
+        }
     }
 }
 } // namespace Wayland
