@@ -135,7 +135,7 @@ void WaylandXdgSurface::SetWindowGeometry(int32_t x, int32_t y, int32_t width, i
         windowTitle_.c_str(), x, y, width, height);
     auto surface = surface_.promote();
     if (surface != nullptr) {
-        Rect rect = {x, y, (uint32_t)width, (uint32_t)height};
+        Rect rect = {x, y, static_cast<uint32_t>(width), static_cast<uint32_t>(height)};
         surface->SetWindowGeometry(rect);
     }
 }
