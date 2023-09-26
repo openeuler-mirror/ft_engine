@@ -397,7 +397,7 @@ void WaylandSurface::Commit()
         return; // it is pointer surface, we do not handle commit!
     }
 
-    if (window_ == nullptr) {
+    if (withTopLevel_ && window_ == nullptr) {
         CreateWindow();
     }
 
