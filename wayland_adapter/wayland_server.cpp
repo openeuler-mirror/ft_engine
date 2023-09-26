@@ -17,6 +17,7 @@
 
 #include <system_ability_definition.h>
 #include "wayland_adapter_hilog.h"
+#include "wayland_event_loop.h"
 
 namespace FT {
 namespace Wayland {
@@ -72,26 +73,25 @@ void WaylandServer::OnStart()
     }
 
     CreateGlobalObjects();
-
-    loop_ = std::make_shared<EventLoop>();
-    wlDisplayChannel_ = std::make_unique<EventChannel>(wl_event_loop_get_fd(wlDisplayLoop_), loop_.get());
+    wlDisplayChannel_ = std::make_unique<EventChannel>(wl_event_loop_get_fd(wlDisplayLoop_),
+        WaylandEventLoop::GetInstance().GetEventLoopPtr());
     wlDisplayChannel_->SetReadCallback([this](TimeStamp timeStamp) {
         wl_event_loop_dispatch(wlDisplayLoop_, -1);
         wl_display_flush_clients(display_);
     });
     wlDisplayChannel_->EnableReading(true);
-    loop_->Start();
+    WaylandEventLoop::GetInstance().Start();
 }
 
 void WaylandServer::OnStop()
 {
     LOG_INFO("OnStop");
 
-    if (display_ == nullptr || loop_ == nullptr) {
+    if (display_ == nullptr) {
         return;
     }
 
-    auto stopWlDisplay = loop_->Schedule([this]() {
+    auto stopWlDisplay = WaylandEventLoop::GetInstance().Schedule([this]() {
         wl_display_terminate(display_);
         wl_display_destroy_clients(display_);
         wl_display_destroy(display_);
@@ -103,7 +103,6 @@ void WaylandServer::OnStop()
     stopWlDisplay.wait();
 
     display_ = nullptr;
-    loop_ = nullptr;
     compositorGlobal_ = nullptr;
     xdgWmBaseGlobal_ = nullptr;
     seatGlobal_ = nullptr;
