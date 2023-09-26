@@ -19,6 +19,7 @@
 
 #include <include/core/SkImageInfo.h>
 #include "wayland-server-protocol.h"
+#include "window.h"
 
 namespace FT {
 namespace Wayland {
@@ -56,8 +57,16 @@ struct Size {
     }
 };
 
+struct WindowOptionExt {
+    bool maximizeAfterShow = false;
+    bool fullscreenAfterShow = false;
+    bool minimizeAfterShow = false;
+    std::string title;
+};
+
 using SurfaceCommitCallback = std::function<void()>;
 using SurfaceRectCallback = std::function<void(Rect)>;
+using WindowCreateCallback = std::function<void(OHOS::sptr<OHOS::Rosen::Window>)>;
 
 class FrameCallback final : public WaylandResourceObject {
 public:
@@ -85,6 +94,8 @@ struct SurfaceState {
     int32_t offsetX = 0;
     int32_t offsetY = 0;
     OHOS::sptr<FrameCallback> cb;
+    Rect inputRegion;
+    Rect opaqueRegion;
     void Reset()
     {
         damage.Reset();
@@ -93,6 +104,8 @@ struct SurfaceState {
         damageBuffer.Reset();
         offsetX = 0;
         offsetY = 0;
+        inputRegion.Reset();
+        opaqueRegion.Reset();
     }
 };
 
