@@ -52,7 +52,6 @@ private:
     struct wl_event_loop *wlDisplayLoop_ = nullptr;
     std::string socketName_;
     std::unique_ptr<EventChannel> wlDisplayChannel_;
-    std::shared_ptr<EventLoop> loop_;
     OHOS::sptr<WaylandCompositor> compositorGlobal_;
     OHOS::sptr<WaylandXdgWmBase> xdgWmBaseGlobal_;
     OHOS::sptr<WaylandOutput> outputGlobal_;

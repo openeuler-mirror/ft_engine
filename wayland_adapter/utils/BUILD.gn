@@ -24,6 +24,7 @@ ft_source_set("wayland_adapter_utils_sources") {
     "src/wayland_objects_pool.cpp",
     "src/wayland_resource_object.cpp",
     "src/wayland_keycode_trans.cpp",
+    "src/wayland_event_loop.cpp",
   ]
 
   public_configs = [ ":wayland_utils_public_config" ]
