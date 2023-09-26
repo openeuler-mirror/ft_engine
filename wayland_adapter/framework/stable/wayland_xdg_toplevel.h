@@ -43,7 +43,8 @@ struct IWaylandXdgToplevel {
 
 class WaylandXdgToplevel final : public WaylandResourceObject {
 public:
-    static OHOS::sptr<WaylandXdgToplevel> Create(const OHOS::sptr<WaylandXdgSurface> &xdgSurface, uint32_t id);
+    static OHOS::sptr<WaylandXdgToplevel> Create(const OHOS::sptr<WaylandXdgSurface> &xdgSurface, uint32_t id,
+        OHOS::sptr<OHOS::Rosen::WindowOption> windowOption, std::shared_ptr<WindowOptionExt> windowOptionExt);
     ~WaylandXdgToplevel() noexcept override;
 
     void DestroyResource(struct wl_client *client, struct wl_resource *resource);
@@ -61,6 +62,7 @@ public:
     void SendConfigure();
     void HandleCommit();
     void SetRect(Rect rect);
+    void SetWindow(OHOS::sptr<OHOS::Rosen::Window> window);
 
 private:
     WaylandXdgToplevel(const OHOS::sptr<WaylandXdgSurface> &xdgSurface, uint32_t id);
@@ -69,13 +71,16 @@ private:
     OHOS::wptr<WaylandXdgSurface> xdgSurface_;
     std::string windowTitle_ = "unknow";
     Rect rect_;
+    OHOS::sptr<OHOS::Rosen::Window> window_;
+    OHOS::sptr<OHOS::Rosen::WindowOption> windowOption_;
+    std::shared_ptr<WindowOptionExt> windowOptionExt_;
 
     struct {
         bool maximized = false;
         bool minimized = false;
         bool fullscreen = false;
         bool resizing = true;
-    }state_;
+    } state_;
 };
 } // namespace Wayland
 } // namespace FT
