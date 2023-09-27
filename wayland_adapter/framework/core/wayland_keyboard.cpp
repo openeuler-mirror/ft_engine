@@ -90,8 +90,14 @@ void WaylandKeyboard::OnKeyboardLeave(struct wl_resource *surface_resource)
 }
 
 WaylandKeyboard::WaylandKeyboard(struct wl_client *client, uint32_t version, uint32_t id)
-    : WaylandResourceObject(client, &wl_keyboard_interface, version, id, &IWaylandKeyboard::impl_) {}
+    : WaylandResourceObject(client, &wl_keyboard_interface, version, id, &IWaylandKeyboard::impl_)
+{
+    LOG_DEBUG("WaylandKeyboard create, this=%{public}p", this);
+}
 
-WaylandKeyboard::~WaylandKeyboard() noexcept {}
+WaylandKeyboard::~WaylandKeyboard() noexcept
+{
+    LOG_DEBUG("WaylandKeyboard release, this=%{public}p", this);
+}
 } // namespace Wayland
 } // namespace FT
