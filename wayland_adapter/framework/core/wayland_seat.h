@@ -42,6 +42,7 @@ public:
     void GetPointerResource(struct wl_client *client, std::list<OHOS::sptr<WaylandPointer>> &list);
     void GetKeyboardResource(struct wl_client *client, std::list<OHOS::sptr<WaylandKeyboard>> &list);
     ~WaylandSeat() noexcept override;
+    void FreeSeatResource(struct wl_client *client, struct wl_resource *resource);
 
 private:
     WaylandSeat(struct wl_display *display);
@@ -49,6 +50,7 @@ private:
     static void UpdateCapabilities(struct wl_resource *resource);
     std::unordered_map<struct wl_client *, std::list<OHOS::sptr<WaylandSeatObject>>> seatResourcesMap_;
     std::unique_ptr<std::thread> thread_ = nullptr;
+    mutable std::mutex seatResourcesMutex_;
 };
 
 class WaylandSeatObject final : public WaylandResourceObject {
@@ -59,6 +61,7 @@ public:
     ~WaylandSeatObject() noexcept;
     void GetChildPointer(std::list<OHOS::sptr<WaylandPointer>> &list);
     void GetChildKeyboard(std::list<OHOS::sptr<WaylandKeyboard>> &list);
+    void OnResourceDestroy() override;
 
 private:
     void GetPointer(uint32_t id);
