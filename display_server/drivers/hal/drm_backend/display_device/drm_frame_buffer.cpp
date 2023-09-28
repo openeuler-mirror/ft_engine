@@ -37,11 +37,11 @@ bool AddFb(int drmFd, uint32_t fbHandle, FrameBufferInfo &fbInfo)
     pitches[0] = fbInfo.stride;
     offsets[0] = 0;
 
-    printf("AddFb: fd=%d, width=%u, height=%u, pixel_format=DRM_FORMAT_XRGB8888, handle=%u, pitch=%u, offset=%u, fbId=%u\n",
+    LOG_DEBUG("AddFb: fd=%d, width=%u, height=%u, pixel_format=DRM_FORMAT_XRGB8888, handle=%u, pitch=%u, offset=%u, fbId=%u\n",
         drmFd, fbInfo.width, fbInfo.height, handles[0], pitches[0], offsets[0], fbInfo.fbId);
     if (drmModeAddFB2(drmFd, fbInfo.width, fbInfo.height, DRM_FORMAT_XRGB8888, // need use DRM_FORMAT_XRGB8888
                       handles, pitches, offsets, &fbInfo.fbId, 0) != 0) {
-        printf("drmModeAddFB2 failed, error: %s\n", ErrnoToString(errno).c_str());
+        LOG_ERROR("drmModeAddFB2 failed, error: %s\n", ErrnoToString(errno).c_str());
         return false;
     }
 
