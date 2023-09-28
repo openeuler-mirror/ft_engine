@@ -49,10 +49,15 @@ OHOS::sptr<WaylandPointer> WaylandPointer::Create(struct wl_client *client, uint
 }
 
 WaylandPointer::WaylandPointer(struct wl_client *client, uint32_t version, uint32_t id)
-    : WaylandResourceObject(client, &wl_pointer_interface, version, id, &IWaylandPointer::impl_) {}
+    : WaylandResourceObject(client, &wl_pointer_interface, version, id, &IWaylandPointer::impl_)
+{
+    LOG_DEBUG("WaylandPointer create, this=%{public}p", this);
+}
 
-WaylandPointer::~WaylandPointer() noexcept {}
-
+WaylandPointer::~WaylandPointer() noexcept
+{
+    LOG_DEBUG("WaylandPointer release, this=%{public}p", this);
+}
 
 void WaylandPointer::OnPointerButton(uint32_t time, uint32_t button, bool isPressed)
 {
