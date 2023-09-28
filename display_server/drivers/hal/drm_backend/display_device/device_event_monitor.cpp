@@ -149,13 +149,17 @@ void DeviceEventMonitor::DrmPageFlipHandler(int fd, uint32_t sequence, uint32_t 
     // DRM timestamp is MONOTONIC and our timestamp is REALTIME.
     TimeStamp timeStamp(
         static_cast<TimeType>(sec) * MICRO_SECS_PER_SECOND + static_cast<TimeType>(usec));
-    LOG_DEBUG("DeviceEventMonitor::DrmPageFlipHandler, timestamp: %{public}s", timeStamp.ToFormattedString().c_str());
-    display->OnVSync(sequence, static_cast<uint64_t>(timeStamp.Nanos()));
+    TimeStamp tmp(TimeAdd(TimeStamp::SystemStartTime(), timeStamp.Micros()));
+    LOG_DEBUG("DeviceEventMonitor::DrmPageFlipHandler, timestamp: %s\n", tmp.ToFormattedString().c_str());
+    auto frame = detail::GetFrameCnt();
+    display->OnVSync(frame, static_cast<uint64_t>(timeStamp.Nanos()));
 }
 
 void DeviceEventMonitor::OnDrmVsyncEvent(TimeStamp timeStamp)
 {
     UNUSED(timeStamp);
+    drmEventContext_->version = DRM_EVENT_CONTEXT_VERSION;
+    drmEventContext_->page_flip_handler = DrmPageFlipHandler;
     drmHandleEvent(dupDrmFd_, drmEventContext_.get());
 }
 
@@ -173,9 +177,6 @@ void DeviceEventMonitor::RegisterVsyncEventHandler()
 {
 #ifdef ENABLE_HARDWARE_VSYNC
     if (drmDevice_->SupportAtomicModeSet()) {
-        // TODO: drmEventContext VERSION
-        drmEventContext_->version = 3;
-        drmEventContext_->page_flip_handler = DrmPageFlipHandler;
         vsyncChannel_ = std::make_unique<EventChannel>(dupDrmFd_, loop_);
         vsyncChannel_->SetReadCallback([this](TimeStamp timestamp) { OnDrmVsyncEvent(timestamp); });
         vsyncChannel_->EnableReading(true);
