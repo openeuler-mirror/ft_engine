@@ -21,6 +21,7 @@ config("display_device_public_config") {
     "//display_server/drivers/interfaces",
     "//display_server/drivers/base",
   ]
+  cflags = [ "-DENABLE_HARDWARE_VSYNC=1" ]
 }
 
 ft_shared_library("display_device") {

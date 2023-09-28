@@ -91,7 +91,7 @@ private:
     void *vsyncUserData_ = nullptr;          // guarded by mutex_;
     bool vSyncCbEverReged_ = false;          // guarded by mutex_;
 #ifdef ENABLE_HARDWARE_VSYNC
-    // bool enableVsync_ = true;
+    bool enableVsync_ = true;
 #endif // ENABLE_HARDWARE_VSYNC
 
     void InitReservedFb();
