@@ -4,7 +4,13 @@
 #                      it will be automatically created in /usr/include/ft_engine)
 #Example: install test/test1.h to /usr/include/ft_engine/test_h,  add: test/test1.h   test_h
 
-window_manager/interfaces/innerkits/wm/window.h         wm
-window_manager/interfaces/innerkits/wm/window_option.h  wm
-window_manager/interfaces/innerkits/wm/wm_common.h      wm
-window_manager/interfaces/innerkits/dm/dm_common.h      dm
+window_manager/interfaces/innerkits/wm/window.h               wm
+window_manager/interfaces/innerkits/wm/window_option.h        wm
+window_manager/interfaces/innerkits/wm/wm_common.h            wm
+window_manager/interfaces/innerkits/dm/dm_common.h            dm
+window_manager/interfaces/innerkits/dm/display.h              dm
+window_manager/interfaces/innerkits/dm/display_manager.h      dm
+window_manager/utils/include/class_var_definition.h           utils
+window_manager/utils/include/noncopyable.h                    utils
+window_manager/utils/include/screenshot_info.h                utils
+window_manager/utils/include/wm_single_instance.h             utils
