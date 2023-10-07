@@ -2,7 +2,7 @@
 #              Param1: relative path of header file
 #              Param2: installation directory name (if this directory does not exist,
 #                      it will be automatically created in /usr/include/ft_engine)
-#Example: install test/test1.h              to /usr/include/ft_engine/test_h,  add: test/test1.h                test_h
+#Example: install test/test1.h to /usr/include/ft_engine/test_h,  add: test/test1.h   test_h
 
 window_manager/interfaces/innerkits/wm/window.h               wm
 window_manager/interfaces/innerkits/wm/window_option.h        wm
