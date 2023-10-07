@@ -73,6 +73,7 @@ class Builder:
                     rst = exec_sys_command(['sudo', 'cp', '-f', os.path.join(self.build_output_dir, 'common/common/', output_file), os.path.join(self.args.install, 'bin')])
                     if rst[0] == False : return False
 
+        if self.args.install:
             # Install header files
             install_header_files_dir = '/usr/include/ft/'
             exec_sys_command(['sudo', 'mkdir', '-p', install_header_files_dir])
