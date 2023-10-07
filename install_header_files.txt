@@ -97,7 +97,7 @@ display_server/rosen/modules/render_service_client/core/modifier/rs_modifier.h  
 display_server/rosen/modules/render_service_client/core/modifier/rs_modifier_manager.h               display_server/core/modifier
 display_server/rosen/modules/render_service_client/core/modifier/rs_property.h                       display_server/core/modifier
 display_server/rosen/modules/render_service_client/core/modifier/rs_property_modifier.h              display_server/core/modifier
-display_server/rosen/modules/render_service_client/core/pipeline/rs_node_map.h        /core/pipeline
+display_server/rosen/modules/render_service_client/core/pipeline/rs_node_map.h        display_server/core/pipeline
 display_server/rosen/modules/render_service_client/core/transaction/rs_interfaces.h      display_server/core/transaction
 display_server/rosen/modules/render_service_client/core/ui/rs_base_node.h              display_server/core/ui
 display_server/rosen/modules/render_service_client/core/ui/rs_canvas_node.h            display_server/core/ui
