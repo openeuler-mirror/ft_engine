@@ -53,8 +53,8 @@ display_server/rosen/modules/render_service_base/include/pipeline/rs_render_node
 display_server/rosen/modules/render_service_base/include/pipeline/rs_render_node_map.h               display_server/base/pipeline
 display_server/rosen/modules/render_service_base/include/platform/common/rs_log.h                   display_server/base/platform/common
 display_server/rosen/modules/render_service_base/include/platform/common/rs_system_properties.h     display_server/base/platform/common
-display_server/rosen/modules/render_service_base/src/platform/fangtian/rs_surface_frame.h        display_server/base/platform/drawing
-display_server/rosen/modules/render_service_base/src/platform/fangtian/rs_surface.h              display_server/base/platform/drawing
+display_server/rosen/modules/render_service_base/include/platform/drawing/rs_surface_frame.h        display_server/base/platform/drawing
+display_server/rosen/modules/render_service_base/include/platform/drawing/rs_surface.h              display_server/base/platform/drawing
 display_server/rosen/modules/render_service_base/include/property/rs_properties_def.h          display_server/base/property
 display_server/rosen/modules/render_service_base/include/property/rs_properties.h              display_server/base/property
 display_server/rosen/modules/render_service_base/include/render/rs_border.h            display_server/base/render
@@ -106,6 +106,7 @@ display_server/rosen/modules/render_service_client/core/ui/rs_node.h            
 display_server/rosen/modules/render_service_client/core/ui/rs_root_node.h              display_server/core/ui
 display_server/rosen/modules/render_service_client/core/ui/rs_surface_node.h           display_server/core/ui
 display_server/rosen/modules/render_service_client/core/ui/rs_ui_director.h            display_server/core/ui
+display_server/rosen/modules/render_service_client/core/ui/rs_surface_extractor.h            display_server/core/ui
 display_server/rosen/modules/frame_analyzer/export/frame_collector.h         display_server/frame_analyzer
 display_server/rosen/modules/frame_analyzer/export/frame_info.h              display_server/frame_analyzer
 display_server/rosen/modules/frame_analyzer/export/ring_queue.h              display_server/frame_analyzer
@@ -121,3 +122,8 @@ display_server/interfaces/inner_api/surface/surface.h                        dis
 display_server/interfaces/inner_api/surface/surface_tunnel_handle.h          display_server/surface
 display_server/interfaces/inner_api/surface/surface_type.h                   display_server/surface
 display_server/interfaces/inner_api/surface/surface_utils.h                  display_server/surface
+display_server/drivers/interfaces/display_type.h     display_server/drivers
+display_server/rosen/modules/2d_graphics/src/render_context/render_context.h   display_server/render_context
+display_server/rosen/modules/2d_graphics/src/render_context/memory_handler.h   display_server/render_context
+display_server/rosen/modules/2d_graphics/src/render_context/cache_data.h   display_server/render_context
+display_server/rosen/modules/2d_graphics/src/render_context/shader_cache.h   display_server/render_context
