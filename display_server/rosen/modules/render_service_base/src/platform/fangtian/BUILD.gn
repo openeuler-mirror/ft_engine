@@ -51,7 +51,6 @@ ft_source_set("rosen_fangtian_sources") {
     "rs_frame_report.cpp",
     "rs_innovation.cpp",
     "rs_log.cpp",
-    "rs_param.cpp",
     "rs_marshalling_helper.cpp",
     "rs_render_service_client.cpp",
     "rs_render_service_connect_hub.cpp",
@@ -105,6 +104,7 @@ ft_source_set("rosen_fangtian_sources") {
     "//build/gn/configs/system_libs:eventhandler",
     "//build/gn/configs/system_libs:skia",
     "//build/gn/configs/system_libs:samgr",
+    "//build/gn/configs/system_libs:syspara",
   ]
 
   public_deps = [
