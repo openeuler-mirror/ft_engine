@@ -51,6 +51,7 @@ config("skia_config") {
 
   include_dirs = [
     "${sys_inc}/skia",
+    "${sys_inc}/skia/src",
     "${sys_inc}/skia/include",
     "${sys_inc}/skia/include/core"
   ]
