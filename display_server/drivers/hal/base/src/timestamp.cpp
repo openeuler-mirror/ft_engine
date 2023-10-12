@@ -31,7 +31,7 @@ TimeType SteadyClockMicroSeconds()
 }
 
 // Class std::chrono::system_clock represents the system-wide real time wall clock.
-// It may not be monotonic: on most systems, the system time can be adjusted at any mo/ment.
+// It may not be monotonic: on most systems, the system time can be adjusted at any moment.
 TimeType SystemClockMicroSeconds()
 {
     auto tp = std::chrono::time_point_cast<std::chrono::microseconds>(std::chrono::system_clock::now());
