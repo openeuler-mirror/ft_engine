@@ -266,14 +266,22 @@ void DrmDisplay::OnVSync(uint32_t sequence, uint64_t timeStamp)
         cb = vSyncCallBack_;
         data = vsyncUserData_;
     }
-
+ #ifdef ENABLE_HARDWARE_VSYNC
+    if (enableVsync_) {
+        if (cb != nullptr) {
+            cb(sequence, timeStamp, data);
+        }
+        if (sampleVsync > 0) {
+            int32_t fenceFd = -1;
+            Commit(&fenceFd);
+            sampleVsync--;
+        }
+    }
+#else
     if (cb != nullptr) {
         cb(sequence, timeStamp, data);
     }
-    if (enableVsync_) {
-        int32_t fenceFd = -1;
-        Commit(&fenceFd);
-    }
+#endif
 }
 
 int32_t DrmDisplay::SetDisplayVsyncEnabled(bool enabled)
