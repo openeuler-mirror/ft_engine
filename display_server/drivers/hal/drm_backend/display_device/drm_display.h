@@ -91,7 +91,8 @@ private:
     void *vsyncUserData_ = nullptr;          // guarded by mutex_;
     bool vSyncCbEverReged_ = false;          // guarded by mutex_;
 #ifdef ENABLE_HARDWARE_VSYNC
-    bool enableVsync_ = true;
+    int sampleVsync = 6; // same with MIN_SAMPLES_FOR_UPDATE in vsync_sampler.h
+    bool enableVsync_ = false;
 #endif // ENABLE_HARDWARE_VSYNC
 
     void InitReservedFb();
