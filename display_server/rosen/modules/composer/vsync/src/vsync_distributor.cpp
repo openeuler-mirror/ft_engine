@@ -28,8 +28,10 @@ namespace {
 constexpr int32_t SOFT_VSYNC_PERIOD = 16;
 constexpr int32_t ERRNO_EAGAIN = -1;
 constexpr int32_t ERRNO_OTHER = -2;
+#ifndef FT_BUILD
 constexpr int32_t THREAD_PRIORTY = -6;
 constexpr int32_t SCHED_PRIORITY = 2;
+#endif
 constexpr uint32_t SOCKET_CHANNEL_SIZE = 1024;
 }
 VSyncConnection::VSyncConnection(const sptr<VSyncDistributor>& distributor, std::string name)
@@ -145,10 +147,23 @@ VsyncError VSyncDistributor::RemoveConnection(const sptr<VSyncConnection>& conne
 void VSyncDistributor::ThreadMain()
 {
     // set thread priorty
+#ifdef FT_BUILD
+    pthread_attr_t thread_attr;
+    struct sched_param thread_param;
+    pthread_attr_init(&thread_attr);
+    if (pthread_attr_setschedpolicy(&thread_attr, SCHED_FIFO) == 0) {
+        thread_param.sched_priority = sched_get_priority_max(SCHED_FIFO);
+        if (pthread_attr_setschedparam(&thread_attr, &thread_param) == 0) {
+            VLOGI("set thread priorty: SCHED_FIFO/%{public}d", thread_param.sched_priority);
+        }
+    }
+#else
     setpriority(PRIO_PROCESS, 0, THREAD_PRIORTY);
     struct sched_param param = {0};
     param.sched_priority = SCHED_PRIORITY;
     sched_setscheduler(0, SCHED_FIFO, &param);
+#endif
+
 
     int64_t timestamp;
     int64_t vsyncCount;
@@ -207,6 +222,9 @@ void VSyncDistributor::ThreadMain()
             }
         }
     }
+#ifdef FT_BUILD
+    pthread_attr_destroy(&thread_attr);
+#endif
 }
 
 void VSyncDistributor::EnableVSync()
