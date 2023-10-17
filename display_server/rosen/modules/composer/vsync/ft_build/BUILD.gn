@@ -27,7 +27,8 @@ config("vsync_config") {
     "-Wall",
     "-Werror",
     "-g3",
-    "-Wno-c++11-narrowing"
+    "-Wno-c++11-narrowing",
+    "-DFT_BUILD"
   ]
 }
 
