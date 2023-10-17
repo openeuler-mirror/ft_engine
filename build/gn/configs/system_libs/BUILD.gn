@@ -50,12 +50,14 @@ config("skia_config") {
   visibility = [ ":*" ]
 
   include_dirs = [
+    "${sys_inc}/flutter",
+    "${sys_inc}/flutter/txt",
     "${sys_inc}/skia",
     "${sys_inc}/skia/src",
     "${sys_inc}/skia/include",
-    "${sys_inc}/skia/include/core"
+    "${sys_inc}/skia/include/core",
   ]
-  libs = [ "ace_skia_fangtian" ]
+  libs = [ "ace_skia_fangtian", "txt" ]
 }
 
 config("samgr_config") {
@@ -101,6 +103,13 @@ config("libz_config") {
 config("gtest_config") {
   visibility = [ ":*" ]
   libs = [ "gtest", "gtest_main" ]
+}
+
+config("harfbuzz_config") {
+  visibility = [ ":*" ]
+
+  include_dirs = [ "/usr/include/harfbuzz" ]
+  libs = ["harfbuzz"]
 }
 
 group("c_utils") {
@@ -179,4 +188,8 @@ group("libz") {
 
 group("gtest") {
   public_configs = [ ":gtest_config" ]
+}
+
+group("harfbuzz") {
+  public_configs = [ ":harfbuzz_config" ]
 }
