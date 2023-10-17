@@ -30,6 +30,7 @@ package_deps = [
     "make",
     "gtest-devel",
     "ninja-build",
+    "harfbuzz-devel",
     "libxml2-devel",
     "libpng-devel",
     "libicu",

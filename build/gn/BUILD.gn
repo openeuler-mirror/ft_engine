@@ -16,6 +16,7 @@ group("ft_display_server") {
     "//display_server/rosen/modules/render_service_base/ft_build:librender_service_base",
     "//display_server/rosen/modules/render_service/ft_build:render_service_group",
     "//display_server/rosen/modules/render_service_client/ft_build:librender_service_client",
+    "//display_server/rosen/modules/2d_graphics/ft_build:2d_graphics",
   ]
 }
 
