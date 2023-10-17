@@ -64,7 +64,7 @@ void RSBaseRenderEngine::PostProcessOutput(RSPaintFilterCanvas& canvas, [[maybe_
     paint.setAntiAlias(true);
     paint.setStyle(SkPaint::kFill_Style);
     paint.setStrokeJoin(SkPaint::kRound_Join);
-    paint.setARGB(0xaa, 0xff, 0xff, 0xff); // set the font color to white with some transparency.
+    paint.setARGB(0xaa, 0xff, 0x00, 0x00); // set the font color to white with some transparency.
     char fpsMsg[BUFFER_SIZE] = { 0 };
     if (fps > MAX_FPS || fps < 0) {
         sprintf(fpsMsg, "FPS ERROR");
@@ -72,7 +72,7 @@ void RSBaseRenderEngine::PostProcessOutput(RSPaintFilterCanvas& canvas, [[maybe_
         sprintf(fpsMsg, "%.1f", fps);
     }
     SkFont font;
-    const float fontSize = 16;
+    const float fontSize = 40;
     font.setSize(fontSize);
     canvas.drawString(fpsMsg, 1.0f, fontSize, font, paint);
 #endif
