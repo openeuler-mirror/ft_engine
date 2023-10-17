@@ -14,6 +14,7 @@
  */
 
 #include "vsync_generator.h"
+#include "vsync_log.h"
 #include <scoped_bytrace.h>
 #include <sched.h>
 #include <sys/resource.h>
@@ -30,8 +31,10 @@ static int64_t GetSysTimeNs()
 }
 // 1.5ms
 constexpr int64_t maxWaleupDelay = 1500000;
+#ifndef FT_BUILD
 constexpr int32_t THREAD_PRIORTY = -6;
 constexpr int32_t SCHED_PRIORITY = 2;
+#endif
 constexpr int64_t errorThreshold = 500000;
 }
 
@@ -75,10 +78,22 @@ VSyncGenerator::~VSyncGenerator()
 void VSyncGenerator::ThreadLoop()
 {
     // set thread priorty
+#ifdef FT_BUILD
+    pthread_attr_t thread_attr;
+    struct sched_param thread_param;
+    pthread_attr_init(&thread_attr);
+    if (pthread_attr_setschedpolicy(&thread_attr, SCHED_FIFO) == 0) {
+        thread_param.sched_priority = sched_get_priority_max(SCHED_FIFO);
+        if (pthread_attr_setschedparam(&thread_attr, &thread_param) == 0) {
+            VLOGI("set thread priorty: SCHED_FIFO/%{public}d", thread_param.sched_priority);
+        }
+    }
+#else
     setpriority(PRIO_PROCESS, 0, THREAD_PRIORTY);
     struct sched_param param = {0};
     param.sched_priority = SCHED_PRIORITY;
     sched_setscheduler(0, SCHED_FIFO, &param);
+#endif
 
     int64_t occurTimestamp = 0;
     int64_t nextTimeStamp = 0;
@@ -128,6 +143,9 @@ void VSyncGenerator::ThreadLoop()
             listeners[i].callback_->OnVSyncEvent(listeners[i].lastTime_);
         }
     }
+#ifdef FT_BUILD
+    pthread_attr_destroy(&thread_attr);
+#endif
 }
 
 int64_t VSyncGenerator::ComputeNextVSyncTimeStamp(int64_t now)
