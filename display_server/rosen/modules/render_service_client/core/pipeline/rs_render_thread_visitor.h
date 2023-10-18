@@ -66,7 +66,6 @@ private:
     bool dirtyFlag_ = false;
     bool isIdle_ = true;
     std::shared_ptr<RSPaintFilterCanvas> canvas_ = nullptr;
-    uint32_t queueSize_ = 0;
     uint64_t uiTimestamp_ = 0;
 
     void ClipHoleForSurfaceNode(RSSurfaceRenderNode& node);
