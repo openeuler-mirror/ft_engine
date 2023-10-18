@@ -308,8 +308,6 @@ void RSRenderThreadVisitor::ProcessRootRenderNode(RSRootRenderNode& node)
         ROSEN_LOGE("ProcessRoot %s: No RSSurface found", ptr->GetName().c_str());
         return;
     }
-    // Update queue size for each process loop in case it dynamically changes
-    queueSize_ = rsSurface->GetQueueSize();
 
 #ifndef ROSEN_CROSS_PLATFORM
     auto rsSurfaceColorSpace = rsSurface->GetColorSpace();
