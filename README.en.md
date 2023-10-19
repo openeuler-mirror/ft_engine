@@ -11,17 +11,5 @@ FangTian engine mainly focuses on the underlying modules of windowing system, wi
 4. Natural animation and effects
 5. Compatible with wayland and X11 application
 
-#### Software Architecture
-Software architecture description
-
-#### Compilation
-1.  Enter the code root directory and perform system environment and dependency checks:/ build/prebuild.sh。
-2.  After downloading and installing the dependency package, run it directly/ Build. sh to start building.
-
-#### Contribution
-
-1.  Fork the repository
-2.  Create Feat_xxx branch
-3.  Commit your code
-4.  Create Pull Request
-
+#### Wiki
+[Ref](https://gitee.com/openeuler/ft_engine/wikis/)
