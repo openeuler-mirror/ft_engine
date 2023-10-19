@@ -12,20 +12,8 @@ ft engine 主要聚焦于视窗底座，目标在与解决Linux桌面上图形�
 4.  自然的动效能力
 5.  兼容wayland、X11协议
 
-#### 软件架构
-软件架构说明
+#### WiKi
+[请参阅](https://gitee.com/openeuler/ft_engine/wikis/)
 
-
-#### 源码编译
-
-1.  进入代码根目录，执行进行系统环境检查和依赖检查：./build/prebuild.sh。
-2.  完成依赖包的下载及安装后，直接运行 ./build.sh 即可开始构建。
-
-#### 参与贡献
-
-1.  Fork 本仓库
-2.  新建 Feat_xxx 分支
-3.  提交代码
-4.  新建 Pull Request
 
 

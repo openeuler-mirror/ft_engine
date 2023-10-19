@@ -48,14 +48,6 @@ int32_t DumbAllocator::Init()
     }
     drmFd_ = drmFd;
 
-    // TODO: enable reopen DrmFd
-    // int newFd = GrallocUtils::ReopenDrmFd(drmFd);
-    // if (IsInvalidFd(newFd)) {
-    //     LOG_ERROR << "[Gralloc::DumbAllocator::Init] Failed to reopen DRM fd!";
-    //     return DISPLAY_FD_ERR;
-    // }
-    // drmFd_ = newFd;
-
     LOG_DEBUG("[Gralloc::DumbAllocator::Init] Init done.");
 
     return DISPLAY_SUCCESS;
