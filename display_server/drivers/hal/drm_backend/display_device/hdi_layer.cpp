@@ -42,8 +42,6 @@ HdiLayerBuffer::HdiLayerBuffer(const BufferHandle &handle)
                 handle.fd, ErrnoToString(errno).c_str(), errno);
         }
     }
-
-    // LOG_DEBUG << "HdiLayerBuffer handle width: " << width_ << ", height: " << height_ << ", fd: " << fd_;
 }
 
 HdiLayerBuffer::~HdiLayerBuffer() noexcept {}
@@ -56,10 +54,6 @@ int32_t HdiLayer::SetSize(IRect *rect)
         LOG_ERROR("HdiLayer::SetSize: rect is nullptr.");
         return DISPLAY_PARAM_ERR;
     }
-
-    // LOG_DEBUG << "HdiLayer::SetSize: id: " << id_
-    //           << Fmt(", rect x: %d y : %d w : %d h : %d", rect->x, rect->y, rect->w, rect->h);
-
     displayRect_ = *rect;
     return DISPLAY_SUCCESS;
 }
@@ -70,24 +64,18 @@ int32_t HdiLayer::SetCrop(IRect *rect)
         LOG_ERROR("HdiLayer::SetCrop: rect is nullptr.");
         return DISPLAY_PARAM_ERR;
     }
-
-    // LOG_DEBUG << "HdiLayer::SetCrop: id: " << id_
-    //           << Fmt(", crop x: %d y : %d w : %d h : %d", rect->x, rect->y, rect->w, rect->h);
-
     crop_ = *rect;
     return DISPLAY_SUCCESS;
 }
 
 int32_t HdiLayer::SetZOrder(uint32_t zOrder)
 {
-    // LOG_DEBUG << "HdiLayer::SetZOrder: id: " << id_ << ", zOrder: " << zOrder;
     zOrder_ = zOrder;
     return DISPLAY_SUCCESS;
 }
 
 int32_t HdiLayer::SetPreMulti(bool preMul)
 {
-    // LOG_DEBUG << "HdiLayer::SetPreMulti: id: " << id_ << ", preMul: " << preMul;
     preMulti_ = preMul;
     return DISPLAY_SUCCESS;
 }
@@ -98,18 +86,12 @@ int32_t HdiLayer::SetAlpha(LayerAlpha *alpha)
         LOG_ERROR("HdiLayer::SetAlpha: alpha is nullptr.");
         return DISPLAY_PARAM_ERR;
     }
-
-    // LOG_DEBUG << "HdiLayer::SetPreMulti: id: " << id_ << ", alpha: " << alpha->enGlobalAlpha
-    //           << ", gAlpha: " << alpha->gAlpha;
-
     alpha_ = *alpha;
     return DISPLAY_SUCCESS;
 }
 
 int32_t HdiLayer::SetTransformMode(TransformType type)
 {
-    // LOG_DEBUG << "HdiLayer::TransformType: id: " << id_ << ", type: " << type;
-
     transformType_ = type;
     return DISPLAY_SUCCESS;
 }
@@ -120,9 +102,6 @@ int32_t HdiLayer::SetDirtyRegion(IRect *region)
         LOG_ERROR("HdiLayer::SetDirtyRegion: region is nullptr.");
         return DISPLAY_PARAM_ERR;
     }
-
-    // LOG_DEBUG << "HdiLayer::SetDirtyRegion: id: " << id_
-    //           << Fmt(", region x: %d, y: %d, w: %d, h: %d", region->x, region->y, region->w, region->h);
     return DISPLAY_SUCCESS;
 }
 
@@ -132,8 +111,6 @@ int32_t HdiLayer::SetVisibleRegion(uint32_t num, IRect *rect)
         LOG_ERROR("HdiLayer::SetVisibleRegion: rect is nullptr.");
         return DISPLAY_PARAM_ERR;
     }
-    // LOG_DEBUG << "HdiLayer::SetVisibleRegion: id: " << id_
-    //           << Fmt(", rect x: %d, y: %d, w: %d, h: %d", rect->x, rect->y, rect->w, rect->h);
     return DISPLAY_SUCCESS;
 }
 
@@ -151,14 +128,12 @@ int32_t HdiLayer::SetBuffer(const BufferHandle *handle, int32_t fence)
 
 int32_t HdiLayer::SetCompositionType(CompositionType type)
 {
-    // LOG_DEBUG << "HdiLayer::SetCompositionType: id: " << id_ << ", type: " << type;
     compositionType_ = type;
     return DISPLAY_SUCCESS;
 }
 
 int32_t HdiLayer::SetBlendType(BlendType type)
 {
-    // LOG_DEBUG << "HdiLayer::SetBlendType: id: " << id_ << ", type: " << type;
     blendType_ = type;
     return DISPLAY_SUCCESS;
 }
@@ -193,7 +168,6 @@ void HdiLayer::SetPixel(const BufferHandle &handle, int x, int y, uint32_t color
 
 void HdiLayer::ClearColor(uint32_t color)
 {
-    // LOG_DEBUG << "HdiLayer::ClearColor, color: " << color;
     const auto &handle = hdiBuffer_->GetBufferHandle();
     for (int32_t x = 0; x < handle.width; x++) {
         for (int32_t y = 0; y < handle.height; y++) {
