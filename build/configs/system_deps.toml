@@ -43,4 +43,6 @@ package_deps = [
     "cjson-devel",
     # GPU render
     "openssl-devel",
+    "distributed-utils",
+    "distributed-build",
 ]
