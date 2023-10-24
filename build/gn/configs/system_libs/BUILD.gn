@@ -14,44 +14,55 @@
 config("c_utils_config") {
   visibility = [ ":*" ]
 
-  include_dirs = [ "${sys_inc}/c_utils" ]
-  libs = [ "utils", "sec_shared" ]
+  include_dirs = [ "/opt/distributed-middleware-build/openeuler/compiler_include" ]
+  include_dirs += [ "${sys_inc}/c_utils" ]
+  libs = [ "utils.z", "boundscheck" ]
 }
 
 config("ipc_core_config") {
   visibility = [ ":*" ]
 
-  include_dirs = [ "${sys_inc}/ipc_core" ]
-  libs = [ "ipc_core" ]
+  include_dirs = [ "${sys_inc}/ipc" ]
+  include_dirs += [ "//mock/ipc" ]
+
+  libs = [ "ipc_core.z" ]
 }
 
 config("hilog_config") {
   visibility = [ ":*" ]
 
   include_dirs = [ "${sys_inc}/hilog" ]
-  libs = [ "hilog" ]
+  libs = [ "hilog.z" ]
 }
+
+# config("hitrace_meter_config") {
+  # visibility = [ ":*" ]
+
+  # include_dirs = [ "${sys_inc}/hitrace_meter" ]
+  # libs = [ "hitrace_meter" ]
+# }
 
 config("hitrace_meter_config") {
   visibility = [ ":*" ]
 
-  include_dirs = [ "${sys_inc}/hitrace_meter" ]
-  libs = [ "hitrace_meter" ]
+  include_dirs = [ "//mock/hitrace" ]
+  #libs = [ "hitrace_meter" ]
 }
 
 config("eventhandler_config") {
   visibility = [ ":*" ]
 
   include_dirs = [ "${sys_inc}/eventhandler" ]
-  libs = [ "eventhandler" ]
+  include_dirs += [ "//mock/eventhandler" ]
+  libs = [ "eventhandler.z" ]
 }
 
 config("skia_config") {
   visibility = [ ":*" ]
 
   include_dirs = [
-    "${sys_inc}/flutter",
-    "${sys_inc}/flutter/txt",
+    "${usr_inc}/flutter",
+    "${usr_inc}/flutter/txt",
     "${sys_inc}/skia",
     "${sys_inc}/skia/src",
     "${sys_inc}/skia/include",
@@ -64,7 +75,7 @@ config("samgr_config") {
   visibility = [ ":*" ]
 
   include_dirs = [ "${sys_inc}/samgr" ]
-  libs = [ "samgr_proxy" ]
+  libs = [ "samgr_proxy.z" ]
 }
 
 config("image_config") {
@@ -84,15 +95,15 @@ config("mmi_config") {
 config("syspara_config") {
   visibility = [ ":*" ]
 
-  include_dirs = [ "${sys_inc}/syspara" ]
-  libs = [ "beget_proxy", "begetutil" ]
+  include_dirs = [ "${sys_inc}/init" ]
+  libs = [ "beget_proxy.z", "begetutil.z" ]
 }
 
 config("safwk_config") {
   visibility = [ ":*" ]
 
   include_dirs = [ "${sys_inc}/safwk" ]
-  libs = [ "system_ability_fwk" ]
+  libs = [ "system_ability_fwk.z" ]
 }
 
 config("libz_config") {
@@ -108,7 +119,7 @@ config("gtest_config") {
 config("harfbuzz_config") {
   visibility = [ ":*" ]
 
-  include_dirs = [ "/usr/include/harfbuzz" ]
+  include_dirs = [ "${sys_inc}/harfbuzz" ]
   libs = ["harfbuzz"]
 }
 
@@ -146,7 +157,7 @@ group("samgr") {
 group("image") {
   public_deps = [
     ":hilog",
-    ":hitrace_meter",
+    # ":hitrace_meter",
     ":c_utils",
     ":ipc_core",
   ]
