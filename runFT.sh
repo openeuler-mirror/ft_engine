@@ -11,6 +11,9 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-sudo systemctl restart samgr
-sudo systemctl restart hilogd
-sa_main /usr/local/share/ft/ft.xml
+pid=$(ps aux | grep samgr | awk '{print $2}')
+kill -9 $pid
+
+samgr &
+sa_main /system/profile/ft/ft.xml
+

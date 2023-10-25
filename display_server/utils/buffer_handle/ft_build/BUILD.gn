@@ -21,14 +21,15 @@ config("buffer_handle_public") {
 
 ft_static_library("buffer_handle") {
   include_dirs = [
-    "${sys_inc}/c_utils",
-    "${sys_inc}/ipc_core",
-    "${sys_inc}/hilog",
     "${usr_inc}/ftsurface",
   ]
   public_configs = [ ":buffer_handle_public" ]
 
-  libs = [ "ipc_core", "hilog", "utils", "sec_shared" ]
-
   sources = [ "../src/buffer_handle.cpp" ]
+
+  deps = [
+    "//build/gn/configs/system_libs:ipc_core",
+    "//build/gn/configs/system_libs:hilog",
+    "//build/gn/configs/system_libs:c_utils",
+  ]
 }
