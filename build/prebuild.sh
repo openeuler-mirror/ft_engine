@@ -48,9 +48,6 @@ PROJECT_DIR=$(dirname ${SCRIPT_DIR})
 
 sudo pip3 install -r ${SCRIPT_DIR}/configs/requirements.txt
 
-# Remove out dir
-# rm -rf ${PROJECT_DIR}/out
-
 # =============================================================================
 # System Packages
 # =============================================================================
@@ -75,36 +72,19 @@ fi
 cd ${PREBUILD_DIR}
 FT_PREBUILD_DIR=$(pwd)
 
-# install prebuild library
-if [ ! -d ${FT_PREBUILD_DIR}/libs ]; then
-git clone https://gitee.com/yanansong/ft_engine_prebuild.git -b rpms ${FT_PREBUILD_DIR}/libs
-fi
-
-ARCHNAME=`uname -m`
-
-cd ${FT_PREBUILD_DIR}/libs/rpms/${ARCHNAME}
-sudo ./installRPM
-
-# install prebuild include.
-if [ ! -d ${FT_PREBUILD_DIR}/inc ]; then
-git clone https://gitee.com/yanansong/devel_inc.git ${FT_PREBUILD_DIR}/inc
-fi
-
-# copy include files to /usr/include.
-cd ${FT_PREBUILD_DIR}/inc
-sudo cp -fr * /usr/local/include
-
 # install mesa_fangtian
 if [ ! -d ${FT_PREBUILD_DIR}/rpm/binary ]; then
-    git clone https://gitee.com/ShaoboFeng/rpm-fangtian.git ${FT_PREBUILD_DIR}/rpm/binary
+    git clone https://gitee.com/huangyuxin2023/rpm-fangtian.git ${FT_PREBUILD_DIR}/rpm/binary
 fi
 cd ${FT_PREBUILD_DIR}/rpm/binary
 ./install.sh
 cd ${PROJECT_DIR}
 
-# copy FT sa file to /usr/local/share/ft/
+# copy FT sa file
+sudo mkdir -p /system/profile/ft
+sudo cp -fr ${PROJECT_DIR}/etc/ft.xml /system/profile/ft
+
 sudo mkdir -p /usr/local/share/ft
-sudo cp -fr ${PROJECT_DIR}/etc/ft.xml /usr/local/share/ft/
 sudo cp -fr ${PROJECT_DIR}/etc/icon   /usr/local/share/ft/
 sudo cp -fr ${PROJECT_DIR}/etc/desktop /usr/local/share/ft/
 
@@ -118,21 +98,21 @@ sudo cp ${PROJECT_DIR}/window_manager/resources/config/other/window_manager_conf
 # =============================================================================
 
 if [ ! -d ${PROJECT_DIR}/third_party/ft_flutter ]; then
-git clone https://gitee.com/openeuler/ft_flutter.git ${PROJECT_DIR}/third_party/ft_flutter
+git clone https://gitee.com/openeuler/ft_flutter.git -b 2203sp2_20231023 ${PROJECT_DIR}/third_party/ft_flutter
 fi
 cd ${PROJECT_DIR}/third_party/ft_flutter
 ./project_build/prebuild.sh
 ./build.sh $*
 
 if [ ! -d ${PROJECT_DIR}/third_party/ft_multimedia ]; then
-git clone https://gitee.com/openeuler/ft_multimedia.git ${PROJECT_DIR}/third_party/ft_multimedia
+git clone https://gitee.com/openeuler/ft_multimedia.git -b 2203sp2_20231023  ${PROJECT_DIR}/third_party/ft_multimedia
 fi
 cd ${PROJECT_DIR}/third_party/ft_multimedia
 ./build/prebuild.sh $*
 ./build.sh $*
 
 if [ ! -d ${PROJECT_DIR}/third_party/ft_mmi ]; then
-git clone https://gitee.com/openeuler/ft_mmi.git ${PROJECT_DIR}/third_party/ft_mmi
+git clone https://gitee.com/openeuler/ft_mmi.git -b 2203sp2_20231023  ${PROJECT_DIR}/third_party/ft_mmi
 fi
 cd ${PROJECT_DIR}/third_party/ft_mmi
 ./build/prebuild.sh
