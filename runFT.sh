@@ -13,4 +13,5 @@
 
 sudo systemctl restart samgr
 sudo systemctl restart hilogd
+sudo dmesg -n 1
 sa_main /usr/local/share/ft/ft.xml
