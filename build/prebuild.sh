@@ -124,6 +124,20 @@ cd ${PROJECT_DIR}/third_party/ft_flutter
 ./project_build/prebuild.sh
 ./build.sh $*
 
+if [ ! -d ${PROJECT_DIR}/third_party/ft_surface ]; then
+git clone https://gitee.com/openeuler/ft_surface ${PROJECT_DIR}/third_party/ft_surface
+fi
+cd ${PROJECT_DIR}/third_party/ft_surface/ft_surface_wrapper
+cmake .
+make
+sudo cp -fr libft_surface_wrapper.so /usr/lib64
+sudo mkdir -p /usr/include/ftsurface
+sudo cp -fr include/buffer_handle.h /usr/include/ftsurface
+sudo cp -fr include/display_type.h /usr/include/ftsurface
+sudo cp -fr include/external_window.h /usr/include/ftsurface
+sudo cp -fr include/native_window_wrapper.h /usr/include/ftsurface
+sudo cp -fr include/window.h /usr/include/ftsurface
+
 if [ ! -d ${PROJECT_DIR}/third_party/ft_multimedia ]; then
 git clone https://gitee.com/openeuler/ft_multimedia.git ${PROJECT_DIR}/third_party/ft_multimedia
 fi
