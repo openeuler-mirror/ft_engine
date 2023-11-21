@@ -191,6 +191,7 @@ void *GbmAllocator::Mmap(BufferHandle &buffer)
         &mapData); // map_data & return address is the same
 
     buffer.virAddr = virAddr;
+    buffer.mapData = mapData;
     LOG_DEBUG("[Gralloc::GbmAllocator::Mmap] Mmap done.");
     return virAddr;
 }
@@ -216,8 +217,8 @@ int32_t GbmAllocator::Unmap(BufferHandle &buffer)
         return DISPLAY_NULL_PTR;
     }
 
-    gbm_bo_unmap(gbmBo, buffer.virAddr);
-    buffer.virAddr = nullptr;
+    gbm_bo_unmap(gbmBo, buffer.mapData);
+    buffer.mapData = nullptr;
 
     LOG_DEBUG("[Gralloc::GbmAllocator::Unmap] Unmap done.");
 
