@@ -101,7 +101,7 @@ int32_t Unmap(BufferHandle *handle)
         return DISPLAY_NULL_PTR;
     }
 
-    return allocator->InvalidateCache(*handle);
+    return allocator->Unmap(*handle);
 }
 
 int32_t FlushCache(BufferHandle *handle)
