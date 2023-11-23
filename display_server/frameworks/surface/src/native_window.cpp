@@ -128,7 +128,12 @@ int32_t NativeWindowFlushBuffer(OHNativeWindow *window, OHNativeWindowBuffer *bu
 
     OHOS::sptr<OHOS::SyncFence> acquireFence = new OHOS::SyncFence(fenceFd);
     window->surface->FlushBuffer(buffer->sfbuffer, acquireFence, config);
+    // fixbug: fd leak. 
     buffer->sfbuffer = nullptr;
+    // here we delete OHNativeWindowBuffer buffer, because we new it when requesting.
+    // otherwise, will leak mem of OHNativeWindowBuffer per frame.
+    // actually, if we delete buffer, fd will not leak fd at the sametime.
+    delete buffer;
     return OHOS::GSERROR_OK;
 }
 
