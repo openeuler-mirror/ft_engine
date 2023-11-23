@@ -72,7 +72,7 @@ class FtBuilder:
                                 help='Specify the number of jobs to run simultaneously during building.')
         build_parser.add_argument('--enable-musl',
                                 action='store_true',
-                                help='Enable musl C lib. if musl is disabled, you\'ll use system C lib.')
+                                help='Enable musl C lib. If musl is disabled, you\'ll use system C lib.')
         build_parser.add_argument('-cc', '--export-compile-commands',
                                 action='store_true',
                                 help='Export "compile_commands.json" file.')
