@@ -98,5 +98,6 @@ ft_shared_library("libwms") {
     "//build/gn/configs/system_libs:skia",
     "//build/gn/configs/system_libs:image",
     "//build/gn/configs/system_libs:mmi",
+    "//build/gn/configs/system_libs:syspara",
   ]
 }
