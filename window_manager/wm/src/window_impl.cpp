@@ -1031,7 +1031,7 @@ WMError WindowImpl::Create(uint32_t parentId, const std::shared_ptr<AbilityRunti
             property_->SetTokenState(true);
         }
     }
-    InitAbilityInfo();
+    // InitAbilityInfo(); // bundle management system is not available in euler platform
     SetSystemConfig();
 
     if (WindowHelper::IsMainWindow(property_->GetWindowType())) {
