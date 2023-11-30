@@ -51,6 +51,7 @@ public:
     void SetRequestedOrientation(Orientation orientation);
     void SetCallingWindow(uint32_t windowId);
     void SetMainHandlerAvailable(bool isMainHandlerAvailable);
+    void SetDragHotZoneNone(bool hotZoneNone);
 
     Rect GetWindowRect() const;
     WindowType GetWindowType() const;
@@ -68,6 +69,7 @@ public:
     Orientation GetRequestedOrientation() const;
     uint32_t GetCallingWindow() const;
     bool GetMainHandlerAvailable() const;
+    bool GetDragHotZoneNone() const;
 
 private:
     Rect windowRect_ { 0, 0, 0, 0 };
@@ -91,6 +93,7 @@ private:
         { WindowType::WINDOW_TYPE_NAVIGATION_BAR, SystemBarProperty() },
     };
     Orientation requestedOrientation_ { Orientation::UNSPECIFIED };
+    bool dragHotZoneNone_ = false;
 };
 } // namespace Rosen
 } // namespace OHOS

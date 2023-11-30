@@ -219,6 +219,16 @@ void WindowOption::SetRequestedOrientation(Orientation orientation)
 {
     requestedOrientation_ = orientation;
 }
+
+void WindowOption::SetDragHotZoneNone(bool hotZoneNone)
+{
+    dragHotZoneNone_ = hotZoneNone;
+}
+
+bool WindowOption::GetDragHotZoneNone() const
+{
+    return dragHotZoneNone_;
+}
 } // namespace Rosen
 } // namespace OHOS
 
