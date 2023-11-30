@@ -93,7 +93,7 @@ WindowImpl::WindowImpl(const sptr<WindowOption>& option)
         property_->SetSystemBarProperty(it.first, it.second);
     }
     name_ = option->GetWindowName();
-
+    dragHotZoneNone_ = option->GetDragHotZoneNone();
     surfaceNode_ = CreateSurfaceNode(property_->GetWindowName(), option->GetWindowType());
 
     moveDragProperty_ = new (std::nothrow) MoveDragProperty();
@@ -2275,6 +2275,9 @@ void WindowImpl::CalculateStartRectExceptHotZone(float vpr)
 
 bool WindowImpl::IsPointInDragHotZone(int32_t startPointPosX, int32_t startPointPosY)
 {
+    if (dragHotZoneNone_) {
+        return false;
+    }
     if (!WindowHelper::IsPointInTargetRect(startPointPosX,
         startPointPosY, moveDragProperty_->startRectExceptFrame_) ||
         (!WindowHelper::IsPointInWindowExceptCorner(startPointPosX,
