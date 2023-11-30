@@ -580,6 +580,7 @@ private:
         {DragType::DRAG_RIGHT_TOP_CORNER, MMI::MOUSE_ICON::NORTH_EAST_SOUTH_WEST}
     };
     float virtualPixelRatio_ = 0;
+    bool dragHotZoneNone_ = false;
 };
 } // namespace Rosen
 } // namespace OHOS
