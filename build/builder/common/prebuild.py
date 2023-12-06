@@ -31,7 +31,7 @@ def build_deps(output_dir):
     usr_gn_path = os.path.join(usr_bin_path, 'gn')
     if os.path.exists(usr_gn_path):
         exec_sys_command(['cp', usr_gn_path, gn_path])
-        logger.info("get gn success")
+        logger.info("Get gn success")
     else:
         # build gn
         gn_dir = os.path.join(output_dir, "gn-build")
@@ -49,9 +49,9 @@ def build_deps(output_dir):
             os.chdir(os.path.join(gn_dir, "out"))
             if os.path.exists("gn"):
                 exec_sys_command(['cp', 'gn', gn_path])
-                logger.info("build gn success")
+                logger.info("Build gn success")
                 exec_sys_command(['sudo', 'cp', 'gn', usr_bin_path])
-                logger.info("copy gn success")
+                logger.info("Copy gn success")
             os.chdir(cur_work_dir)
 
 
