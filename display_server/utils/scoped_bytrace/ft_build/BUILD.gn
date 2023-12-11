@@ -20,11 +20,6 @@ config("scoped_bytrace_config") {
     "-Werror",
     "-g3",
   ]
-  include_dirs = [
-    "${sys_inc}/hitrace_meter",
-    "${sys_inc}/hilog",
-  ]
-  libs = ["hilog", "hitrace_meter"]
 }
 
 config("scoped_bytrace_public_config") {
@@ -35,4 +30,8 @@ ft_static_library("scoped_bytrace") {
   sources = [ "../src/scoped_bytrace.cpp" ]
   configs = [ ":scoped_bytrace_config" ]
   public_configs = [ ":scoped_bytrace_public_config" ]
+  deps = [
+    "//build/gn/configs/system_libs:hitrace_meter",
+    "//build/gn/configs/system_libs:hilog",
+  ]
 }

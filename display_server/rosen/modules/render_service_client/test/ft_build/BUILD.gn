@@ -43,7 +43,6 @@ ft_executable("render_service_client_rs_demo") {
     "//display_server/rosen/modules/render_service_client/ft_build:librender_service_client",
 
     "//build/gn/configs/system_libs:hilog",
-    "//build/gn/configs/system_libs:libz",
     "//build/gn/configs/system_libs:skia",
     "//build/gn/configs/system_libs:image",
   ]
