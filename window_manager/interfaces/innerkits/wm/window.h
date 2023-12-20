@@ -475,6 +475,17 @@ public:
      * @param configuration configuration for app
      */
     virtual bool IsAllowHaveSystemSubWindow() = 0;
+
+    /**
+     * @brief Update Limit size of window
+     *
+     * @param minWidth min width of window
+     * @param minHeight min height of window
+     * @param maxWidth max width of window
+     * @param maxHeight max height of window
+     */
+    virtual WMError SetLimitSize(uint32_t minWidth, uint32_t minHeight,
+        uint32_t maxWidth, uint32_t maxHeight) = 0;
 };
 }
 }

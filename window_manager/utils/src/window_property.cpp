@@ -800,6 +800,9 @@ bool WindowProperty::Write(Parcel& parcel, PropertyChangeAction action)
         case PropertyChangeAction::ACTION_UPDATE_PRIVACY_MODE:
             ret = ret && parcel.WriteBool(isPrivacyMode_);
             break;
+        case PropertyChangeAction::ACTION_UPDATE_LIMIT_SIZE:
+            ret = ret && MarshallingWindowSizeLimits(parcel);
+            break;
         default:
             break;
     }
@@ -862,6 +865,9 @@ void WindowProperty::Read(Parcel& parcel, PropertyChangeAction action)
         }
         case PropertyChangeAction::ACTION_UPDATE_PRIVACY_MODE:
             SetPrivacyMode(parcel.ReadBool());
+            break;
+        case PropertyChangeAction::ACTION_UPDATE_LIMIT_SIZE:
+            UnmarshallingWindowSizeLimits(parcel, this);
             break;
         default:
             break;

@@ -52,6 +52,7 @@ public:
     void SetCallingWindow(uint32_t windowId);
     void SetMainHandlerAvailable(bool isMainHandlerAvailable);
     void SetDragHotZoneNone(bool hotZoneNone);
+    void SetWindowLimitSize(uint32_t minWidth, uint32_t minHeight, uint32_t maxWidth, uint32_t maxHeight);
 
     Rect GetWindowRect() const;
     WindowType GetWindowType() const;
@@ -70,6 +71,11 @@ public:
     uint32_t GetCallingWindow() const;
     bool GetMainHandlerAvailable() const;
     bool GetDragHotZoneNone() const;
+    uint32_t GetWinMinWidth() const;
+    uint32_t GetWinMinHeight() const;
+    uint32_t GetWinMaxWidth() const;
+    uint32_t GetWinMaxHeight() const;
+    bool LimitSizeUpdated() const;
 
 private:
     Rect windowRect_ { 0, 0, 0, 0 };
@@ -94,6 +100,11 @@ private:
     };
     Orientation requestedOrientation_ { Orientation::UNSPECIFIED };
     bool dragHotZoneNone_ = false;
+    bool limitSizeUpdated_ = false;
+    uint32_t winMinWidth_ = 320;
+    uint32_t winMinHeight_ = 240;
+    uint32_t winMaxWidth_ = 1920;
+    uint32_t winMaxHeight_ = 1920;
 };
 } // namespace Rosen
 } // namespace OHOS

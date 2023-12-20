@@ -1260,6 +1260,10 @@ WMError WindowController::UpdateProperty(sptr<WindowProperty>& property, Propert
             node->GetWindowProperty()->SetPrivacyMode(property->GetPrivacyMode());
             break;
         }
+        case PropertyChangeAction::ACTION_UPDATE_LIMIT_SIZE: {
+            node->GetWindowProperty()->SetSizeLimits(property->GetSizeLimits());
+            break;
+        }
         default:
             break;
     }

@@ -229,6 +229,45 @@ bool WindowOption::GetDragHotZoneNone() const
 {
     return dragHotZoneNone_;
 }
+
+void WindowOption::SetWindowLimitSize(uint32_t minWidth, uint32_t minHeight, uint32_t maxWidth, uint32_t maxHeight)
+{
+    if (minWidth != 0 && minHeight != 0) {
+        winMinWidth_ = minWidth;
+        winMinHeight_ = minHeight;
+        limitSizeUpdated_ = true;
+    }
+    if (maxWidth != 0 && maxHeight != 0) {
+        winMaxWidth_ = maxWidth;
+        winMaxHeight_ = maxHeight;
+        limitSizeUpdated_ = true;
+    }
+}
+
+uint32_t WindowOption::GetWinMinWidth() const
+{
+    return winMinWidth_;
+}
+
+uint32_t WindowOption::GetWinMinHeight() const
+{
+    return winMinHeight_;
+}
+
+uint32_t WindowOption::GetWinMaxWidth() const
+{
+    return winMaxWidth_;
+}
+
+uint32_t WindowOption::GetWinMaxHeight() const
+{
+    return winMaxHeight_;
+}
+
+bool WindowOption::LimitSizeUpdated() const
+{
+    return limitSizeUpdated_;
+}
 } // namespace Rosen
 } // namespace OHOS
 
