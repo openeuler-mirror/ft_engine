@@ -79,6 +79,7 @@ enum class PropertyChangeAction : uint32_t {
     ACTION_UPDATE_TRANSFORM_PROPERTY = 1 << 13,
     ACTION_UPDATE_ANIMATION_FLAG = 1 << 14,
     ACTION_UPDATE_PRIVACY_MODE = 1 << 15,
+    ACTION_UPDATE_LIMIT_SIZE = 1 << 16,
 };
 
 struct ModeChangeHotZonesConfig {

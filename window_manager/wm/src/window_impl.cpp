@@ -87,6 +87,15 @@ WindowImpl::WindowImpl(const sptr<WindowOption>& option)
     property_->SetTurnScreenOn(option->IsTurnScreenOn());
     property_->SetKeepScreenOn(option->IsKeepScreenOn());
     property_->SetBrightness(option->GetBrightness());
+    if (option->LimitSizeUpdated()) {
+        WindowSizeLimits limits;
+        limits.minWidth_ = option->GetWinMinWidth();
+        limits.minHeight_ = option->GetWinMinHeight();
+        limits.maxWidth_ = option->GetWinMaxWidth();
+        limits.maxHeight_ = option->GetWinMaxHeight();
+        property_->SetSizeLimits(limits);
+    }
+
     AdjustWindowAnimationFlag();
     auto& sysBarPropMap = option->GetSystemBarProperty();
     for (auto it : sysBarPropMap) {
@@ -3229,6 +3238,20 @@ bool WindowImpl::IsAllowHaveSystemSubWindow()
         return false;
     }
     return true;
+}
+
+WMError WindowImpl::SetLimitSize(uint32_t minWidth, uint32_t minHeight, uint32_t maxWidth, uint32_t maxHeight)
+{
+    if (!IsWindowValid()) {
+        return WMError::WM_ERROR_INVALID_WINDOW;
+    }
+    WindowSizeLimits limits;
+    limits.minWidth_ = minWidth;
+    limits.minHeight_ = minHeight;
+    limits.maxWidth_ = maxWidth;
+    limits.maxHeight_ = maxHeight;
+    property_->SetSizeLimits(limits);
+    return UpdateProperty(PropertyChangeAction::ACTION_UPDATE_LIMIT_SIZE);
 }
 } // namespace Rosen
 } // namespace OHOS
