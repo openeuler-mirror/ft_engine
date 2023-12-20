@@ -268,6 +268,8 @@ public:
     virtual WMError NotifyMemoryLevel(int32_t level) const override;
     virtual bool IsAllowHaveSystemSubWindow() override;
     void RestoreSplitWindowMode(uint32_t mode);
+    virtual WMError SetLimitSize(uint32_t minWidth, uint32_t minHeight,
+        uint32_t maxWidth, uint32_t maxHeight) override;
 private:
     template<typename T1, typename T2, typename Ret>
     using EnableIfSame = typename std::enable_if<std::is_same_v<T1, T2>, Ret>::type;
